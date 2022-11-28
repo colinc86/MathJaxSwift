@@ -1,0 +1,22 @@
+{
+  "name": "mjn",
+  "version": "3.2.2",
+  "description": "A MathJax wrapper for Swift.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/colinc86/mjn"
+  },
+  "keywords": [
+    "mathjax"
+  ],
+  "author": "Colin Campbell",
+  "license": "MIT",
+  "dependencies": {
+    "mathjax": "^3.2.2",
+    "synchronized-promise": "^0.3.1"
+  }
+}
