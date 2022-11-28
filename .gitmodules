@@ -1,0 +1,3 @@
+[submodule "Sources/MathJaxSwift/Resources/MathJax"]
+	path = Sources/MathJaxSwift/Resources/MathJax
+	url = git@github.com:mathjax/MathJax.git
