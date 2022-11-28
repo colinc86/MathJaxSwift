@@ -5,10 +5,10 @@ final class MathJaxSwiftTests: XCTestCase {
   
   func testResource() throws {
     // Test that the URL exists
-    let url = MathJaxSwift.base
+    let url = MathJax.base
     XCTAssertNotNil(url)
     
-    let es5URL = MathJaxSwift.es5
+    let es5URL = MathJax.es5
     XCTAssertNotNil(es5URL)
     
     // Get a URL
@@ -22,7 +22,7 @@ final class MathJaxSwiftTests: XCTestCase {
   
   func testPackage() throws {
     // Test that we can get the package metadata
-    let package = try MathJaxSwift.package()
+    let package = try MathJax.package()
     XCTAssertNoThrow(package)
     
     // The package name should not change, so let make sure that it equals
@@ -31,7 +31,12 @@ final class MathJaxSwiftTests: XCTestCase {
     
     // In an attempt to keep this version agnostic, lets only check to make sure
     // that we have something non-empty.
-    XCTAssertFalse(package.version.isEmpty)
+    XCTAssertFalse(package.version?.isEmpty ?? true)
+  }
+  
+  func testConvert() async throws {
+    let test = try await MathJax().convert(tex: "Hello, $x^2$!")
+    print(test)
   }
   
 }
