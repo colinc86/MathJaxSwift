@@ -21,7 +21,7 @@ const CSS = [
 
 export class Converter {
   
-  static tex2svg(input, inline = false, em = 16, ex = 8, width = 80 * 16, fontCache = true, assistiveMml = false) {
+  static tex2svg(input, inline = false, em = 16, ex = 8, width = 80 * 16, css = false, styles = true, container = false, fontCache = true, assistiveMml = false) {
     //  Create DOM adaptor and register it for HTML documents
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
@@ -40,31 +40,7 @@ export class Converter {
       containerWidth: width
     });
     
-    // Output the SVG
-    return adaptor.textContent(svg.styleSheet(node));
-  }
-  
-  static tex2chtml(input, inline = false, em = 16, ex = 8, width = 80 * 16, styles = true, container = false, css = false, fontCache = true, assistiveMml = false) {
-    //  Create DOM adaptor and register it for HTML documents
-    const adaptor = liteAdaptor();
-    const handler = RegisterHTMLHandler(adaptor);
-    if (assistiveMml) AssistiveMmlHandler(handler);
-    
-    //  Create input and output jax and a document using them on the content from the HTML file
-    const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    const svg = new SVG({fontCache: (fontCache ? 'local' : 'none')});
-    const html = mathjax.document('', {InputJax: tex, OutputJax: svg});
-    
-    //  Typeset the math from the command line
-    const node = html.convert(input || '', {
-      display: !inline,
-      em: em,
-      ex: ex,
-      containerWidth: width
-    });
-    
-    // If the --css option was specified, output the CSS, otherwise, typeset the
-    // math and output the HTML
+    // Typeset the math and output the HTML
     if (css) {
       return adaptor.textContent(svg.styleSheet(html));
     } else {
