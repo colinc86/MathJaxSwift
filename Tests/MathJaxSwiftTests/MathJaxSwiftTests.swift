@@ -8,11 +8,8 @@ final class MathJaxSwiftTests: XCTestCase {
     let url = MathJax.base
     XCTAssertNotNil(url)
     
-    let es5URL = MathJax.es5
-    XCTAssertNotNil(es5URL)
-    
     // Get a URL
-    let texURL = es5URL?.appending(path: "tex-chtml.js")
+    let texURL = url?.appending(components: "es5", "tex-chtml.js")
     XCTAssertNotNil(texURL)
     
     // Load the resource
@@ -27,7 +24,7 @@ final class MathJaxSwiftTests: XCTestCase {
     
     // The package name should not change, so let make sure that it equals
     // mathjax.
-    XCTAssertEqual(package.name, "mathjax")
+    XCTAssertEqual(package.name, "mathjax-full")
     
     // In an attempt to keep this version agnostic, lets only check to make sure
     // that we have something non-empty.
@@ -35,7 +32,7 @@ final class MathJaxSwiftTests: XCTestCase {
   }
   
   func testConvert() async throws {
-    let test = try await MathJax().convert(tex: "Hello, $x^2$!")
+    let emptyOutput = try MathJax().convert(input: "")
     print(test)
   }
   
