@@ -12,24 +12,45 @@ Add the dependency to your package manifest file.
 
 ## Usage
 
-Import the package and use the properties to access the package contents.
+Import the package, create a `MathJax` instance, and convert some TeX.
+
+```swift
+import MathJaxSwift
+
+do {
+  let mathjax = try MathJax()
+  let input = "Hello, $\\TeX{}$!"
+  
+  // Get SVG output
+  let svg = try mathjax.tex2svg(input)
+  
+  // Get HTML output
+  let html = try mathjax.tex2chtml(input)
+  
+  // Get MathML output
+  let mathml = try mathjax.tex2mml(input)
+}
+catch {
+  print("MathJax error: \(error)")
+}
+```
 
 ```swift
 import MathJaxSwift
 
 // The base path
-if let base = MathJaxSwift.base {
+if let base = MathJax.base {
   print(base)
 }
 
 // The es5 path
-if let es5 = MathJaxSwift.es5 {
+if let es5 = MathJax.base?.appending(path: "es5") {
   print(es5)
 }
 
 do {
   // The MathJax npm package's metadata
-  if let package = try MathJaxSwift.package() {
+  if let package = try MathJax.package() {
     print(package.version)
   }
 }
@@ -38,7 +59,7 @@ catch {
 }
 ```
 
-### The `main` File
+### Converting TeX
 
 Use the package metadata and base path to get the URL to the package's `main` file.
 

@@ -40,7 +40,7 @@ public class MathJax {
   
   private let vm = JSVirtualMachine()
   private let context: JSContext
-  private var convertFunction: JSValue!
+  private var tex2svgFunction: JSValue!
   private var conversionQueue = DispatchQueue(label: "mathjax.swift.conversionQueue")
   
   // MARK: Public properties
@@ -64,14 +64,14 @@ public class MathJax {
     // Load the bundle's contents.
     context.evaluateScript(try String(contentsOf: bundleURL))
     
-    // Get a reference to the convert function.
-    convertFunction = context
-      .objectForKeyedSubscript("mjn")
+    // Get a reference to the convert functions.
+    let converter = context
+      .objectForKeyedSubscript("mjn")?
       .objectForKeyedSubscript("Converter")
-      .objectForKeyedSubscript("convert")
+    tex2svgFunction = converter?.objectForKeyedSubscript("tex2svg")
     
     // Make sure we were able to get the convert function
-    guard convertFunction?.isObject == true else {
+    guard tex2svgFunction?.isObject == true else {
       throw MathJaxError.missingFunction
     }
   }
@@ -94,92 +94,139 @@ extension MathJax {
   
 }
 
-// MARK: Public methods
+// MARK: tex2svg methods
 
 extension MathJax {
   
+  public func tex2svg(
+    _ input: String,
+    inline: Bool = false,
+    em: Float = 16,
+    ex: Float = 8,
+    width: Float = 80 * 16,
+    css: Bool = false,
+    styles: Bool = true,
+    container: Bool = false,
+    fontCache: Bool = true,
+    assistiveMml: Bool = false
+  ) async throws -> String {
+    return try await withCheckedThrowingContinuation { [weak self] continuation in
+      guard let self = self else {
+        continuation.resume(throwing: MathJaxError.deallocatedSelf)
+        return
+      }
+      
+      Task {
+        do {
+          if let output = try self.tex2svg(
+            input,
+            inline: inline,
+            em: em,
+            ex: ex,
+            width: width,
+            css: css,
+            styles: styles,
+            container: container,
+            fontCache: fontCache,
+            assistiveMml: assistiveMml
+          ) {
+            continuation.resume(returning: output)
+          }
+          else {
+            continuation.resume(throwing: MathJaxError.conversionUnknownError)
+          }
+        }
+        catch {
+          continuation.resume(throwing: error)
+        }
+      }
+    }
+  }
   
+//  private func tex2svg(
+//    input: String,
+//    inline: Bool = false,
+//    em: Float = 16,
+//    ex: Float = 8,
+//    width: Float = 80 * 16,
+//    css: Bool = false,
+//    styles: Bool = true,
+//    container: Bool = false,
+//    fontCache: Bool = true,
+//    assistiveMml: Bool = false,
+//    completion: @escaping (String?, Error?) -> Void
+//  ) {
+//    conversionQueue.async { [weak self] in
+//      guard let self = self else {
+//        completion(nil, MathJaxError.deallocatedSelf)
+//        return
+//      }
+//
+//      guard let value = self.tex2svgFunction?.call(withArguments: [
+//        input,
+//        inline,
+//        em,
+//        ex,
+//        width,
+//        css,
+//        styles,
+//        container,
+//        fontCache,
+//        assistiveMml
+//      ]) else {
+//        completion(nil, MathJaxError.conversionFailed)
+//        return
+//      }
+//
+//      if let stringValue = value.toString() {
+//        completion(stringValue, nil)
+//      }
+//      else {
+//        completion(nil, MathJaxError.conversionUnknownError)
+//      }
+//    }
+//  }
+  
+  public func tex2svg(
+    _ input: String,
+    inline: Bool = false,
+    em: Float = 16,
+    ex: Float = 8,
+    width: Float = 80 * 16,
+    css: Bool = false,
+    styles: Bool = true,
+    container: Bool = false,
+    fontCache: Bool = true,
+    assistiveMml: Bool = false
+  ) throws -> String? {
+    guard let value = self.tex2svgFunction?.call(withArguments: [
+      input,
+      inline,
+      em,
+      ex,
+      width,
+      css,
+      styles,
+      container,
+      fontCache,
+      assistiveMml
+    ]) else {
+      throw MathJaxError.conversionFailed
+    }
+    
+    if let stringValue = value.toString() {
+      return stringValue
+    }
+    else {
+      throw MathJaxError.conversionUnknownError
+    }
+  }
   
 }
 
 // MARK: Private methods
 
 extension MathJax {
-  
-  private func convert(
-    input: String,
-    inline: Bool = false,
-    em: Float = 16,
-    ex: Float = 8,
-    width: Float = 80 * 16,
-    styles: Bool = true,
-    container: Bool = false,
-    css: Bool = false,
-    fontCache: Bool = true,
-    assistiveMml: Bool = false
-  ) async throws -> String {
-    return try await withCheckedThrowingContinuation({ [weak self] continuation in
-      guard let self = self else {
-        continuation.resume(throwing: MathJaxError.deallocatedSelf)
-        return
-      }
-      self.convert(input: input, inline: inline, em: em, ex: ex, width: width, styles: styles, container: container, css: css, fontCache: fontCache, assistiveMml: assistiveMml) { output, error in
-        if let error = error {
-          continuation.resume(throwing: error)
-        }
-        else if let output = output {
-          continuation.resume(returning: output)
-        }
-        else {
-          continuation.resume(throwing: MathJaxError.conversionUnknownError)
-        }
-      }
-    })
-  }
-  
-  private func convert(
-    input: String,
-    inline: Bool = false,
-    em: Float = 16,
-    ex: Float = 8,
-    width: Float = 80 * 16,
-    styles: Bool = true,
-    container: Bool = false,
-    css: Bool = false,
-    fontCache: Bool = true,
-    assistiveMml: Bool = false,
-    completion: @escaping (String?, Error?) -> Void
-  ) {
-    conversionQueue.async { [weak self] in
-      guard let self = self else {
-        completion(nil, MathJaxError.deallocatedSelf)
-        return
-      }
-      
-      guard let value = self.convertFunction?.call(withArguments: [
-        input,
-        inline,
-        em,
-        ex,
-        width,
-        styles,
-        container,
-        css,
-        fontCache,
-        assistiveMml
-      ]) else {
-        completion(nil, MathJaxError.conversionFailed)
-        return
-      }
-      
-      if let stringValue = value.toString() {
-        completion(stringValue, nil)
-      }
-      else {
-        completion(nil, MathJaxError.conversionUnknownError)
-      }
-    }
-  }
   
   private func handleException(from context: JSContext?, value: JSValue?) {
     guard let value = value else {
