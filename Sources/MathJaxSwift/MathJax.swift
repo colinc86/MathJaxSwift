@@ -77,6 +77,8 @@ public class MathJax {
   private static let mjnModuleName = "mjn"
   private static let converterClassName = "Converter"
   private static let tex2svgFunctionName = "tex2svg"
+  private static let tex2chtmlFunctionName = "tex2chtml"
+  private static let tex2mmlFunctionName = "tex2mml"
   
   private static let mjnBundleFilePath = "dist/mjn.bundle.js"
   private static let packageLockFilePath = "package-lock.json"
@@ -100,6 +102,8 @@ public class MathJax {
   
   /// The TeX to SVG function.
   private var tex2svgFunction: JSValue!
+  private var tex2chtmlFunction: JSValue!
+  private var tex2mmlFunction: JSValue!
 
   // MARK: Public properties
 
@@ -137,9 +141,13 @@ public class MathJax {
     
     // Get a reference to the functions.
     tex2svgFunction = converter?.objectForKeyedSubscript(MathJax.tex2svgFunctionName)
+    tex2chtmlFunction = converter?.objectForKeyedSubscript(MathJax.tex2chtmlFunctionName)
+    tex2mmlFunction = converter?.objectForKeyedSubscript(MathJax.tex2mmlFunctionName)
     
     // Make sure we were able to get the convert function
-    guard tex2svgFunction?.isObject == true else {
+    guard tex2svgFunction?.isObject == true,
+          tex2chtmlFunction?.isObject == true,
+          tex2mmlFunction?.isObject == true else {
       throw MathJaxError.missingFunction
     }
   }
@@ -186,7 +194,7 @@ extension MathJax {
   ///   - container: Include the `<mjx-container>` element.
   ///   - fontCache: Wether or not a local font cache should be used.
   ///   - assistiveMml: Whether to include assistive MathML output.
-  /// - Returns: Contents of an SVG.
+  /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
@@ -240,7 +248,7 @@ extension MathJax {
   ///   - container: Include the `<mjx-container>` element.
   ///   - fontCache: Wether or not a local font cache should be used.
   ///   - assistiveMml: Whether to include assistive MathML output.
-  /// - Returns: Contents of an SVG.
+  /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
@@ -265,6 +273,134 @@ extension MathJax {
       fontCache,
       assistiveMml
     ])
+  }
+  
+}
+
+// MARK: tex2chtml methods
+
+extension MathJax {
+  
+  /// Converts a TeX input string to CHTML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing TeX.
+  ///   - inline: Process the math as inline or not.
+  ///   - em: The em-size in pixels.
+  ///   - ex: The ex-size in pixels.
+  ///   - width: Width of the container in pixels.
+  ///   - css: Output the CSS instead of the SVG.
+  ///   - assistiveMml: Whether to include assistive MathML output.
+  ///   - fontURL: The URL of the font to use.
+  /// - Returns: CHTML formatted output.
+  public func tex2chtml(
+    _ input: String,
+    inline: Bool = false,
+    em: Float = 16,
+    ex: Float = 8,
+    width: Float = 80 * 16,
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    fontURL: URL = URL(string: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2")!
+  ) async throws -> String {
+    return try await withCheckedThrowingContinuation { [weak self] continuation in
+      guard let self = self else {
+        continuation.resume(throwing: MathJaxError.deallocatedSelf)
+        return
+      }
+      
+      Task {
+        do {
+          continuation.resume(returning: try self.tex2chtml(
+            input,
+            inline: inline,
+            em: em,
+            ex: ex,
+            width: width,
+            css: css,
+            assistiveMml: assistiveMml,
+            fontURL: fontURL
+          ))
+        }
+        catch {
+          continuation.resume(throwing: error)
+        }
+      }
+    }
+  }
+  
+  /// Converts a TeX input string to CHTML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing TeX.
+  ///   - inline: Process the math as inline or not.
+  ///   - em: The em-size in pixels.
+  ///   - ex: The ex-size in pixels.
+  ///   - width: Width of the container in pixels.
+  ///   - css: Output the CSS instead of the SVG.
+  ///   - assistiveMml: Whether to include assistive MathML output.
+  ///   - fontURL: The URL of the font to use.
+  /// - Returns: CHTML formatted output.
+  public func tex2chtml(
+    _ input: String,
+    inline: Bool = false,
+    em: Float = 16,
+    ex: Float = 8,
+    width: Float = 80 * 16,
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    fontURL: URL = URL(string: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2")!
+  ) throws -> String {
+    return try callFunction(tex2chtmlFunction, with: [
+      input,
+      inline,
+      em,
+      ex,
+      width,
+      css,
+      assistiveMml,
+      fontURL
+    ])
+  }
+  
+}
+
+// MARK: tex2mml methods
+
+extension MathJax {
+  
+  /// Converts a TeX input string to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing TeX.
+  ///   - inline: Process the math as inline or not.
+  /// - Returns: MathML formatted output.
+  public func tex2mml(_ input: String, inline: Bool = false) async throws -> String {
+    return try await withCheckedThrowingContinuation { [weak self] continuation in
+      guard let self = self else {
+        continuation.resume(throwing: MathJaxError.deallocatedSelf)
+        return
+      }
+      
+      Task {
+        do {
+          continuation.resume(returning: try self.tex2mml(input, inline: inline))
+        }
+        catch {
+          continuation.resume(throwing: error)
+        }
+      }
+    }
+  }
+  
+  /// Converts a TeX input string to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing TeX.
+  ///   - inline: Process the math as inline or not.
+  /// - Returns: MathML formatted output.
+  public func tex2mml(_ input: String, inline: Bool = false) throws -> String {
+    return try callFunction(tex2mmlFunction, with: [input, inline])
   }
   
 }

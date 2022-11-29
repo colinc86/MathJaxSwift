@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-A SPM wrapper for the [MathJax](https://github.com/mathjax/MathJax) repository.
+A SPM wrapper for the [MathJax](https://github.com/mathjax/MathJax) package.
 
 ## Installation
 
@@ -19,7 +19,7 @@ import MathJaxSwift
 
 do {
   let mathjax = try MathJax()
-  let input = "Hello, $\\TeX{}$!"
+  let input = "Hello, \\TeX{}!"
   
   // Get SVG output
   let svg = try mathjax.tex2svg(input)
@@ -51,6 +51,6 @@ catch {
 
 ### Notes
 
-`MathJaxSwift` wraps the MathJax TeX conversion process in convenient methods (described here)[https://github.com/mathjax/MathJax-demos-node/tree/master/direct] and exposes them to Swift through the `JavaScriptCore` framework. 
+`MathJaxSwift` wraps the MathJax TeX conversion process in convenient JS methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
-To get around the limitations of the `JSContext` class, the package uses (Webpack)[https://webpack.js.org] to create a bundle file that can be evaluated by the context.
+To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create a bundle file that can be evaluated by the context.

@@ -22,6 +22,11 @@ let package = Package(
       ]),
     .testTarget(
       name: "MathJaxSwiftTests",
-      dependencies: ["MathJaxSwift"]),
+      dependencies: ["MathJaxSwift"],
+      resources: [
+        .copy("Resources/tex2svg.svg"),
+        .copy("Resources/tex2chtml.html"),
+        .copy("Resources/tex2mml.xml")
+      ]),
   ]
 )
