@@ -73,11 +73,11 @@ public final class MathJax {
   
   // MARK: Public static properties
   
-  /// The default `em` method parameter value.
-  public static let defaultEMValue: Float = 16
+  /// The default `fontSize` method parameter value.
+  public static let defaultFontSize: Float = 16
   
   /// The default `ex` method parameter value.
-  public static let defaultEXValue: Float = 8
+  public static let defaultFontHeight: Float = 8
   
   /// The default `width` method parameter value.
   public static let defaultWidthValue: Float = 80 * 16
@@ -218,8 +218,8 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
-  ///   - em: The em-size in pixels.
-  ///   - ex: The ex-size in pixels.
+  ///   - fontSize: The font size in pixels.
+  ///   - fontHeight: The font height in pixels.
   ///   - width: Width of the container in pixels.
   ///   - css: Output the CSS instead of the SVG.
   ///   - styles: Include CSS styles for the image.
@@ -230,8 +230,8 @@ extension MathJax {
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
-    em: Float = defaultEMValue,
-    ex: Float = defaultEXValue,
+    fontSize: Float = defaultFontSize,
+    fontHeight: Float = defaultFontHeight,
     width: Float = defaultWidthValue,
     css: Bool = false,
     styles: Bool = true,
@@ -250,8 +250,8 @@ extension MathJax {
           continuation.resume(returning: try self.tex2svg(
             input,
             inline: inline,
-            em: em,
-            ex: ex,
+            fontSize: fontSize,
+            fontHeight: fontHeight,
             width: width,
             css: css,
             styles: styles,
@@ -272,7 +272,7 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
-  ///   - em: The em-size in pixels.
+  ///   - fontSize: The font size in pixels.
   ///   - ex: The ex-size in pixels.
   ///   - width: Width of the container in pixels.
   ///   - css: Output the CSS instead of the SVG.
@@ -284,8 +284,8 @@ extension MathJax {
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
-    em: Float = defaultEMValue,
-    ex: Float = defaultEXValue,
+    fontSize: Float = defaultFontSize,
+    fontHeight: Float = defaultFontHeight,
     width: Float = defaultWidthValue,
     css: Bool = false,
     styles: Bool = true,
@@ -296,8 +296,8 @@ extension MathJax {
     return try callFunction(tex2svgFunction, with: [
       input,
       inline,
-      em,
-      ex,
+      fontSize,
+      fontHeight,
       width,
       css,
       styles,
@@ -318,7 +318,7 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
-  ///   - em: The em-size in pixels.
+  ///   - fontSize: The font size in pixels.
   ///   - ex: The ex-size in pixels.
   ///   - width: Width of the container in pixels.
   ///   - css: Output the CSS instead of the SVG.
@@ -328,8 +328,8 @@ extension MathJax {
   public func tex2chtml(
     _ input: String,
     inline: Bool = false,
-    em: Float = defaultEMValue,
-    ex: Float = defaultEXValue,
+    fontSize: Float = defaultFontSize,
+    fontHeight: Float = defaultFontHeight,
     width: Float = defaultWidthValue,
     css: Bool = false,
     assistiveMml: Bool = false,
@@ -346,8 +346,8 @@ extension MathJax {
           continuation.resume(returning: try self.tex2chtml(
             input,
             inline: inline,
-            em: em,
-            ex: ex,
+            fontSize: fontSize,
+            fontHeight: fontHeight,
             width: width,
             css: css,
             assistiveMml: assistiveMml,
@@ -366,7 +366,7 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
-  ///   - em: The em-size in pixels.
+  ///   - fontSize: The font size in pixels.
   ///   - ex: The ex-size in pixels.
   ///   - width: Width of the container in pixels.
   ///   - css: Output the CSS instead of the SVG.
@@ -376,8 +376,8 @@ extension MathJax {
   public func tex2chtml(
     _ input: String,
     inline: Bool = false,
-    em: Float = defaultEMValue,
-    ex: Float = defaultEXValue,
+    fontSize: Float = defaultFontSize,
+    fontHeight: Float = defaultFontHeight,
     width: Float = defaultWidthValue,
     css: Bool = false,
     assistiveMml: Bool = false,
@@ -386,8 +386,8 @@ extension MathJax {
     return try callFunction(tex2chtmlFunction, with: [
       input,
       inline,
-      em,
-      ex,
+      fontSize,
+      fontHeight,
       width,
       css,
       assistiveMml,
