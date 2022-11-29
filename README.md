@@ -1,6 +1,8 @@
 # MathJaxSwift
 
-A SPM wrapper for the [MathJax](https://github.com/mathjax/MathJax) package.
+[![Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
+
+A Swift wrapper for the [MathJax](https://github.com/mathjax/MathJax) component library.
 
 ## Installation
 
