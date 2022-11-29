@@ -1,5 +1,5 @@
 //
-//  MathJaxSwift.swift
+//  MathJax.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/26/22.
@@ -24,47 +24,71 @@ public class MathJax {
   // MARK: Types
   
   /// An error thrown by the `MathJax` package.
-  public enum MathJaxError: Error {
-    
-    /// The npm package file was missing.
+  public enum MathJaxError: Error, CustomStringConvertible {
     case missingPackageFile
-
-    /// The package-lock file's dependency information is missing for the 
-    // mathjax-full module.
     case missingDependencyInformation
-    
-    /// Unable to create the JS context.
     case missingJSContext
-    
-    /// The package is missing the bundled JS file.
     case missingBundle
-    
-    /// The conversion function could not be found in the bundled JS class.
     case missingFunction
-    
-    /// The MathJax instance was deallocated.
     case deallocatedSelf
-    
-    /// The instance failed to convert the input string.
     case conversionFailed
-    
-    /// An unknown error occurred during conversion.
     case conversionUnknownError
-
-    /// The returned format was invalid.
     case conversionInvalidFormat
+    
+    public var description: String {
+      switch self {
+      case .missingPackageFile: return "The npm package-lock file was missing or is inaccessable."
+      case .missingDependencyInformation: return "The mathjax-full dependency metadata was missing."
+      case .missingJSContext: return "The required JavaScript context could not be created."
+      case .missingBundle: return "The bundled JavaScript file was missing or is inaccessable."
+      case .missingFunction: return "The conversion function was missing from the JavaScript bundle."
+      case .deallocatedSelf: return "An internal error occurred."
+      case .conversionFailed: return "The function failed to convert the input string."
+      case .conversionUnknownError: return "The conversion failed for an unknown reason."
+      case .conversionInvalidFormat: return "The output format was invalid."
+      }
+    }
+  }
+  
+  /// The npm `mathjax-full` metadata.
+  public struct Metadata: Codable {
+    
+    /// The version of the module.
+    let version: String
+    
+    /// The URL of the module.
+    let resolved: URL
+    
+    /// The module's SHA-512.
+    let integrity: String
+  }
+  
+  /// NPM package-lock.json metadata for extracting the mathjax-full version
+  /// string.
+  internal struct PackageLock: Codable {
+    
+    /// The package-lock file's dependencies.
+    let dependencies: [String: Metadata]
   }
   
   // MARK: Private static properties
   
+  private static let mathJaxModuleName = "mathjax-full"
+  private static let mjnModuleName = "mjn"
+  private static let converterClassName = "Converter"
+  private static let tex2svgFunctionName = "tex2svg"
+  
+  private static let mjnBundleFilePath = "dist/mjn.bundle.js"
+  private static let packageLockFilePath = "package-lock.json"
+  
   /// The URL of the mjn top-level directory.
-  private static let mjn = Bundle.module.url(forResource: "mjn", withExtension: nil)
+  private static let mjn = Bundle.module.url(forResource: mjnModuleName, withExtension: nil)
   
   /// The URL of the JS bundle file.
-  private static let bundle = mjn?.appending(components: "dist", "mjn.bundle.js")
+  private static let bundle = mjn?.appending(path: mjnBundleFilePath)
   
   /// The URL of the mjn package-lock.json file.
-  private static let packageLock = mjn?.appending(path: "package-lock.json")
+  private static let packageLock = mjn?.appending(path: packageLockFilePath)
   
   // MARK: Private properties
   
@@ -85,6 +109,8 @@ public class MathJax {
   // MARK: Initializers
   
   /// Initializes a new `MathJax` instance.
+  ///
+  /// - Parameter delegate: The MathJax delegate to receive exceptions.
   public init(delegate: MathJaxDelegate? = nil) throws {
     self.delegate = delegate
 
@@ -104,11 +130,13 @@ public class MathJax {
     // Load the bundle's contents.
     context.evaluateScript(try String(contentsOf: bundleURL))
     
-    // Get a reference to the convert functions.
+    // Get a reference to the converter.
     let converter = context
-      .objectForKeyedSubscript("mjn")?
-      .objectForKeyedSubscript("Converter")
-    tex2svgFunction = converter?.objectForKeyedSubscript("tex2svg")
+      .objectForKeyedSubscript(MathJax.mjnModuleName)?
+      .objectForKeyedSubscript(MathJax.converterClassName)
+    
+    // Get a reference to the functions.
+    tex2svgFunction = converter?.objectForKeyedSubscript(MathJax.tex2svgFunctionName)
     
     // Make sure we were able to get the convert function
     guard tex2svgFunction?.isObject == true else {
@@ -122,15 +150,18 @@ public class MathJax {
 
 extension MathJax {
   
-  /// The MathJax npm package metadata.
-  public static func package() throws -> NPMPackage.Dependency {
+  /// The MathJax npm module metadata.
+  ///
+  /// - Returns: An npm package metadata structure containing version, URL, and
+  ///   hash information about the `mathjax-full` module.
+  public static func metadata() throws -> Metadata {
     guard let packageLockURL = packageLock else {
       throw MathJaxError.missingPackageFile
     }
     let package = try JSONDecoder().decode(
-      NPMPackage.self,
-      from: try Data(contentsOf: packageURL))
-    guard let dependency = package.dependencies.first(where: { $0.name == "mathjax-full" }) else {
+      PackageLock.self,
+      from: try Data(contentsOf: packageLockURL))
+    guard let dependency = package.dependencies[MathJax.mathJaxModuleName] else {
       throw MathJaxError.missingDependencyInformation
     }
     return dependency

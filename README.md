@@ -35,42 +35,22 @@ catch {
 }
 ```
 
-```swift
-import MathJaxSwift
+Each of the conversion methods are also available with `async` implementations.
 
-// The base path
-if let base = MathJax.base {
-  print(base)
-}
-
-// The es5 path
-if let es5 = MathJax.base?.appending(path: "es5") {
-  print(es5)
-}
-
-do {
-  // The MathJax npm package's metadata
-  if let package = try MathJax.package() {
-    print(package.version)
-  }
-}
-catch {
-  print("Error getting package metadata: \(error)")
-}
-```
-
-### Converting TeX
-
-Use the package metadata and base path to get the URL to the package's `main` file.
+To check the `mathjax-full` npm module's package information that the Swift package is using, use the static `metadata() throws` method.
 
 ```swift
 do {
-  let package = try MathJaxSwift.package()
-  if let main = MathJaxSwift.base?.appending(path: package.main) {
-    print(main)
-  }
+  let metadata = try MathJax.metadata()
+  print(metadata.version)
 }
 catch {
-  print("Error getting package metadata: \(error)")
+  print("Error getting MathJax version: \(error)") 
 }
 ```
+
+### Notes
+
+`MathJaxSwift` wraps the MathJax TeX conversion process in convenient methods (described here)[https://github.com/mathjax/MathJax-demos-node/tree/master/direct] and exposes them to Swift through the `JavaScriptCore` framework. 
+
+To get around the limitations of the `JSContext` class, the package uses (Webpack)[https://webpack.js.org] to create a bundle file that can be evaluated by the context.
