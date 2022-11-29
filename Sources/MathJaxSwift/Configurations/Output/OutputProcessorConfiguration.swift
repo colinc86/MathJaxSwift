@@ -1,5 +1,5 @@
 //
-//  CommonOutputProcessorConfiguration.swift
+//  OutputProcessorConfiguration.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CommonOutputProcessorConfiguration: Codable {
+public class OutputProcessorConfiguration: Codable {
   
   // MARK: Types
   
@@ -214,7 +214,7 @@ public class CommonOutputProcessorConfiguration: Codable {
 
 // MARK: Public methods
 
-extension CommonOutputProcessorConfiguration {
+extension OutputProcessorConfiguration {
   
   /// Gets a JSON representation of the receiver.
   ///

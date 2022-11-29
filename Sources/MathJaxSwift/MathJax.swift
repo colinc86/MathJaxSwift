@@ -82,8 +82,11 @@ public final class MathJax {
   /// The default `width` method parameter value.
   public static let defaultWidthValue: Float = 80 * 16
   
-  /// The default `fontURL` method parameter value.
-  public static let defaultFontURLValue: URL = URL(string: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2")!
+  /// The default `configuration` parameter value for the `tex2svg` method.
+  public static let defaultSVGOutputProcessorConfiguration: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration()
+  
+  /// The default `configuration` parameter value for the `tex2chtml` method.
+  public static let defaultCHTMLOutputProcessorConfiguration: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration()
   
   // MARK: Private static properties
   
@@ -224,8 +227,8 @@ extension MathJax {
   ///   - css: Output the CSS instead of the SVG.
   ///   - styles: Include CSS styles for the image.
   ///   - container: Include the `<mjx-container>` element.
-  ///   - fontCache: Wether or not a local font cache should be used.
   ///   - assistiveMml: Whether to include assistive MathML output.
+  ///   - outputConfig: The SVG output processor configuration.
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
@@ -236,8 +239,8 @@ extension MathJax {
     css: Bool = false,
     styles: Bool = true,
     container: Bool = false,
-    fontCache: Bool = true,
-    assistiveMml: Bool = false
+    assistiveMml: Bool = false,
+    outputConfig: SVGOutputProcessorConfiguration = defaultSVGOutputProcessorConfiguration
   ) async throws -> String {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {
@@ -256,8 +259,8 @@ extension MathJax {
             css: css,
             styles: styles,
             container: container,
-            fontCache: fontCache,
-            assistiveMml: assistiveMml
+            assistiveMml: assistiveMml,
+            outputConfig: outputConfig
           ))
         }
         catch {
@@ -278,8 +281,8 @@ extension MathJax {
   ///   - css: Output the CSS instead of the SVG.
   ///   - styles: Include CSS styles for the image.
   ///   - container: Include the `<mjx-container>` element.
-  ///   - fontCache: Wether or not a local font cache should be used.
   ///   - assistiveMml: Whether to include assistive MathML output.
+  ///   - outputConfig: The SVG output processor configuration.
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
@@ -290,8 +293,8 @@ extension MathJax {
     css: Bool = false,
     styles: Bool = true,
     container: Bool = false,
-    fontCache: Bool = true,
-    assistiveMml: Bool = false
+    assistiveMml: Bool = false,
+    outputConfig: SVGOutputProcessorConfiguration = defaultSVGOutputProcessorConfiguration
   ) throws -> String {
     return try callFunction(tex2svgFunction, with: [
       input,
@@ -302,8 +305,8 @@ extension MathJax {
       css,
       styles,
       container,
-      fontCache,
-      assistiveMml
+      assistiveMml,
+      try outputConfig.json()
     ])
   }
   
@@ -323,7 +326,7 @@ extension MathJax {
   ///   - width: Width of the container in pixels.
   ///   - css: Output the CSS instead of the SVG.
   ///   - assistiveMml: Whether to include assistive MathML output.
-  ///   - fontURL: The URL of the font to use.
+  ///   - outputConfig: The CHTML output processor configuration.
   /// - Returns: CHTML formatted output.
   public func tex2chtml(
     _ input: String,
@@ -333,7 +336,7 @@ extension MathJax {
     width: Float = defaultWidthValue,
     css: Bool = false,
     assistiveMml: Bool = false,
-    fontURL: URL = defaultFontURLValue
+    outputConfig: CHTMLOutputProcessorConfiguration = defaultCHTMLOutputProcessorConfiguration
   ) async throws -> String {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {
@@ -351,7 +354,7 @@ extension MathJax {
             width: width,
             css: css,
             assistiveMml: assistiveMml,
-            fontURL: fontURL
+            outputConfig: outputConfig
           ))
         }
         catch {
@@ -371,7 +374,7 @@ extension MathJax {
   ///   - width: Width of the container in pixels.
   ///   - css: Output the CSS instead of the SVG.
   ///   - assistiveMml: Whether to include assistive MathML output.
-  ///   - fontURL: The URL of the font to use.
+  ///   - outputConfig: The CHTML output processor configuration.
   /// - Returns: CHTML formatted output.
   public func tex2chtml(
     _ input: String,
@@ -381,7 +384,7 @@ extension MathJax {
     width: Float = defaultWidthValue,
     css: Bool = false,
     assistiveMml: Bool = false,
-    fontURL: URL = defaultFontURLValue
+    outputConfig: CHTMLOutputProcessorConfiguration = defaultCHTMLOutputProcessorConfiguration
   ) throws -> String {
     return try callFunction(tex2chtmlFunction, with: [
       input,
@@ -391,7 +394,7 @@ extension MathJax {
       width,
       css,
       assistiveMml,
-      fontURL
+      try outputConfig.json()
     ])
   }
   

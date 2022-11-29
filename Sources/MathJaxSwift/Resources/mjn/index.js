@@ -27,18 +27,13 @@ const CSS = [
 
 export class Converter {
   
-  static tex2svg(input, inline = false, em = 16, ex = 8, width = 80 * 16, css = false, styles = true, container = false, fontCache = true, assistiveMml = false) {
-    //  Create DOM adaptor and register it for HTML documents
+  static tex2svg(input, inline, em, ex, width, css, styles, container, assistiveMml, svgConfig) {
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
     if (assistiveMml) AssistiveMmlHandler(handler);
-    
-    //  Create input and output jax and a document using them on the content from the HTML file
     const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    const svg = new SVG({fontCache: (fontCache ? 'local' : 'none')});
+    const svg = new SVG(JSON.parse(svgConfig));
     const html = mathjax.document('', {InputJax: tex, OutputJax: svg});
-    
-    //  Typeset the math from the command line
     const node = html.convert(input || '', {
       display: !inline,
       em: em,
@@ -46,7 +41,6 @@ export class Converter {
       containerWidth: width
     });
     
-    // Typeset the math and output the HTML
     if (css) {
       return adaptor.textContent(svg.styleSheet(html));
     } else {
@@ -55,27 +49,20 @@ export class Converter {
     }
   }
   
-  static tex2chtml(input, inline = false, em = 16, ex = 8, width = 80 * 16, css = false, assistiveMml = false, fontURL = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2') {
-    //  Create DOM adaptor and register it for HTML documents
+  static tex2chtml(input, inline, em, ex, width, css, assistiveMml, chtmlConfig) {
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
     if (assistiveMml) AssistiveMmlHandler(handler);
-    
-    //  Create input and output jax and a document using them on the content from the HTML file
     const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    const chtml = new CHTML({fontURL: fontURL});
+    const chtml = new CHTML(JSON.parse(chtmlConfig));
     const html = mathjax.document('', {InputJax: tex, OutputJax: chtml});
-    
-    //  Typeset the math from the command line
     const node = html.convert(input || '', {
       display: !inline,
       em: em,
       ex: ex,
       containerWidth: width
     });
-    
-    //  If the --css option was specified, output the CSS,
-    //  Otherwise, typeset the math and output the HTML
+
     if (css) {
       return adaptor.textContent(chtml.styleSheet(html));
     } else {
@@ -83,18 +70,11 @@ export class Converter {
     }
   }
   
-  static tex2mml(input, inline = false) {
-    //  Create the input jax
+  static tex2mml(input, inline) {
     const tex = new TeX({packages: FILTERED_PACKAGES.split(/\s*,\s*/)});
-    
-    //  Create an HTML document using a LiteDocument and the input jax
     const html = new HTMLDocument('', liteAdaptor(), {InputJax: tex});
-    
-    //  Create a MathML serializer
     const visitor = new SerializedMmlVisitor();
     const toMathML = (node => visitor.visitTree(node, html));
-    
-    //  Convert the math from the command line to serialzied MathML
     return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
   }
   
