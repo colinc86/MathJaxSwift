@@ -115,10 +115,10 @@ public final class MathJax {
   private static let mjn = Bundle.module.url(forResource: mjnModuleName, withExtension: nil)
   
   /// The URL of the JS bundle file.
-  private static let bundle = mjn?.appending(path: mjnBundleFilePath)
+  private static let bundle = mjn?.appendingPathComponent(mjnBundleFilePath)
   
   /// The URL of the mjn package-lock.json file.
-  private static let packageLock = mjn?.appending(path: packageLockFilePath)
+  private static let packageLock = mjn?.appendingPathComponent(packageLockFilePath)
   
   // MARK: Private properties
   
@@ -159,7 +159,7 @@ public final class MathJax {
     
     // Get the bundle path and make sure it exists.
     guard let bundleURL = MathJax.bundle,
-          FileManager.default.fileExists(atPath: bundleURL.path()) else {
+          FileManager.default.fileExists(atPath: bundleURL.path) else {
       throw MathJaxError.missingBundle
     }
     
