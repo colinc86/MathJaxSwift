@@ -19,7 +19,7 @@ public protocol MathJaxDelegate: AnyObject {
 
 /// A class that exposes the `tex2svg`, `tex2chtml`, and `tex2mml` MathJax 
 /// methods.
-public class MathJax {
+public final class MathJax {
   
   // MARK: Types
   
@@ -71,16 +71,44 @@ public class MathJax {
     let dependencies: [String: Metadata]
   }
   
+  // MARK: Public static properties
+  
+  /// The default `em` method parameter value.
+  public static let defaultEMValue: Float = 16
+  
+  /// The default `ex` method parameter value.
+  public static let defaultEXValue: Float = 8
+  
+  /// The default `width` method parameter value.
+  public static let defaultWidthValue: Float = 80 * 16
+  
+  /// The default `fontURL` method parameter value.
+  public static let defaultFontURLValue: URL = URL(string: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2")!
+  
   // MARK: Private static properties
   
+  /// The name of the MathJax npm module.
   private static let mathJaxModuleName = "mathjax-full"
+  
+  /// The name of the mjn npm module.
   private static let mjnModuleName = "mjn"
+  
+  /// The name of the converter JS class.
   private static let converterClassName = "Converter"
+  
+  /// The name of the tex2svg function.
   private static let tex2svgFunctionName = "tex2svg"
+  
+  /// The name of the tex2chtml function.
   private static let tex2chtmlFunctionName = "tex2chtml"
+  
+  /// The name of the tex2mml function.
   private static let tex2mmlFunctionName = "tex2mml"
   
+  /// The path to the mjn JS bundle.
   private static let mjnBundleFilePath = "dist/mjn.bundle.js"
+  
+  /// The path to the mjn package-lock.json file.
   private static let packageLockFilePath = "package-lock.json"
   
   /// The URL of the mjn top-level directory.
@@ -102,7 +130,11 @@ public class MathJax {
   
   /// The TeX to SVG function.
   private var tex2svgFunction: JSValue!
+  
+  /// The TeX to CHTML function.
   private var tex2chtmlFunction: JSValue!
+  
+  /// The TeX to MML function.
   private var tex2mmlFunction: JSValue!
 
   // MARK: Public properties
@@ -198,9 +230,9 @@ extension MathJax {
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
-    em: Float = 16,
-    ex: Float = 8,
-    width: Float = 80 * 16,
+    em: Float = defaultEMValue,
+    ex: Float = defaultEXValue,
+    width: Float = defaultWidthValue,
     css: Bool = false,
     styles: Bool = true,
     container: Bool = false,
@@ -252,9 +284,9 @@ extension MathJax {
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
-    em: Float = 16,
-    ex: Float = 8,
-    width: Float = 80 * 16,
+    em: Float = defaultEMValue,
+    ex: Float = defaultEXValue,
+    width: Float = defaultWidthValue,
     css: Bool = false,
     styles: Bool = true,
     container: Bool = false,
@@ -296,12 +328,12 @@ extension MathJax {
   public func tex2chtml(
     _ input: String,
     inline: Bool = false,
-    em: Float = 16,
-    ex: Float = 8,
-    width: Float = 80 * 16,
+    em: Float = defaultEMValue,
+    ex: Float = defaultEXValue,
+    width: Float = defaultWidthValue,
     css: Bool = false,
     assistiveMml: Bool = false,
-    fontURL: URL = URL(string: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2")!
+    fontURL: URL = defaultFontURLValue
   ) async throws -> String {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {
@@ -344,12 +376,12 @@ extension MathJax {
   public func tex2chtml(
     _ input: String,
     inline: Bool = false,
-    em: Float = 16,
-    ex: Float = 8,
-    width: Float = 80 * 16,
+    em: Float = defaultEMValue,
+    ex: Float = defaultEXValue,
+    width: Float = defaultWidthValue,
     css: Bool = false,
     assistiveMml: Bool = false,
-    fontURL: URL = URL(string: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2")!
+    fontURL: URL = defaultFontURLValue
   ) throws -> String {
     return try callFunction(tex2chtmlFunction, with: [
       input,

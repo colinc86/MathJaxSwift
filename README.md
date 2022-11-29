@@ -53,4 +53,4 @@ catch {
 
 `MathJaxSwift` wraps the MathJax TeX conversion process in convenient JS methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
-To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create a bundle file that can be evaluated by the context.
+To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create a bundle file that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. After making modifications to `index.js`, it should be rebuilt with `npm run build` which will create the `mjn.bundle.js` file.
