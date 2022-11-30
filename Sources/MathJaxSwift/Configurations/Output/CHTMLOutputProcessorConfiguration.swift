@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CHTMLOutputProcessorConfiguration: CommonOutputProcessorConfiguration {
+public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
   
   // MARK: Types
   

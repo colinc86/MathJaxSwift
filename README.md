@@ -24,7 +24,7 @@ do {
   let input = "Hello, \\TeX{}!"
   
   // Get SVG output
-  let svg = try mathjax.tex2svg(input)
+  let svg = try mathjax.tex2svg("Hello, \\TeX{}!")
   
   // Get HTML output
   let html = try mathjax.tex2chtml(input)
@@ -36,6 +36,14 @@ catch {
   print("MathJax error: \(error)")
 }
 ```
+
+- [x] `tex2svg`
+- [x] `tex2chtml`
+- [x] `tex2mml`
+- [ ] `am2chtml`
+- [ ] `am2mml`
+- [ ] `mml2svg`
+- [ ] `mml2chtml`
 
 Each of the conversion methods are also available with `async` implementations.
 

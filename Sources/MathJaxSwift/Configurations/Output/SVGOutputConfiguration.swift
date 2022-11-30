@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SVGOutputProcessorConfiguration: CommonOutputProcessorConfiguration {
+public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
   
   // MARK: Types
   

@@ -44,7 +44,7 @@ public class CHTMLContainerConfiguration: Codable {
   
   // MARK: Initializers
   
-  init(
+  public init(
     em: Float = defaultEm,
     ex: Float = defaultEx,
     width: Float = defaultWidth,

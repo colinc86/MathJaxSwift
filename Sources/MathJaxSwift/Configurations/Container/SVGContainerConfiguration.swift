@@ -31,7 +31,7 @@ public class SVGContainerConfiguration: CHTMLContainerConfiguration {
   
   // MARK: Initializers
   
-  init(
+  public init(
     styles: Bool = defaultStyles,
     container: Bool = defaultContainer,
     em: Float = defaultEm,

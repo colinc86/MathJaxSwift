@@ -25,9 +25,9 @@ let package = Package(
       name: "MathJaxSwiftTests",
       dependencies: ["MathJaxSwift"],
       resources: [
-        .copy("Resources/tex2svg.svg"),
-        .copy("Resources/tex2chtml.html"),
-        .copy("Resources/tex2mml.xml")
+        .copy("Resources/testSVG.svg"),
+        .copy("Resources/testCHTML.html"),
+        .copy("Resources/testMML.xml")
       ]),
   ]
 )

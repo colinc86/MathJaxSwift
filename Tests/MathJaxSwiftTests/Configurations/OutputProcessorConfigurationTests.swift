@@ -1,8 +1,18 @@
-//
-//  File.swift
-//  
-//
-//  Created by Colin Campbell on 11/29/22.
-//
+import XCTest
+@testable import MathJaxSwift
 
-import Foundation
+final class OutputProcessorConfigurationTests: XCTestCase {
+  
+  func testCHTMLOutputJSON() throws {
+    let json = try CHTMLOutputProcessorConfiguration().json()
+    XCTAssertNoThrow(json)
+    XCTAssertFalse(json.isEmpty)
+  }
+  
+  func testSVGOutputJSON() throws {
+    let json = try SVGOutputProcessorConfiguration().json()
+    XCTAssertNoThrow(json)
+    XCTAssertFalse(json.isEmpty)
+  }
+  
+}
