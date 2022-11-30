@@ -9,13 +9,6 @@ import Foundation
 
 public class SVGContainerConfiguration: CHTMLContainerConfiguration {
   
-  // MARK: Types
-  
-  private enum CodingKeys: CodingKey {
-    case styles
-    case container
-  }
-  
   // MARK: Default values
   
   public static let defaultStyles: Bool = true
@@ -48,13 +41,6 @@ public class SVGContainerConfiguration: CHTMLContainerConfiguration {
       width: width,
       css: css,
       assistiveMml: assistiveMml)
-  }
-  
-  public required init(from decoder: Decoder) throws {
-    let jsonContainer = try decoder.container(keyedBy: CodingKeys.self)
-    styles = try jsonContainer.decode(Bool.self, forKey: .styles)
-    container = try jsonContainer.decode(Bool.self, forKey: .container)
-    try super.init(from: decoder)
   }
   
 }

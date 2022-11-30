@@ -9,14 +9,6 @@ import Foundation
 
 public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
   
-  // MARK: Types
-  
-  private enum CodingKeys: CodingKey {
-    case matchFontHeight
-    case fontURL
-    case adaptiveCSS
-  }
-  
   // MARK: Default values
   
   public static let defaultMatchFontHeight: Bool = true
@@ -100,14 +92,6 @@ public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
-  }
-  
-  required init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-    matchFontHeight = try container.decode(Bool.self, forKey: .matchFontHeight)
-    fontURL = try container.decode(URL.self, forKey: .fontURL)
-    adaptiveCSS = try container.decode(Bool.self, forKey: .adaptiveCSS)
-    try super.init(from: decoder)
   }
   
 }

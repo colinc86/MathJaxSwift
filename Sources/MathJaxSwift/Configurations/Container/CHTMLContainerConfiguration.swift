@@ -9,7 +9,7 @@ import Foundation
 
 public typealias ContainerConfiguration = CHTMLContainerConfiguration
 
-public class CHTMLContainerConfiguration: Codable {
+public class CHTMLContainerConfiguration: Encodable {
   
   // MARK: Types
   
