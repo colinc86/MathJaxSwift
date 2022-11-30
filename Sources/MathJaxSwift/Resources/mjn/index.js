@@ -33,34 +33,17 @@ const CSS = [
 export class Converter {
   
   /**
-   * Converts a TeX input string to HTML.
+   * Converts a TeX input string to CommonHTML.
    *
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
-   * @param {object} containerConfig The HTML container configuration.
-   * @param {object} chtmlConfig The HTML output configuration.
-   * @return {string} The HTML formatted data.
+   * @param {object} containerConfig The CommonHTML container configuration.
+   * @param {object} chtmlConfig The CommonHTML output configuration.
+   * @return {string} The CommonHTML formatted string.
    */
   static tex2chtml(input, inline, containerConfig, chtmlConfig) {
-    const chtmlContainer = JSON.parse(containerConfig);
-    const adaptor = liteAdaptor();
-    const handler = RegisterHTMLHandler(adaptor);
-    if (chtmlContainer.assistiveMml) AssistiveMmlHandler(handler);
     const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    const chtml = new CHTML(JSON.parse(chtmlConfig));
-    const html = mathjax.document('', {InputJax: tex, OutputJax: chtml});
-    const node = html.convert(input || '', {
-      display: !inline,
-      em: chtmlContainer.em,
-      ex: chtmlContainer.ex,
-      containerWidth: chtmlContainer.width
-    });
-    
-    if (chtmlContainer.css) {
-      return adaptor.textContent(chtml.styleSheet(html));
-    } else {
-      return adaptor.outerHTML(node);
-    }
+    return Converter.createCHTML(input, tex, inline, containerConfig, chtmlConfig);
   }
   
   /**
@@ -70,10 +53,11 @@ export class Converter {
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
    * @param {object} containerConfig The SVG container configuration.
    * @param {object} svgConfig The SVG output configuration.
-   * @return {string} The SVG formatted data.
+   * @return {string} The SVG formatted string.
    */
   static tex2svg(input, inline, containerConfig, svgConfig) {
-    return Converter.createSVG(input, 'tex', inline, containerConfig, svgConfig);
+    const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
+    return Converter.createSVG(input, tex, inline, containerConfig, svgConfig);
   }
   
   /**
@@ -81,45 +65,25 @@ export class Converter {
    *
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
-   * @return {string} The MathML formatted data.
+   * @return {string} The MathML formatted string.
    */
   static tex2mml(input, inline) {
     const tex = new TeX({packages: FILTERED_PACKAGES.split(/\s*,\s*/)});
-    const html = new HTMLDocument('', liteAdaptor(), {InputJax: tex});
-    const visitor = new SerializedMmlVisitor();
-    const toMathML = (node => visitor.visitTree(node, html));
-    return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
+    return Converter.createMML(input, tex, inline);
   }
   
   /**
-   * Converts an ASCIIMath input string to HTML.
+   * Converts an ASCIIMath input string to CommonHTML.
    *
    * @param {string} input The ASCIIMath input string.
    * @param {boolean} inline Whether or not the ASCIIMath should be rendered inline.
-   * @param {object} containerConfig The HTML container configuration.
-   * @param {object} chtmlConfig The HTML output configuration.
-   * @return {string} The HTML formatted data.
+   * @param {object} containerConfig The CommonHTML container configuration.
+   * @param {object} chtmlConfig The CommonHTML output configuration.
+   * @return {string} The CommonHTML formatted string.
    */
   static am2chtml(input, inline, containerConfig, chtmlConfig) {
-    const chtmlContainer = JSON.parse(containerConfig);
-    const adaptor = liteAdaptor({fontSize: chtmlContainer.em});
-    const handler = RegisterHTMLHandler(adaptor);
-    if (chtmlContainer.assistiveMml) AssistiveMmlHandler(handler);
     const asciimath = new AsciiMath();
-    const chtml = new CHTML(JSON.parse(chtmlConfig));
-    const html = mathjax.document('', {InputJax: asciimath, OutputJax: chtml});
-    const node = html.convert(input || '', {
-      display: !inline,
-      em: chtmlContainer.em,
-      ex: chtmlContainer.ex,
-      containerWidth: chtmlContainer.width
-    });
-    
-    if (chtmlContainer.css) {
-      return adaptor.textContent(chtml.styleSheet(html));
-    } else {
-      return adaptor.outerHTML(node);
-    }
+    return Converter.createCHTML(input, asciimath, inline, containerConfig, chtmlConfig);
   }
   
   /**
@@ -127,45 +91,25 @@ export class Converter {
    *
    * @param {string} input The ASCIIMath input string.
    * @param {boolean} inline Whether or not the ASCIIMath should be rendered inline.
-   * @return {string} The MathML formatted data.
+   * @return {string} The MathML formatted string.
    */
   static am2mml(input, inline) {
     const asciimath = new AsciiMath();
-    const html = new HTMLDocument('', liteAdaptor(), {InputJax: asciimath});
-    const visitor = new SerializedMmlVisitor();
-    const toMathML = (node => visitor.visitTree(node, html));
-    return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
+    return Converter.createMML(input, asciimath, inline);
   }
   
   /**
-   * Converts a MathML input string to HTML.
+   * Converts a MathML input string to CommonHTML.
    *
    * @param {string} input The MathML input string.
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
-   * @param {object} containerConfig The HTML container configuration.
-   * @param {object} chtmlConfig The HTML output configuration.
-   * @return {string} The HTML formatted data.
+   * @param {object} containerConfig The CommonHTML container configuration.
+   * @param {object} chtmlConfig The CommonHTML output configuration.
+   * @return {string} The CommonHTML formatted string.
    */
   static mml2chtml(input, inline, containerConfig, chtmlConfig) {
-    const chtmlContainer = JSON.parse(containerConfig);
-    const adaptor = liteAdaptor({fontSize: chtmlContainer.em});
-    const handler = RegisterHTMLHandler(adaptor);
-    if (chtmlContainer.assistiveMml) AssistiveMmlHandler(handler);
     const mml = new MathML();
-    const chtml = new CHTML(JSON.parse(chtmlConfig));
-    const html = mathjax.document('', {InputJax: mml, OutputJax: chtml});
-    const node = html.convert(input || '', {
-      display: !inline,
-      em: chtmlContainer.em,
-      ex: chtmlContainer.ex,
-      containerWidth: chtmlContainer.width
-    });
-    
-    if (chtmlContainer.css) {
-      return adaptor.textContent(chtml.styleSheet(html));
-    } else {
-      return adaptor.outerHTML(node);
-    }
+    return Converter.createCHTML(input, mml, inline, containerConfig, chtmlConfig);
   }
   
   /**
@@ -175,29 +119,61 @@ export class Converter {
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
    * @param {object} containerConfig The SVG container configuration.
    * @param {object} svgConfig The SVG output configuration.
-   * @return {string} The SVG formatted data.
+   * @return {string} The SVG formatted string.
    */
   static mml2svg(input, inline, containerConfig, svgConfig) {
-    return Converter.createSVG(input, 'mml', inline, containerConfig, svgConfig);
+    const mml = new MathML();
+    return Converter.createSVG(input, mml, inline, containerConfig, svgConfig);
   }
   
-  static createSVG(input, inputType, inline, containerConfig, svgConfig) {
+  /**
+   * Creates CommonHTML data from an input string.
+   *
+   * @param {string} input The input string.
+   * @param {object} inputJax The InputJax object.
+   * @param {boolean} inline Whether or not the input should be rendered inline.
+   * @param {object} containerConfig The CommonHTML container configuration.
+   * @param {object} svgConfig The CommonHTML output configuration.
+   * @return {string} The CommonHTML formatted string.
+   */
+  static createCHTML(input, inputJax, inline, containerConfig, chtmlConfig) {
+    const chtmlContainer = JSON.parse(containerConfig);
+    const adaptor = liteAdaptor({fontSize: chtmlContainer.em});
+    const handler = RegisterHTMLHandler(adaptor);
+    if (chtmlContainer.assistiveMml) AssistiveMmlHandler(handler);
+    const chtml = new CHTML(JSON.parse(chtmlConfig));
+    const html = mathjax.document('', {InputJax: inputJax, OutputJax: chtml});
+    const node = html.convert(input || '', {
+      display: !inline,
+      em: chtmlContainer.em,
+      ex: chtmlContainer.ex,
+      containerWidth: chtmlContainer.width
+    });
+    
+    if (chtmlContainer.css) {
+      return adaptor.textContent(chtml.styleSheet(html));
+    } else {
+      return adaptor.outerHTML(node);
+    }
+  }
+  
+  /**
+   * Creates SVG data from an input string.
+   *
+   * @param {string} input The input string.
+   * @param {object} inputJax The InputJax object.
+   * @param {boolean} inline Whether or not the input should be rendered inline.
+   * @param {object} containerConfig The SVG container configuration.
+   * @param {object} svgConfig The SVG output configuration.
+   * @return {string} The SVG formatted string.
+   */
+  static createSVG(input, inputJax, inline, containerConfig, svgConfig) {
     const svgContainer = JSON.parse(containerConfig);
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
     if (svgContainer.assistiveMml) AssistiveMmlHandler(handler);
     const svg = new SVG(JSON.parse(svgConfig));
-    
-    var obj;
-    if (inputType == 'tex') {
-      obj = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    } else if (inputType == 'mml') {
-      obj = new MathML();
-    } else {
-      return '';
-    }
-    
-    const html = mathjax.document('', {InputJax: obj, OutputJax: svg});
+    const html = mathjax.document('', {InputJax: inputJax, OutputJax: svg});
     const node = html.convert(input || '', {
       display: !inline,
       em: svgContainer.em,
@@ -211,6 +187,21 @@ export class Converter {
       let html = (svgContainer.container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
       return svgContainer.styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;
     }
+  }
+  
+  /**
+   * Creates MathML data from an input string.
+   *
+   * @param {string} input The input string.
+   * @param {object} inputJax The InputJax object.
+   * @param {boolean} inline Whether or not the input should be rendered inline.
+   * @return {string} The MathML formatted string.
+   */
+  static createMML(input, inputJax, inline) {
+    const html = new HTMLDocument('', liteAdaptor(), {InputJax: inputJax});
+    const visitor = new SerializedMmlVisitor();
+    const toMathML = (node => visitor.visitTree(node, html));
+    return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
   }
   
 }
