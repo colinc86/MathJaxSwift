@@ -12,7 +12,7 @@ let package = Package(
   products: [
     .library(
       name: "MathJaxSwift",
-      targets: ["MathJaxSwift"]),
+      targets: ["MathJaxSwift"])
   ],
   targets: [
     .target(

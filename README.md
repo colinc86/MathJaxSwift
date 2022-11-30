@@ -8,13 +8,13 @@ Converts and renders math expressions in Swift using [MathJax](https://github.co
 
 It implements the methods
 
-- [x] `tex2svg` - convert TeX to SVG
+- [x] `tex2svg` - convert [TeX](https://tug.org) to [SVG](https://www.w3.org/Graphics/SVG/)
 - [x] `tex2chtml` - convert TeX to HTML
-- [x] `tex2mml` - convert TeX to MathML
+- [x] `tex2mml` - convert TeX to [MathML](https://www.w3.org/TR/MathML/)
 - [x] `mml2svg` - convert MathML to SVG
 - [x] `mml2chtml` - convert MathML to HTML
-- [x] `am2chtml` - convert ASCIIMath to HTML
-- [x] `am2mml` - convert ASCIIMath to MathML
+- [x] `am2chtml` - convert [AsciiMath](http://asciimath.org) to HTML
+- [x] `am2mml` - convert AsciiMath to MathML
 
 ## Installation
 
@@ -92,7 +92,7 @@ func myTeXMethod() async throws {
 
 ### Configurations
 
-All of the methods that output SVG and HTML each support two configurations passed as parameters; container and output configurations.
+All of the methods that output SVG and HTML each support configurations passed as parameters; container and output configurations.
 
 #### Container Configurations
 

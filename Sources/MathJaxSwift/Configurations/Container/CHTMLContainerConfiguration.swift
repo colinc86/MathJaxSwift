@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias ContainerConfiguration = CHTMLContainerConfiguration
+
 public class CHTMLContainerConfiguration: Codable {
   
   // MARK: Types
