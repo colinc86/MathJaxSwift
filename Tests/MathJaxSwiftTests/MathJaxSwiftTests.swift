@@ -29,6 +29,15 @@ final class MathJaxSwiftTests: XCTestCase {
     XCTAssertEqual(metadata.resolved.absoluteString, "https://registry.npmjs.org/mathjax-full/-/mathjax-full-\(metadata.version).tgz")
   }
   
+  func testInitTime() {
+    measure {
+      do {
+        _ = try MathJax()
+      }
+      catch {}
+    }
+  }
+  
 }
 
 extension MathJaxSwiftTests {
