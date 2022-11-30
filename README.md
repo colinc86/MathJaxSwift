@@ -14,40 +14,59 @@ Add the dependency to your package manifest file.
 
 ## Usage
 
-Import the package, create a `MathJax` instance, and convert some TeX.
+Import the package, create a `MathJax` instance, and convert an input string to a supported output format.
 
 ```swift
 import MathJaxSwift
 
 do {
   let mathjax = try MathJax()
-  let input = "Hello, \\TeX{}!"
-  
-  // Get SVG output
-  let svg = try mathjax.tex2svg("Hello, \\TeX{}!")
-  
-  // Get HTML output
-  let html = try mathjax.tex2chtml(input)
-  
-  // Get MathML output
-  let mathml = try mathjax.tex2mml(input)
+  let svg = try mathjax.tex2svg("\\text{Hello}, \\TeX{}!")
 }
 catch {
   print("MathJax error: \(error)")
 }
 ```
 
-- [x] `tex2svg`
-- [x] `tex2chtml`
-- [x] `tex2mml`
-- [ ] `am2chtml`
-- [ ] `am2mml`
-- [ ] `mml2svg`
-- [ ] `mml2chtml`
+The example above converts the TeX input to SVG data that renders to
 
-Each of the conversion methods are also available with `async` implementations.
+![Hello, TeX!](/assets/images/hello_tex.png)
 
-To check the `mathjax-full` npm module's package information that the Swift package is using, use the static `metadata() throws` method.
+### Conversion Methods
+
+`MathJaxSwift` implements the following conversion methods.
+
+- [x] `tex2svg` - convert TeX to SVG
+- [x] `tex2chtml` - convert TeX to HTML
+- [x] `tex2mml` - convert TeX to MathML
+- [x] `mml2svg` - convert MathML to SVG
+- [x] `mml2chtml` - convert MathML to HTML
+- [x] `am2chtml` - convert ASCIIMath to HTML
+- [x] `am2mml` - convert ASCIIMath to MathML
+
+Each of the methods are also available with `async` implementations.
+
+```swift
+func myMathMethod() async throws {
+  let mml = try await mathjax.tex2mml("\\frac{2}{3}")
+  print(mml)
+}
+```
+
+Outputs
+
+```xml
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mfrac>
+    <mn>2</mn>
+    <mn>3</mn>
+  </mfrac>
+</math>
+```
+
+### MathJax Version
+
+To check the version of MathJax that has been loaded, use the static `metadata() throws` method.
 
 ```swift
 do {
@@ -59,7 +78,7 @@ catch {
 }
 ```
 
-### Notes
+## Notes
 
 `MathJaxSwift` wraps the MathJax TeX conversion process in convenient JS methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
