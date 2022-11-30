@@ -7,5 +7,6 @@ module.exports = {
     filename: "[name].bundle.js",
     library: "[name]",
     libraryTarget: "var"
-  }
+  },
+  mode: "production"
 };

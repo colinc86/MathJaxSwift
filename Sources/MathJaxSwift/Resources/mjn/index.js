@@ -27,43 +27,45 @@ const CSS = [
 
 export class Converter {
   
-  static tex2svg(input, inline, em, ex, width, css, styles, container, assistiveMml, svgConfig) {
+  static tex2svg(input, inline, containerConfig, svgConfig) {
+    const svgContainer = JSON.parse(containerConfig);
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
-    if (assistiveMml) AssistiveMmlHandler(handler);
+    if (svgContainer.assistiveMml) AssistiveMmlHandler(handler);
     const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
     const svg = new SVG(JSON.parse(svgConfig));
     const html = mathjax.document('', {InputJax: tex, OutputJax: svg});
     const node = html.convert(input || '', {
       display: !inline,
-      em: em,
-      ex: ex,
-      containerWidth: width
+      em: svgContainer.em,
+      ex: svgContainer.ex,
+      containerWidth: svgContainer.width
     });
     
-    if (css) {
+    if (svgContainer.css) {
       return adaptor.textContent(svg.styleSheet(html));
     } else {
-      let html = (container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
-      return styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;
+      let html = (svgContainer.container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
+      return svgContainer.styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;
     }
   }
   
-  static tex2chtml(input, inline, em, ex, width, css, assistiveMml, chtmlConfig) {
+  static tex2chtml(input, inline, containerConfig, chtmlConfig) {
+    const chtmlContainer = JSON.parse(containerConfig);
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
-    if (assistiveMml) AssistiveMmlHandler(handler);
+    if (chtmlContainer.assistiveMml) AssistiveMmlHandler(handler);
     const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
     const chtml = new CHTML(JSON.parse(chtmlConfig));
     const html = mathjax.document('', {InputJax: tex, OutputJax: chtml});
     const node = html.convert(input || '', {
       display: !inline,
-      em: em,
-      ex: ex,
-      containerWidth: width
+      em: chtmlContainer.em,
+      ex: chtmlContainer.ex,
+      containerWidth: chtmlContainer.width
     });
 
-    if (css) {
+    if (chtmlContainer.css) {
       return adaptor.textContent(chtml.styleSheet(html));
     } else {
       return adaptor.outerHTML(node);
