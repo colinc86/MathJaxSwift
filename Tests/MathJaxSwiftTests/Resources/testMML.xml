@@ -1,12 +1,6 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mi>T</mi>
-  <mspace width="-.14em"></mspace>
-  <mpadded height="-.5ex" depth="+.5ex" voffset="-.5ex">
-    <mrow data-mjx-texclass="ORD">
-      <mi>E</mi>
-    </mrow>
-  </mpadded>
-  <mspace width="-.115em"></mspace>
-  <mi>X</mi>
-  <mrow data-mjx-texclass="ORD"></mrow>
+  <mfrac>
+    <mn>2</mn>
+    <mn>3</mn>
+  </mfrac>
 </math>

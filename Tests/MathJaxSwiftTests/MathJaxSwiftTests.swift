@@ -3,7 +3,8 @@ import XCTest
 
 final class MathJaxSwiftTests: XCTestCase {
   
-  static let texInput = "\\TeX{}"
+  static let texInput = "\\frac{2}{3}"
+  static let amInput = "2/3"
 
   var mathjax: MathJax!
   

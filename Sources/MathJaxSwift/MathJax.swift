@@ -15,22 +15,25 @@ public protocol MathJaxDelegate: AnyObject {
   ///
   /// - Parameter exception: The exception that was received.
   func mathJax(_ mathJax: MathJax, receivedException exception: String?)
+  
 }
 
-/// A class that exposes the `tex2svg`, `tex2chtml`, and `tex2mml` MathJax
-/// methods.
+/// A class that exposes MathJax conversion methods.
 public final class MathJax {
   
   // MARK: Types
   
   /// An error thrown by the `MathJax` package.
-  public enum MathJaxError: Error, CustomStringConvertible {
+  public enum MJError: Error, CustomStringConvertible {
+    case unknown
     case missingPackageFile
     case missingDependencyInformation
-    case missingJSContext
-    case missingBundle
-    case missingFunction
-    case unexpectedVersion
+    case unableToCreateContext
+    case missingBundle(url: URL)
+    case missingModule
+    case missingClass
+    case missingFunction(name: String)
+    case unexpectedVersion(version: String)
     case deallocatedSelf
     case conversionFailed
     case conversionUnknownError
@@ -38,16 +41,19 @@ public final class MathJax {
     
     public var description: String {
       switch self {
-      case .missingPackageFile: return "The npm package-lock file was missing or is inaccessable."
-      case .missingDependencyInformation: return "The mathjax-full dependency metadata was missing."
-      case .missingJSContext: return "The required JavaScript context could not be created."
-      case .missingBundle: return "The bundled JavaScript file was missing or is inaccessable."
-      case .missingFunction: return "The conversion function was missing from the JavaScript bundle."
-      case .unexpectedVersion: return "The MathJax version was not the expected version."
-      case .deallocatedSelf: return "An internal error occurred."
-      case .conversionFailed: return "The function failed to convert the input string."
-      case .conversionUnknownError: return "The conversion failed for an unknown reason."
-      case .conversionInvalidFormat: return "The output format was invalid."
+      case .unknown:                        return "An unknown error occurred."
+      case .missingPackageFile:             return "The npm package-lock file was missing or is inaccessable."
+      case .missingDependencyInformation:   return "The mathjax-full node module metadata was missing."
+      case .unableToCreateContext:          return "The required JavaScript context could not be created."
+      case .missingBundle(let url):         return "The bundled JavaScript file at \(url) is missing or is inaccessable."
+      case .missingModule:                  return "The module is missing or is inaccessable."
+      case .missingClass:                   return "The class is missing or is inaccessable."
+      case .missingFunction(let name):      return "The function, \(name), is missing or is inaccessable."
+      case .unexpectedVersion(let version): return "The MathJax version (\(version)) was not the expected version (\(Constants.expectedMathJaxVersion))."
+      case .deallocatedSelf:                return "An internal error occurred."
+      case .conversionFailed:               return "The function failed to convert the input string."
+      case .conversionUnknownError:         return "The conversion failed for an unknown reason."
+      case .conversionInvalidFormat:        return "The output format was invalid."
       }
     }
   }
@@ -65,30 +71,10 @@ public final class MathJax {
     let integrity: String
   }
   
-  /// NPM package-lock.json metadata for extracting the mathjax-full version
-  /// string.
-  internal struct PackageLock: Codable {
-    
-    /// The package-lock file's dependencies.
-    let dependencies: [String: Metadata]
-  }
-  
   // MARK: Private/internal properties
-  
-  /// The JS virtual machine.
-  private let vm = JSVirtualMachine()
   
   /// The JS context.
   private let context: JSContext
-  
-  /// The TeX to SVG function.
-  internal var tex2svgFunction: JSValue!
-  
-  /// The TeX to CHTML function.
-  internal var tex2chtmlFunction: JSValue!
-  
-  /// The TeX to MML function.
-  internal var tex2mmlFunction: JSValue!
 
   // MARK: Public properties
 
@@ -106,41 +92,28 @@ public final class MathJax {
     // Make sure we're using the correct MathJax version
     let metadata = try MathJax.metadata()
     guard metadata.version == Constants.expectedMathJaxVersion else {
-      throw MathJaxError.unexpectedVersion
+      throw MJError.unexpectedVersion(version: metadata.version)
+    }
+    
+    // Get the bundle path
+    guard let bundleURL = Constants.URLs.bundle else {
+      throw MJError.unknown
+    }
+    
+    // Make sure the bundle exists
+    guard FileManager.default.fileExists(atPath: bundleURL.path) else {
+      throw MJError.missingBundle(url: bundleURL)
     }
 
     // Create the JavaScript context
-    guard let ctx = JSContext(virtualMachine: vm) else {
-      throw MathJaxError.missingJSContext
+    guard let ctx = JSContext() else {
+      throw MJError.unableToCreateContext
     }
     context = ctx
     context.exceptionHandler = handleException
     
-    // Get the bundle path and make sure it exists.
-    guard let bundleURL = Constants.URLs.bundle,
-          FileManager.default.fileExists(atPath: bundleURL.path) else {
-      throw MathJaxError.missingBundle
-    }
-    
-    // Load the bundle's contents.
+    // Load the bundle's contents to the context
     context.evaluateScript(try String(contentsOf: bundleURL))
-    
-    // Get a reference to the converter.
-    let converter = context
-      .objectForKeyedSubscript(Constants.Names.mjnModuleName)?
-      .objectForKeyedSubscript(Constants.Names.converterClassName)
-    
-    // Get a reference to the functions.
-    tex2svgFunction = converter?.objectForKeyedSubscript(Constants.Names.tex2svgFunctionName)
-    tex2chtmlFunction = converter?.objectForKeyedSubscript(Constants.Names.tex2chtmlFunctionName)
-    tex2mmlFunction = converter?.objectForKeyedSubscript(Constants.Names.tex2mmlFunctionName)
-    
-    // Make sure we were able to get the convert function
-    guard tex2svgFunction?.isObject == true,
-          tex2chtmlFunction?.isObject == true,
-          tex2mmlFunction?.isObject == true else {
-      throw MathJaxError.missingFunction
-    }
   }
   
 }
@@ -155,13 +128,13 @@ extension MathJax {
   ///   hash information about the `mathjax-full` module.
   public static func metadata() throws -> Metadata {
     guard let packageLockURL = Constants.URLs.packageLock else {
-      throw MathJaxError.missingPackageFile
+      throw MJError.missingPackageFile
     }
     let package = try JSONDecoder().decode(
       PackageLock.self,
       from: try Data(contentsOf: packageLockURL))
-    guard let dependency = package.dependencies[Constants.Names.mathJaxModuleName] else {
-      throw MathJaxError.missingDependencyInformation
+    guard let dependency = package.dependencies[Constants.Names.Modules.mathjax] else {
+      throw MJError.missingDependencyInformation
     }
     return dependency
   }
@@ -187,14 +160,48 @@ extension MathJax {
   ///   - function: The function to call.
   ///   - arguments: The arguments to pass to the function.
   /// - Returns: The function's return value.
-  internal func callFunction(_ function: JSValue?, with arguments: [Any]) throws -> String {
-    guard let value = function?.call(withArguments: arguments) else {
-      throw MathJaxError.conversionFailed
+  internal func callFunction(_ functionName: String, with arguments: [Any]) throws -> String {
+    guard let module = context.objectForKeyedSubscript(Constants.Names.Modules.mjn) else {
+      throw MJError.missingModule
+    }
+    guard let converter = module.objectForKeyedSubscript(Constants.Names.converterClass) else {
+      throw MJError.missingClass
+    }
+    guard let function = converter.objectForKeyedSubscript(functionName) else {
+      throw MJError.missingFunction(name: functionName)
+    }
+    guard let value = function.call(withArguments: arguments) else {
+      throw MJError.conversionFailed
+    }
+    guard !value.isUndefined else {
+      throw MJError.conversionUnknownError
     }
     guard let stringValue = value.toString() else {
-      throw MathJaxError.conversionInvalidFormat
+      throw MJError.conversionInvalidFormat
     }
     return stringValue
+  }
+  
+  /// Performs the throwing closure asynchronously.
+  ///
+  /// - Parameter closure: The closure to execute.
+  /// - Returns: A string.
+  internal func performAsync(_ closure: @escaping (MathJax) throws -> String) async throws -> String {
+    return try await withCheckedThrowingContinuation { [weak self] continuation in
+      guard let self = self else {
+        continuation.resume(throwing: MJError.deallocatedSelf)
+        return
+      }
+      
+      Task {
+        do {
+          continuation.resume(returning: try closure(self))
+        }
+        catch {
+          continuation.resume(throwing: error)
+        }
+      }
+    }
   }
   
 }

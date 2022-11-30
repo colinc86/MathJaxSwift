@@ -30,7 +30,7 @@ const CSS = [
 /**
  * Converts TeX input strings to various output formats.
  */
-export class TexConverter {
+export class Converter {
   
   /**
    * Converts a TeX input string to HTML.
@@ -110,13 +110,6 @@ export class TexConverter {
     return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
   }
   
-}
-
-/**
- * Converts ASCIIMath input strings to various output formats.
- */
-export class AMConverter {
-  
   /**
    * Converts an ASCIIMath input string to HTML.
    *
@@ -162,13 +155,6 @@ export class AMConverter {
     const toMathML = (node => visitor.visitTree(node, html));
     return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
   }
-  
-}
-
-/**
- * Converts MathML input strings to various output formats.
- */
-export class MMLConverter {
   
   /**
    * Converts a MathML input string to HTML.

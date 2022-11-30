@@ -16,20 +16,8 @@ extension MathJax {
   ///   - inline: Process the math as inline or not.
   /// - Returns: MathML formatted output.
   public func tex2mml(_ input: String, inline: Bool = false) async throws -> String {
-    return try await withCheckedThrowingContinuation { [weak self] continuation in
-      guard let self = self else {
-        continuation.resume(throwing: MathJaxError.deallocatedSelf)
-        return
-      }
-      
-      Task {
-        do {
-          continuation.resume(returning: try self.tex2mml(input, inline: inline))
-        }
-        catch {
-          continuation.resume(throwing: error)
-        }
-      }
+    return try await performAsync { mathjax in
+      try mathjax.tex2mml(input, inline: inline)
     }
   }
   
@@ -40,7 +28,12 @@ extension MathJax {
   ///   - inline: Process the math as inline or not.
   /// - Returns: MathML formatted output.
   public func tex2mml(_ input: String, inline: Bool = false) throws -> String {
-    return try callFunction(tex2mmlFunction, with: [input, inline])
+    return try callFunction(
+      Constants.Names.Functions.tex2mml,
+      with: [
+        input,
+        inline
+      ])
   }
   
 }
