@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
 
-A Swift wrapper for the [MathJax](https://github.com/mathjax/MathJax) component library.
+Converts and renders math expressions in Swift using [MathJax](https://github.com/mathjax/MathJax) and the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework.
 
 `MathJaxSwift` wraps the MathJax conversion processes in convenient JS methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
@@ -139,4 +139,8 @@ You can also use the returned metadata to check the MathJax node module's URL an
 
 ## Notes
 
-To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create a bundle file that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. After making modifications to `index.js`, it should be rebuilt with `npm run build` which will recreate the `mjn.bundle.js` file.
+To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create a bundle file that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
+
+`mjn`'s main entry point is `index.js` which houses the `Converter` class and conversion functions that utilize MathJax. The file is packed with Webpack and placed in to the `mjn/dist/mjn.bundle.js` file. `mjn.bundle.js` is loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions.
+
+After making modifications to `index.js`, it should be rebuilt with `npm run build` executed in the `mjn` directory which will recreate the `mjn.bundle.js` file.
