@@ -1,20 +1,20 @@
 # MathJaxSwift
 
-[![Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
-
 Converts and renders math expressions in Swift using [MathJax](https://github.com/mathjax/MathJax) and the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework.
 
-`MathJaxSwift` wraps the MathJax conversion processes in convenient JS methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
+[![Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
 
-It implements the methods
+`MathJaxSwift` wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
-- [x] `tex2svg` - convert [TeX](https://tug.org) to [SVG](https://www.w3.org/Graphics/SVG/)
-- [x] `tex2chtml` - convert TeX to HTML
-- [x] `tex2mml` - convert TeX to [MathML](https://www.w3.org/TR/MathML/)
-- [x] `mml2svg` - convert MathML to SVG
-- [x] `mml2chtml` - convert MathML to HTML
-- [x] `am2chtml` - convert [AsciiMath](http://asciimath.org) to HTML
-- [x] `am2mml` - convert AsciiMath to MathML
+It implements the following methods
+
+- [x] `tex2svg` - [TeX](https://tug.org) to SVG
+- [x] `tex2chtml` - TeX to HTML
+- [x] `tex2mml` - TeX to [MathML](https://www.w3.org/TR/MathML/)
+- [x] `mml2svg` - MathML to SVG
+- [x] `mml2chtml` - MathML to HTML
+- [x] `am2chtml` - [AsciiMath](http://asciimath.org) to HTML
+- [x] `am2mml` - AsciiMath to MathML
 
 ## Installation
 
@@ -44,9 +44,44 @@ catch {
 
 ![Hello, TeX!](/assets/images/hello_tex.png)
 
-### Threading
+### Threading and Memory
 
-Each of the methods are also available with an `async` implementation. It is recommended that these methods are preferred over their synchronous counterparts whenever possible.
+Initializing an instance of `MathJax` should not be performed on the main queue to prevent blocking of the UI. You should also attempt to keep a single reference to an instance and submit your function calls to it instead of creating a new `MathJax` instance each time you need to convert.
+
+> An example of what to do: 
+
+```swift
+import MathJaxSwift
+
+class MyModel {
+  let mathjax: MathJax
+  
+  init() throws {
+    mathjax = try MathJax()
+  }
+  
+  func convertTex(_ input: String) async throws -> String {
+    return try await mathjax.tex2chtml(input)
+  }
+}
+```
+
+> An example of what _not_ to do: 
+
+```swift
+import MathJaxSwift
+
+class MyModel {
+  init() {}
+  
+  func convertTex(_ input: String) async throws -> String {
+    let mathjax = try MathJax()
+    return try await mathjax.tex2chtml(input)
+  }
+}
+```
+
+Each of the methods are also available with an `async` implementation. It is recommended that these methods are used over their synchronous counterparts wherever possible.
 
 ```swift
 func myTeXMethod() async throws {
