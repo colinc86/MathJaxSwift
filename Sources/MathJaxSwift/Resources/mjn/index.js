@@ -73,26 +73,7 @@ export class Converter {
    * @return {string} The SVG formatted data.
    */
   static tex2svg(input, inline, containerConfig, svgConfig) {
-    const svgContainer = JSON.parse(containerConfig);
-    const adaptor = liteAdaptor();
-    const handler = RegisterHTMLHandler(adaptor);
-    if (svgContainer.assistiveMml) AssistiveMmlHandler(handler);
-    const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    const svg = new SVG(JSON.parse(svgConfig));
-    const html = mathjax.document('', {InputJax: tex, OutputJax: svg});
-    const node = html.convert(input || '', {
-      display: !inline,
-      em: svgContainer.em,
-      ex: svgContainer.ex,
-      containerWidth: svgContainer.width
-    });
-    
-    if (svgContainer.css) {
-      return adaptor.textContent(svg.styleSheet(html));
-    } else {
-      let html = (svgContainer.container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
-      return svgContainer.styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;
-    }
+    return Converter.createSVG(input, 'tex', inline, containerConfig, svgConfig);
   }
   
   /**
@@ -197,13 +178,26 @@ export class Converter {
    * @return {string} The SVG formatted data.
    */
   static mml2svg(input, inline, containerConfig, svgConfig) {
+    return Converter.createSVG(input, 'mml', inline, containerConfig, svgConfig);
+  }
+  
+  static createSVG(input, inputType, inline, containerConfig, svgConfig) {
     const svgContainer = JSON.parse(containerConfig);
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
     if (svgContainer.assistiveMml) AssistiveMmlHandler(handler);
-    const mml = new MathML();
     const svg = new SVG(JSON.parse(svgConfig));
-    const html = mathjax.document('', {InputJax: mml, OutputJax: svg});
+    
+    var obj;
+    if (inputType == 'tex') {
+      obj = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
+    } else if (inputType == 'mml') {
+      obj = new MathML();
+    } else {
+      return '';
+    }
+    
+    const html = mathjax.document('', {InputJax: obj, OutputJax: svg});
     const node = html.convert(input || '', {
       display: !inline,
       em: svgContainer.em,

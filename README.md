@@ -135,11 +135,6 @@ To set parameters such as the font size, height, container width, etc., use eith
 
 For example, to set the font's size, create a container configuration and set the `em` and `ex` parameters.
 
-```swift
-let config = CHTMLContainerConfiguration(em: 24, ex: 12)
-let html = try await mathjax.tex2chtml("\\text{Hello}, \\TeX{}!", containerConfig: config)
-```
-
 #### Output Processor Configurations
 
 The MathJax HTML and SVG output processors are also configurable using the same method as above, but by setting the `outputConfig` parameter to one of `CHTMLOutputProcessorConfiguration` or `SVGOutputProcessorConfiguration`.
