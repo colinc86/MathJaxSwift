@@ -84,7 +84,7 @@ class MyModel {
 Each of the methods are also available with an `async` implementation. It is recommended that these methods are used over their synchronous counterparts wherever possible.
 
 ```swift
-func myTeXMethod() async throws {
+func myAsyncMethod() async throws {
   let mml = try await mathjax.tex2mml("\\frac{2}{3}")
   print(mml)
 }
@@ -101,6 +101,36 @@ func myTeXMethod() async throws {
 </math>
 ```
 
+#### Preferred Output Formats
+
+MathJaxSwift loads all of the necessary JavaScript in to its context to run all of the conversion methods. In the case that you only want to utilize a subset of the package's output formats, you can instruct the `MathJax` instance to only intialize with your preferred output formats.
+
+```swift
+do {
+  // Save some time and don't load the SVG output format.
+  let mathjax = try MathJax(preferredOutputFormats: [.chtml, .mml])
+}
+catch {
+  print("Error initializing MathJax: \(error)")
+}
+```
+
+The benefit of this approach is that, instead of loading all of the necessary JavaScript in to the instance's context upon initialization, it loads the preferred output formats immediately, and then lazily loads any JavaScript in the future that may be required to execute a conversion method.
+
+```swift
+do {
+  // We _think_ we only need CommonHTML, so save some time by only loading that
+  // output format.
+  let mathjax = try MathJax(preferredOutputFormat: .chtml)
+  
+  // The following is ok!
+  let mml = try mathjax.tex2mml("\\text{Hello}, \\TeX{}!")
+}
+catch {
+  print("MathJax error: \(error)")
+}
+```
+
 See the [Performance](https://github.com/colinc86/MathJaxSwift#performance) section for more details.
 
 ### Block Rendering
@@ -108,7 +138,7 @@ See the [Performance](https://github.com/colinc86/MathJaxSwift#performance) sect
 Use the `inline` parameter to specify whether or not the input should be interpreted as inline text. Input is interpreted as `inline=false` by default which results in block output.
 
 ```swift
-func myTeXMethod() async throws {
+func myAsyncMethod() async throws {
   let mml = try await mathjax.tex2mml("\\frac{2}{3}", inline: true)
   print(mml)
 }

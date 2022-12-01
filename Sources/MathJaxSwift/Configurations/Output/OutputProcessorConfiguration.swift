@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class OutputProcessorConfiguration: Codable {
+public class OutputProcessorConfiguration: Encodable {
   
   // MARK: Types
   

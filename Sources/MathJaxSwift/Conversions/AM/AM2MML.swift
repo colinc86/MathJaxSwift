@@ -28,12 +28,10 @@ extension MathJax {
   ///   - inline: Process the math as inline or not.
   /// - Returns: MathML formatted output.
   public func am2mml(_ input: String, inline: Bool = false) throws -> String {
-    return try callFunction(
-      Constants.Names.Functions.am2mml,
-      with: [
-        input,
-        inline
-      ])
+    return try callFunction(.am2mml, with: [
+      input,
+      inline
+    ])
   }
   
 }

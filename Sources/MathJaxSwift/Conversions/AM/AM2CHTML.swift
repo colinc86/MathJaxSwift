@@ -47,14 +47,12 @@ extension MathJax {
     containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
     outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration()
   ) throws -> String {
-    return try callFunction(
-      Constants.Names.Functions.am2chtml,
-      with: [
-        input,
-        inline,
-        try containerConfig.json(),
-        try outputConfig.json()
-      ])
+    return try callFunction(.am2chtml, with: [
+      input,
+      inline,
+      try containerConfig.json(),
+      try outputConfig.json()
+    ])
   }
   
 }

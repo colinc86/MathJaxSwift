@@ -23,11 +23,6 @@ public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
     case global
   }
   
-  private enum CodingKeys: CodingKey {
-    case fontCache
-    case internalSpeechTitles
-  }
-  
   // MARK: Default values
   
   public static let defaultFontCache: FontCache = .local
@@ -101,13 +96,6 @@ public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
-  }
-  
-  required init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-    fontCache = try container.decode(FontCache.self, forKey: .fontCache)
-    internalSpeechTitles = try container.decode(Bool.self, forKey: .internalSpeechTitles)
-    try super.init(from: decoder)
   }
   
 }

@@ -7,7 +7,7 @@ final class Tex2CHTMLTests: XCTestCase {
   var mathjax: MathJax!
   
   override func setUp() async throws {
-    mathjax = try MathJax()
+    mathjax = try MathJax(preferredOutputFormat: .chtml)
   }
   
   func testTex2CHTMLSync() throws {

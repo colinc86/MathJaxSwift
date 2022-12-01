@@ -47,14 +47,12 @@ extension MathJax {
     containerConfig: SVGContainerConfiguration = SVGContainerConfiguration(),
     outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration()
   ) throws -> String {
-    return try callFunction(
-      Constants.Names.Functions.tex2svg,
-      with: [
-        input,
-        inline,
-        try containerConfig.json(),
-        try outputConfig.json()
-      ])
+    return try callFunction(.tex2svg, with: [
+      input,
+      inline,
+      try containerConfig.json(),
+      try outputConfig.json()
+    ])
   }
   
 }

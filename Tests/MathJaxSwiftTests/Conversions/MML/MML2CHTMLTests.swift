@@ -8,7 +8,7 @@ final class MML2CHTMLTests: XCTestCase {
   var mathjax: MathJax!
   
   override func setUp() async throws {
-    mathjax = try MathJax()
+    mathjax = try MathJax(preferredOutputFormat: .chtml)
   }
   
   func testMML2CHTMLSync() throws {

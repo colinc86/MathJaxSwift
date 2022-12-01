@@ -7,7 +7,7 @@ final class AM2MMLTests: XCTestCase {
   var mathjax: MathJax!
   
   override func setUp() async throws {
-    mathjax = try MathJax()
+    mathjax = try MathJax(preferredOutputFormat: .mml)
   }
   
   func testAM2MMLSync() throws {

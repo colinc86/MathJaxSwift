@@ -69,29 +69,46 @@ public final class MathJax {
     let integrity: String
   }
   
+  /// An output format.
+  public enum OutputFormat: CaseIterable {
+    
+    /// The CommonHTML output format.
+    case chtml
+    
+    /// The MathML output format.
+    case mml
+    
+    /// The SVG output format.
+    case svg
+    
+    /// The format's bundle URL.
+    internal var url: URL? {
+      switch self {
+      case .chtml: return Constants.URLs.chtmlBundle
+      case .mml:   return Constants.URLs.mmlBundle
+      case .svg:   return Constants.URLs.svgBundle
+      }
+    }
+  }
+  
   // MARK: Private/internal properties
   
   /// The JS context.
   private let context: JSContext
   
+  /// The output formats that have been initialized by the instance.
+  private var supportedOutputFormats = [OutputFormat]()
+  
   // MARK: Initializers
   
   /// Initializes a new `MathJax` instance.
-  public init() throws {
+  ///
+  /// - Parameter outputFormats: The preferred output formats.
+  public init(preferredOutputFormats: [OutputFormat] = OutputFormat.allCases) throws {
     // Make sure we're using the correct MathJax version
     let metadata = try MathJax.metadata()
     guard metadata.version == Constants.expectedMathJaxVersion else {
       throw MJError.unexpectedVersion(version: metadata.version)
-    }
-    
-    // Get the bundle path
-    guard let bundleURL = Constants.URLs.bundle else {
-      throw MJError.unknown
-    }
-    
-    // Make sure the bundle exists
-    guard FileManager.default.fileExists(atPath: bundleURL.path) else {
-      throw MJError.missingBundle(url: bundleURL)
     }
 
     // Create the JavaScript context
@@ -100,11 +117,15 @@ public final class MathJax {
     }
     context = ctx
     
-    // Load the bundle's contents to the context
-    context.evaluateScript(try String(contentsOf: bundleURL))
-    
-    // Make sure no exception was thrown
-    try checkForJSException()
+    // Load the bundles for the preferred output formats
+    try loadBundles(with: preferredOutputFormats)
+  }
+  
+  /// Initializes a new `MathJax` instance.
+  ///
+  /// - Parameter preferredOutputFormat: The preferred output format.
+  public convenience init(preferredOutputFormat: OutputFormat) throws {
+    try self.init(preferredOutputFormats: [preferredOutputFormat])
   }
   
 }
@@ -139,6 +160,50 @@ extension MathJax {
 
 extension MathJax {
   
+  /// Loads the bundles with the given output formats.
+  ///
+  /// - Parameter outputFormats: The output formats.
+  private func loadBundles(with outputFormats: [OutputFormat]) throws {
+    for format in outputFormats {
+      try loadBundle(with: format)
+    }
+  }
+  
+  /// Loads the JavaScript bundle that corresponds to the given output format.
+  ///
+  /// - Note: If the bundle has already been loaded, then this method returns
+  ///   without doing anything.
+  ///
+  /// - Parameter outputFormat: The output format to load.
+  private func loadBundle(with outputFormat: OutputFormat) throws {
+    // Only attempt to load the bundle if it hasn't been loaded
+    guard !supportedOutputFormats.contains(outputFormat) else {
+      return
+    }
+    
+    // Get the url
+    guard let url = outputFormat.url else {
+      throw MJError.unknown
+    }
+    
+    // Check to see if the file exists
+    guard FileManager.default.isReadableFile(atPath: url.path) else {
+      throw MJError.missingBundle(url: url)
+    }
+    
+    // Load the file contents
+    let fileContents = try String(contentsOf: url, encoding: .utf8)
+    
+    // Evaluate the JavaScript
+    context.evaluateScript(fileContents, withSourceURL: url)
+    
+    // Check for js errors
+    try checkForJSException()
+    
+    // Save the supported format
+    supportedOutputFormats.append(outputFormat)
+  }
+  
   /// Checks for an exception in the JS context and throws an error if one is
   /// present.
   private func checkForJSException() throws {
@@ -157,20 +222,25 @@ extension MathJax {
   ///   - function: The function to call.
   ///   - arguments: The arguments to pass to the function.
   /// - Returns: The function's return value.
-  internal func callFunction(_ functionName: String, with arguments: [Any]) throws -> String {
+  internal func callFunction(_ function: Function, with arguments: [Any]) throws -> String {
+    // Lazily load the bundle that owns the function if it hasn't been loaded
+    if !supportedOutputFormats.contains(function.outputFormat) {
+      try loadBundle(with: function.outputFormat)
+    }
+    
     // Get the module's JS value
-    guard let module = context.objectForKeyedSubscript(Constants.Names.Modules.mjn) else {
+    guard let module = context.objectForKeyedSubscript(function.jsModuleName) else {
       throw MJError.missingModule
     }
     
     // Get the class's JS value
-    guard let converter = module.objectForKeyedSubscript(Constants.Names.converterClass) else {
+    guard let converter = module.objectForKeyedSubscript(function.className) else {
       throw MJError.missingClass
     }
     
     // Get the function's JS value
-    guard let function = converter.objectForKeyedSubscript(functionName) else {
-      throw MJError.missingFunction(name: functionName)
+    guard let function = converter.objectForKeyedSubscript(function.name) else {
+      throw MJError.missingFunction(name: function.name)
     }
     
     // Call the function and get its return value
