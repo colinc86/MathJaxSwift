@@ -27,37 +27,39 @@ internal struct Constants {
       
     }
     
-    struct Functions {
+    struct JSModules {
       
-      /// The name of the tex2svg function.
-      static let tex2svg = "tex2svg"
+      static let chtml = "chtml"
       
-      /// The name of the tex2chtml function.
-      static let tex2chtml = "tex2chtml"
+      static let mml = "mml"
       
-      /// The name of the tex2mml function.
-      static let tex2mml = "tex2mml"
+      static let svg = "svg"
+    }
+    
+    struct Classes {
       
-      /// The name of the am2chtml function.
-      static let am2chtml = "am2chtml"
+      /// The name of the CommonHTML converter.
+      static let chtmlConverter = "CommonHTMLConverter"
       
-      /// The name of the am2mml function.
-      static let am2mml = "am2mml"
+      /// The name of the MathML converter.
+      static let mmlConverter = "MathMLConverter"
       
-      /// The name of the mml2chtml function.
-      static let mml2chtml = "mml2chtml"
-      
-      /// The name of the mml2svg function.
-      static let mml2svg = "mml2svg"
-      
+      /// The name of the SVG converter.
+      static let svgConverter = "SVGConverter"
     }
     
   }
   
   struct Paths {
     
-    /// The path to the mjn JS bundle.
-    static let mjnBundleFile = "dist/mjn.bundle.js"
+    /// The path to the chtml.js bundle.
+    static let chtmlBundleFile = "dist/chtml.bundle.js"
+    
+    /// The path to the mml.js bundle.
+    static let mmlBundleFile = "dist/mml.bundle.js"
+    
+    /// The path to the svg.js bundle.
+    static let svgBundleFile = "dist/svg.bundle.js"
     
     /// The path to the mjn package-lock.json file.
     static let packageLockFile = "package-lock.json"
@@ -69,8 +71,14 @@ internal struct Constants {
     /// The URL of the mjn top-level directory.
     static let mjn = Bundle.module.url(forResource: Names.Modules.mjn, withExtension: nil)
     
-    /// The URL of the JS bundle file.
-    static let bundle = mjn?.appendingPathComponent(Paths.mjnBundleFile)
+    /// The URL of the chtml bundle file.
+    static let chtmlBundle = mjn?.appendingPathComponent(Paths.chtmlBundleFile)
+    
+    /// The URL of the mml bundle file.
+    static let mmlBundle = mjn?.appendingPathComponent(Paths.mmlBundleFile)
+    
+    /// The URL of the svg bundle file.
+    static let svgBundle = mjn?.appendingPathComponent(Paths.svgBundleFile)
     
     /// The URL of the mjn package-lock.json file.
     static let packageLock = mjn?.appendingPathComponent(Paths.packageLockFile)

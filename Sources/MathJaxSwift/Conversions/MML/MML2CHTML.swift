@@ -16,14 +16,16 @@ extension MathJax {
   ///   - inline: Process the math as inline or not.
   ///   - containerConfig: The CHTML container configuration.
   ///   - outputConfig: The CHTML output processor configuration.
+  ///   - queue: The queue to execute the conversion on.
   /// - Returns: CHTML formatted output.
   public func mml2chtml(
     _ input: String,
     inline: Bool = false,
     containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
-    outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration()
+    outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration(),
+    queue: DispatchQueue = .global()
   ) async throws -> String {
-    return try await performAsync { mathjax in
+    return try await perform(on: queue) { mathjax in
       try self.mml2chtml(
         input,
         inline: inline,
@@ -47,14 +49,12 @@ extension MathJax {
     containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
     outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration()
   ) throws -> String {
-    return try callFunction(
-      Constants.Names.Functions.mml2chtml,
-      with: [
-        input,
-        inline,
-        try containerConfig.json(),
-        try outputConfig.json()
-      ])
+    return try callFunction(.mml2chtml, with: [
+      input,
+      inline,
+      try containerConfig.json(),
+      try outputConfig.json()
+    ])
   }
   
 }

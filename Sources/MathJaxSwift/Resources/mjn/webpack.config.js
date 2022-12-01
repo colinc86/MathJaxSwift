@@ -1,7 +1,11 @@
 var path = require('path');
 
 module.exports = {
-  entry: { mjn: "./index.js" },
+  entry: {
+    chtml: "./converters/chtml.js",
+    mml:   "./converters/mml.js",
+    svg:   "./converters/svg.js"
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: "[name].bundle.js",

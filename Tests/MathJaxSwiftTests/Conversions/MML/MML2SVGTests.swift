@@ -8,7 +8,7 @@ final class MML2SVGTests: XCTestCase {
   var mathjax: MathJax!
   
   override func setUp() async throws {
-    mathjax = try MathJax()
+    mathjax = try MathJax(preferredOutputFormat: .svg)
   }
   
   func testMML2SVGSync() throws {
