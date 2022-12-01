@@ -1,0 +1,28 @@
+{
+  "name": "mjn",
+  "version": "3.2.2",
+  "description": "A MathJax wrapper for Swift.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --progress --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/colinc86/mjn"
+  },
+  "keywords": [
+    "mathjax",
+    "tex",
+    "latex"
+  ],
+  "author": "Colin Campbell",
+  "license": "MIT",
+  "dependencies": {
+    "mathjax-full": "^3.2.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
+  }
+}
