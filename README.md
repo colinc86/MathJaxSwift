@@ -35,7 +35,7 @@ catch {
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/images/hello_tex_light.png">
   <source media="(prefers-color-scheme: light)" srcset="./assets/images/hello_tex_dark.png">
-  <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png">
+  <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png" width=200px, height=auto>
 </picture>
 
 ### Available Methods
@@ -217,18 +217,22 @@ After making modifications to `index.js`, it should be rebuilt with `npm run bui
 
 As described in the [Preferred Output Formats](https://github.com/colinc86/MathJaxSwift#preferred-output-formats) section, you can lazily load the package's bundles. This will greatly improve load times and reduce overhead.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/load_time_light.png">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/images/load_time_dark.png">
-  <img alt="Average Load Times (seconds)" src="./assets/images/load_time_dark.png">
-</picture>
+<center>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/images/load_time_light.png">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/images/load_time_dark.png">
+    <img alt="Average Load Times (seconds)" src="./assets/images/load_time_dark.png" width=400px, height=auto>
+  </picture>
+</center>
 
 For example, if you only need CommonHTML formatted output, you can reduce loading overhead over 50% by only initializing with `chtml` set as the preferred output format.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/execution_time_light.png">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/images/execution_time_dark.png">
-  <img alt="Average Execution Times (seconds)" src="./assets/images/execution_time_dark.png">
-</picture>
+<center>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/images/execution_time_light.png">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/images/execution_time_dark.png">
+    <img alt="Average Execution Times (seconds)" src="./assets/images/execution_time_dark.png" width=400px, height=auto>
+  </picture>
+</center>
 
 Execution times are benchmarked with the XCTest `measure` method on a MacBook Pro, M1 Max, 64 GB, macOS Ventura 13.0.1.
