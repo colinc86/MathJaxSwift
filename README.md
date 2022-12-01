@@ -2,7 +2,7 @@
 
 Converts and renders math expressions in Swift using [MathJax](https://github.com/mathjax/MathJax) and the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework.
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![iOS Version](https://img.shields.io/badge/iOS-%3E%3D13-informational) ![macOS Version](https://img.shields.io/badge/macOS-%3E%3D10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![iOS Version](https://img.shields.io/badge/iOS-%3E%3D13-informational) ![macOS Version](https://img.shields.io/badge/macOS-%3E%3D10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-4.0.0--alpha.1-green)
 
 `MathJaxSwift` wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
@@ -11,7 +11,7 @@ Converts and renders math expressions in Swift using [MathJax](https://github.co
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.2.2")
+.package(url: "https://github.com/colinc86/MathJaxSwift", branch: "v4.0")
 ```
 
 ## Usage
