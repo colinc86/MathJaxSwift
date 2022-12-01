@@ -6,16 +6,6 @@ Converts and renders math expressions in Swift using [MathJax](https://github.co
 
 `MathJaxSwift` wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
-It implements the following methods
-
-- [x] `tex2svg` - [TeX](https://tug.org) to SVG
-- [x] `tex2chtml` - TeX to HTML
-- [x] `tex2mml` - TeX to [MathML](https://www.w3.org/TR/MathML/)
-- [x] `mml2svg` - MathML to SVG
-- [x] `mml2chtml` - MathML to HTML
-- [x] `am2chtml` - [AsciiMath](http://asciimath.org) to HTML
-- [x] `am2mml` - AsciiMath to MathML
-
 ## Installation
 
 Add the dependency to your package manifest file.
@@ -42,7 +32,25 @@ catch {
 
 > The example above converts the TeX input to SVG data that renders the following PNG.
 
-![Hello, TeX!](/assets/images/hello_tex.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/hello_tex_light.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/images/hello_tex_dark.png">
+  <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png">
+</picture>
+
+### Available Methods
+
+MathJaxSwift implements the following methods to convert [TeX](https://tug.org), [MathML](https://www.w3.org/TR/MathML/), and [AsciiMath](http://asciimath.org) to CommonHTML, MathML and SVG data.
+
+| Method      | Input Format                            | Output Format |
+| :---------- | :-------------------------------------- | :------------ |
+| `tex2chtml` | TeX                                     | cHTML         |
+| `tex2mml`   | TeX                                     | MathML        |
+| `tex2svg`   | TeX                                     | SVG           |
+| `mml2chtml` | MathML                                  | cHTML         |
+| `mml2svg`   | MathML                                  | SVG           |
+| `am2chtml`  | AsciiMath                               | cHTML         |
+| `am2mml`    | AsciiMath                               | MathML        |
 
 ### Threading and Memory
 
@@ -103,7 +111,7 @@ func myAsyncMethod() async throws {
 
 #### Preferred Output Formats
 
-MathJaxSwift loads all of the necessary JavaScript in to its context to run all of the conversion methods. In the case that you only want to utilize a subset of the package's output formats, you can instruct the `MathJax` instance to only intialize with your preferred output formats.
+MathJaxSwift loads all of the necessary JavaScript in to its context to run all of the conversion methods. In the case that you only want to utilize a subset of the package's output formats, you can instruct the `MathJax` instance to only initialize with your preferred output formats.
 
 ```swift
 do {
@@ -199,8 +207,28 @@ You can also use the returned metadata to check the MathJax node module's URL an
 
 ## Notes
 
-To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create a bundle file that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
+To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create bundle files that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
 
-`mjn`'s main entry point is `index.js` which houses the `Converter` class and conversion functions that utilize MathJax. The file is packed with Webpack and placed in to the `mjn/dist/mjn.bundle.js` file. `mjn.bundle.js` is loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions.
+`mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions.
 
-After making modifications to `index.js`, it should be rebuilt with `npm run build` executed in the `mjn` directory which will recreate the `mjn.bundle.js` file.
+After making modifications to `index.js`, it should be rebuilt with `npm run build` executed in the `mjn` directory which will recreate the bundle files.
+
+### Performance
+
+As described in the [Preferred Output Formats](https://github.com/colinc86/MathJaxSwift#preferred-output-formats) section, you can lazily load the package's bundles. This will greatly improve load times and reduce overhead.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/load_time_light.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/images/load_time_dark.png">
+  <img alt="Average Load Times (seconds)" src="./assets/images/load_time_dark.png">
+</picture>
+
+For example, if you only need CommonHTML formatted output, you can reduce loading overhead over 50% by only initializing with `chtml` set as the preferred output format.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/execution_time_light.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/images/execution_time_dark.png">
+  <img alt="Average Execution Times (seconds)" src="./assets/images/execution_time_dark.png">
+</picture>
+
+Execution times are benchmarked with the XCTest `measure` method on a MacBook Pro, M1 Max, 64 GB, macOS Ventura 13.0.1.

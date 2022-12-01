@@ -265,18 +265,20 @@ extension MathJax {
   
   /// Performs the throwing closure asynchronously.
   ///
-  /// - Parameter closure: The closure to execute.
+  /// - Parameters:
+  ///   - queue: The queue to perform the block on.
+  ///   - block: The block to execute.
   /// - Returns: A string.
-  internal func performAsync(_ closure: @escaping (MathJax) throws -> String) async throws -> String {
+  internal func perform(on queue: DispatchQueue, _ block: @escaping (MathJax) throws -> String) async throws -> String {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {
         continuation.resume(throwing: MJError.deallocatedSelf)
         return
       }
       
-      Task {
+      queue.async {
         do {
-          continuation.resume(returning: try closure(self))
+          continuation.resume(returning: try block(self))
         }
         catch {
           continuation.resume(throwing: error)

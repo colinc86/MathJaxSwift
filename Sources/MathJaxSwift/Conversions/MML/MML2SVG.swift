@@ -16,14 +16,16 @@ extension MathJax {
   ///   - inline: Process the math as inline or not.
   ///   - containerConfig: The SVG container configuration.
   ///   - outputConfig: The SVG output processor configuration.
+  ///   - queue: The queue to execute the conversion on.
   /// - Returns: SVG formatted output.
   public func mml2svg(
     _ input: String,
     inline: Bool = false,
     containerConfig: SVGContainerConfiguration = SVGContainerConfiguration(),
-    outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration()
+    outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration(),
+    queue: DispatchQueue = .global()
   ) async throws -> String {
-    return try await performAsync { mathjax in
+    return try await perform(on: queue) { mathjax in
       try mathjax.mml2svg(
         input,
         inline: inline,
