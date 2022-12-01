@@ -109,6 +109,14 @@ func myAsyncMethod() async throws {
 </math>
 ```
 
+You can specify which queue to execute on when calling async methods. The instance will use the `.global()` queue by default.
+
+```swift
+func myAsyncMethod() async throws {
+  let mml = try await mathjax.tex2mml("\\frac{2}{3}", queue: myQueue)
+}
+```
+
 #### Preferred Output Formats
 
 MathJaxSwift loads all of the necessary JavaScript in to its context to run all of the conversion methods. In the case that you only want to utilize a subset of the package's output formats, you can instruct the `MathJax` instance to only initialize with your preferred output formats.
@@ -139,7 +147,7 @@ catch {
 }
 ```
 
-See the [Performance](https://github.com/colinc86/MathJaxSwift#performance) section for more details.
+See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more details.
 
 ### Block Rendering
 
