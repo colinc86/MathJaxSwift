@@ -2,7 +2,7 @@
 
 Converts and renders math expressions in Swift using [MathJax](https://github.com/mathjax/MathJax) and the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework.
 
-[![Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
+[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![iOS Version](https://img.shields.io/badge/iOS-%3E%3D13-informational) ![macOS Version](https://img.shields.io/badge/macOS-%3E%3D10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
 
 `MathJaxSwift` wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
 
@@ -225,22 +225,18 @@ After making modifications to `index.js`, it should be rebuilt with `npm run bui
 
 As described in the [Preferred Output Formats](https://github.com/colinc86/MathJaxSwift#preferred-output-formats) section, you can lazily load the package's bundles. This will greatly improve load times and reduce overhead.
 
-<center>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/images/load_time_light.png">
-    <source media="(prefers-color-scheme: light)" srcset="./assets/images/load_time_dark.png">
-    <img alt="Average Load Times (seconds)" src="./assets/images/load_time_dark.png" width=400px, height=auto>
-  </picture>
-</center>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/load_time_light.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/images/load_time_dark.png">
+  <img alt="Average Load Times (seconds)" src="./assets/images/load_time_dark.png" width=400px, height=auto>
+</picture>
 
 For example, if you only need CommonHTML formatted output, you can reduce loading overhead over 50% by only initializing with `chtml` set as the preferred output format.
 
-<center>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/images/execution_time_light.png">
-    <source media="(prefers-color-scheme: light)" srcset="./assets/images/execution_time_dark.png">
-    <img alt="Average Execution Times (seconds)" src="./assets/images/execution_time_dark.png" width=400px, height=auto>
-  </picture>
-</center>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/execution_time_light.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/images/execution_time_dark.png">
+  <img alt="Average Execution Times (seconds)" src="./assets/images/execution_time_dark.png" width=400px, height=auto>
+</picture>
 
 Execution times are benchmarked with the XCTest `measure` method on a MacBook Pro, M1 Max, 64 GB, macOS Ventura 13.0.1.
