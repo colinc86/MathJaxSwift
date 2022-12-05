@@ -11,12 +11,6 @@ public class OutputProcessorOptions: Options {
   
   // MARK: Types
   
-  public enum ConfigurationError: Error {
-    
-    /// The configuration was unable to be encoded in to UTF-8 character data.
-    case unableToEncodeConfiguration
-  }
-  
   public enum DisplayAlignment: String, Codable {
     
     /// Align content left.
@@ -31,8 +25,8 @@ public class OutputProcessorOptions: Options {
   
   // MARK: Default values
   
-  public static let defaultScale: Float = 1
-  public static let defaultMinScale: Float = 0.5
+  public static let defaultScale: Double = 1
+  public static let defaultMinScale: Double = 0.5
   public static let defaultMtextInheritFont: Bool = false
   public static let defaultMerrorInheritFont: Bool = false
   public static let defaultMtextFont: String = ""
@@ -40,9 +34,9 @@ public class OutputProcessorOptions: Options {
   public static let defaultUnknownFamily: String = "serif"
   public static let defaultMathmlSpacing: Bool = false
   public static let defaultSkipAttributes: [String: Bool] = [:]
-  public static let defaultExFactor: Float = 0.5
+  public static let defaultExFactor: Double = 0.5
   public static let defaultDisplayAlign: DisplayAlignment = .center
-  public static let defaultDisplayIndent: Float = 0
+  public static let defaultDisplayIndent: Double = 0
   
   // MARK: Properties
   
@@ -56,7 +50,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `1`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-scale)
-  public let scale: Float
+  dynamic public var scale: Double
   
   /// This gives a minimum scale factor for the scaling used by MathJax to match
   /// the equation to the surrounding text.
@@ -65,7 +59,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `0.5`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-minscale)
-  public let minScale: Float
+  dynamic public var minScale: Double
   
   /// This setting controls whether `<mtext>` elements will be typeset using the
   /// math fonts or the font of the surrounding text.
@@ -79,7 +73,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `false`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-mtextinheritfont)
-  public let mtextInheritFont: Bool
+  dynamic public var mtextInheritFont: Bool
   
   /// This setting controls whether the text for `<merror>` elements will be
   /// typeset using the math fonts or the font of the surrounding text.
@@ -92,7 +86,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `false`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-merrorinheritfont)
-  public let merrorInheritFont: Bool
+  dynamic public var merrorInheritFont: Bool
   
   /// This specifies the font family to use for `<mtext>` elements when
   /// [mtextInheritFont](https://docs.mathjax.org/en/latest/options/output/index.html#output-mtextinheritfont)
@@ -103,7 +97,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `""`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-mtextfont)
-  public let mtextFont: String
+  dynamic public var mtextFont: String
   
   /// This specifies the font family to use for `<merror>` elements when
   /// [merrorInheritFont](https://docs.mathjax.org/en/latest/options/output/index.html#output-mtextinheritfont)
@@ -114,7 +108,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `"serif"`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-merrorfont)
-  public let merrorFont: String
+  dynamic public var merrorFont: String
   
   /// This specifies the font family to use for characters that are not found in
   /// the MathJax math fonts.
@@ -124,7 +118,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `"serif"`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-unknownfamily)
-  public let unknownFamily: String
+  dynamic public var unknownFamily: String
   
   /// This specifies whether to use TeX spacing or MathML spacing when
   /// typesetting the math.
@@ -134,7 +128,7 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `false`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-mathmlspacing)
-  public let mathmlSpacing: Bool
+  dynamic public var mathmlSpacing: Bool
   
   /// This object gives a list of non-standard attributes (e.g., RFDa
   /// attributes) that will *not* be transferred from MathML element to their
@@ -155,19 +149,19 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `{}`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-skipattributes)
-  public let skipAttributes: [String: Bool]
+  dynamic public var skipAttributes: [String: Bool]
   
   /// This is the size of an ex in comparison to 1 em that is to be used when
   /// the ex-size can’t be determined (e.g., when running in a Node application,
   /// where the size of DOM elements can’t be determined).
-  public let exFactor: Float
+  dynamic public var exFactor: Double
   
   /// This determines how displayed equations will be aligned (left, center, or
   /// right).
   ///
   /// - Note: The default value is `center`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-displayalign)
-  public let displayAlign: DisplayAlignment
+  dynamic public var displayAlign: DisplayAlignment
   
   /// This gives the amount of indentation that should be used for displayed
   /// equations.
@@ -178,13 +172,13 @@ public class OutputProcessorOptions: Options {
   ///
   /// - Note: The default value is `0`. Negative values are allowed.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-displayindent)
-  public let displayIndent: Float
+  dynamic public var displayIndent: Double
   
   // MARK: Initializers
   
   init(
-    scale: Float = defaultScale,
-    minScale: Float = defaultMinScale,
+    scale: Double = defaultScale,
+    minScale: Double = defaultMinScale,
     mtextInheritFont: Bool = defaultMtextInheritFont,
     merrorInheritFont: Bool = defaultMerrorInheritFont,
     mtextFont: String = defaultMtextFont,
@@ -192,9 +186,9 @@ public class OutputProcessorOptions: Options {
     unknownFamily: String = defaultUnknownFamily,
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
-    exFactor: Float = defaultExFactor,
+    exFactor: Double = defaultExFactor,
     displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Float = defaultDisplayIndent
+    displayIndent: Double = defaultDisplayIndent
   ) {
     self.scale = scale
     self.minScale = minScale

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SVGContainerOptions: ContainerOptions {
+@objc public class SVGContainerOptions: ContainerOptions {
   
   // MARK: Default values
   
@@ -17,19 +17,19 @@ public class SVGContainerOptions: ContainerOptions {
   // MARK: Properties
   
   /// Whether the CSS for a stand-alone image should be included.
-  public let styles: Bool
+  dynamic public var styles: Bool
   
   /// Whether the `<mjx-container>` element should be included.
-  public let container: Bool
+  dynamic public var container: Bool
   
   // MARK: Initializers
   
   public init(
     styles: Bool = defaultStyles,
     container: Bool = defaultContainer,
-    em: Float = defaultEm,
-    ex: Float = defaultEx,
-    width: Float = defaultWidth,
+    em: Double = defaultEm,
+    ex: Double = defaultEx,
+    width: Double = defaultWidth,
     css: Bool = defaultCSS,
     assistiveMml: Bool = defaultAssistiveMml
   ) {
@@ -41,6 +41,21 @@ public class SVGContainerOptions: ContainerOptions {
       width: width,
       css: css,
       assistiveMml: assistiveMml)
+  }
+  
+  public override func json() -> String {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+    
+    guard let data = try? encoder.encode(self) else {
+      return "{}"
+    }
+    
+    guard let jsonString = String(data: data, encoding: .utf8) else {
+      return "{}"
+    }
+    
+    return jsonString
   }
   
 }

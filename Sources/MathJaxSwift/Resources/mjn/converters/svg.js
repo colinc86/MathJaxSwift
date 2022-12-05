@@ -32,13 +32,13 @@ export class SVGConverter {
    *
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
-   * @param {object} containerConfig The SVG container configuration.
-   * @param {object} svgConfig The SVG output configuration.
+   * @param {object} containerOptions The SVG container configuration.
+   * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static tex2svg(input, inline, containerConfig, svgConfig) {
+  static tex2svg(input, inline, containerOptions, svgOptions) {
     const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
-    return SVGConverter.createSVG(input, tex, inline, containerConfig, svgConfig);
+    return SVGConverter.createSVG(input, tex, inline, containerOptions, svgOptions);
   }
   
   /**
@@ -46,13 +46,13 @@ export class SVGConverter {
    *
    * @param {string} input The MathML input string.
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
-   * @param {object} containerConfig The SVG container configuration.
-   * @param {object} svgConfig The SVG output configuration.
+   * @param {object} containerOptions The SVG container configuration.
+   * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static mml2svg(input, inline, containerConfig, svgConfig) {
+  static mml2svg(input, inline, containerOptions, svgOptions) {
     const mml = new MathML();
-    return SVGConverter.createSVG(input, mml, inline, containerConfig, svgConfig);
+    return SVGConverter.createSVG(input, mml, inline, containerOptions, svgOptions);
   }
   
   /**
@@ -61,29 +61,28 @@ export class SVGConverter {
    * @param {string} input The input string.
    * @param {object} inputJax The InputJax object.
    * @param {boolean} inline Whether or not the input should be rendered inline.
-   * @param {object} containerConfig The SVG container configuration.
-   * @param {object} svgConfig The SVG output configuration.
+   * @param {object} containerOptions The SVG container configuration.
+   * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static createSVG(input, inputJax, inline, containerConfig, svgConfig) {
-    const svgContainer = JSON.parse(containerConfig);
+  static createSVG(input, inputJax, inline, containerOptions, svgOptions) {
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
-    if (svgContainer.assistiveMml) AssistiveMmlHandler(handler);
-    const svg = new SVG(JSON.parse(svgConfig));
+    if (containerOptions.assistiveMml) AssistiveMmlHandler(handler);
+    const svg = new SVG(JSON.parse(svgOptions));
     const html = mathjax.document('', {InputJax: inputJax, OutputJax: svg});
     const node = html.convert(input || '', {
       display: !inline,
-      em: svgContainer.em,
-      ex: svgContainer.ex,
-      containerWidth: svgContainer.width
+      em: containerOptions.em,
+      ex: containerOptions.ex,
+      containerWidth: containerOptions.width
     });
     
-    if (svgContainer.css) {
+    if (containerOptions.css) {
       return adaptor.textContent(svg.styleSheet(html));
     } else {
-      let html = (svgContainer.container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
-      return svgContainer.styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;
+      let html = (containerOptions.container ? adaptor.outerHTML(node) : adaptor.innerHTML(node));
+      return containerOptions.styles ? html.replace(/<defs>/, `<defs><style>${CSS}</style>`) : html;
     }
   }
   

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
+@objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
   
   // MARK: Default values
   
@@ -31,7 +31,7 @@ public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
   ///
   /// - Note: The default value is `true`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-matchfontheight)
-  public let matchFontHeight: Bool
+  dynamic public var matchFontHeight: Bool
   
   /// This is the URL to the location where the MathJax fonts are stored.
   ///
@@ -40,7 +40,7 @@ public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
   ///
   /// - Note: The default value is `"https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2"`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-fonturl)
-  public let fontURL: URL
+  dynamic public var fontURL: URL
   
   /// This setting controls how the CommonHTML output jax handles the CSS styles
   /// that it generates.
@@ -54,7 +54,7 @@ public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
   ///
   /// - Note: The default value is `true`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-adaptivecss)
-  public let adaptiveCSS: Bool
+  dynamic public var adaptiveCSS: Bool
   
   // MARK: Initializers
   
@@ -62,8 +62,8 @@ public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
     matchFontHeight: Bool = defaultMatchFontHeight,
     fontURL: URL = defaultFontURL,
     adaptiveCSS: Bool = defaultAdaptiveCSS,
-    scale: Float = defaultScale,
-    minScale: Float = defaultMinScale,
+    scale: Double = defaultScale,
+    minScale: Double = defaultMinScale,
     mtextInheritFont: Bool = defaultMtextInheritFont,
     merrorInheritFont: Bool = defaultMerrorInheritFont,
     mtextFont: String = defaultMtextFont,
@@ -71,9 +71,9 @@ public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
     unknownFamily: String = defaultUnknownFamily,
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
-    exFactor: Float = defaultExFactor,
+    exFactor: Double = defaultExFactor,
     displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Float = defaultDisplayIndent
+    displayIndent: Double = defaultDisplayIndent
   ) {
     self.matchFontHeight = matchFontHeight
     self.fontURL = fontURL
@@ -92,6 +92,21 @@ public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
+  }
+  
+  public override func json() -> String {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+    
+    guard let data = try? encoder.encode(self) else {
+      return "{}"
+    }
+    
+    guard let jsonString = String(data: data, encoding: .utf8) else {
+      return "{}"
+    }
+    
+    return jsonString
   }
   
 }

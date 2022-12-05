@@ -52,8 +52,8 @@ extension MathJax {
     return try callFunction(.mml2svg, with: [
       input,
       inline,
-      try containerOptions.json(),
-      try outputOptions.json()
+      containerOptions,
+      outputOptions
     ])
   }
   

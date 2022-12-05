@@ -6,40 +6,46 @@
 //
 
 import Foundation
+import JavaScriptCore
+
+@objc protocol ContainerOptionsJSExports: JSExport {
+  var em: Double
+  var ex: Double
+}
 
 public class ContainerOptions: Options {
   
   // MARK: Default values
   
-  public static let defaultEm: Float = 16
-  public static let defaultEx: Float = 8
-  public static let defaultWidth: Float = 80 * 16
+  public static let defaultEm: Double = 16
+  public static let defaultEx: Double = 8
+  public static let defaultWidth: Double = 80 * 16
   public static let defaultCSS: Bool = false
   public static let defaultAssistiveMml: Bool = false
   
   // MARK: Properties
   
   /// The em-size in pixels.
-  public let em: Float
+  dynamic public var em: Double
   
   /// The ex-size in pixels.
-  public let ex: Float
+  dynamic public var ex: Double
   
   /// The width of the container in pixels.
-  public let width: Float
+  dynamic public var width: Double
   
   /// Whether the required CSS is output instead.
-  public let css: Bool
+  dynamic public var css: Bool
   
   /// Whether to include assistive MathML output.
-  public let assistiveMml: Bool
+  dynamic public var assistiveMml: Bool
   
   // MARK: Initializers
   
   public init(
-    em: Float = defaultEm,
-    ex: Float = defaultEx,
-    width: Float = defaultWidth,
+    em: Double = defaultEm,
+    ex: Double = defaultEx,
+    width: Double = defaultWidth,
     css: Bool = defaultCSS,
     assistiveMml: Bool = defaultAssistiveMml
   ) {

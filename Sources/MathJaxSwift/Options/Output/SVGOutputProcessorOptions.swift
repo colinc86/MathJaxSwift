@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SVGOutputProcessorOptions: OutputProcessorOptions {
+@objc public class SVGOutputProcessorOptions: OutputProcessorOptions {
   
   // MARK: Types
   
@@ -47,7 +47,7 @@ public class SVGOutputProcessorOptions: OutputProcessorOptions {
   ///
   /// - Note: The default value is `local`.
   /// - SeeAlso: [SVG Output Processor Options](https://docs.mathjax.org/en/latest/options/output/svg.html#output-fontcache)
-  public let fontCache: FontCache
+  dynamic public var fontCache: FontCache
   
   /// This tells the SVG output jax whether to put speech text into `<title>`
   /// elements within the SVG (when set to `true`), or to use an aria-label
@@ -60,15 +60,15 @@ public class SVGOutputProcessorOptions: OutputProcessorOptions {
   ///
   /// - Note: The default value is `true`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-internalspeechtitles)
-  public let internalSpeechTitles: Bool
+  dynamic public var internalSpeechTitles: Bool
   
   // MARK: Initializers
   
   public init(
     fontCache: FontCache = defaultFontCache,
     internalSpeechTitles: Bool = defaultInternalSpeechTitles,
-    scale: Float = defaultScale,
-    minScale: Float = defaultMinScale,
+    scale: Double = defaultScale,
+    minScale: Double = defaultMinScale,
     mtextInheritFont: Bool = defaultMtextInheritFont,
     merrorInheritFont: Bool = defaultMerrorInheritFont,
     mtextFont: String = defaultMtextFont,
@@ -76,9 +76,9 @@ public class SVGOutputProcessorOptions: OutputProcessorOptions {
     unknownFamily: String = defaultUnknownFamily,
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
-    exFactor: Float = defaultExFactor,
+    exFactor: Double = defaultExFactor,
     displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Float = defaultDisplayIndent
+    displayIndent: Double = defaultDisplayIndent
   ) {
     self.fontCache = fontCache
     self.internalSpeechTitles = internalSpeechTitles
@@ -96,6 +96,21 @@ public class SVGOutputProcessorOptions: OutputProcessorOptions {
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
+  }
+  
+  public override func json() -> String {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+    
+    guard let data = try? encoder.encode(self) else {
+      return "{}"
+    }
+    
+    guard let jsonString = String(data: data, encoding: .utf8) else {
+      return "{}"
+    }
+    
+    return jsonString
   }
   
 }

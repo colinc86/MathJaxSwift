@@ -117,8 +117,18 @@ public final class MathJax {
     }
     context = ctx
     
+    // Register our options classes
+    try registerClasses([
+      CHTMLContainerOptions.self,
+      SVGContainerOptions.self,
+      CHTMLOutputProcessorOptions.self,
+      SVGOutputProcessorOptions.self
+    ])
+    
     // Load the bundles for the preferred output formats
     try loadBundles(with: preferredOutputFormats)
+    
+    
   }
   
   /// Initializes a new `MathJax` instance.
@@ -202,6 +212,14 @@ extension MathJax {
     
     // Save the supported format
     supportedOutputFormats.append(outputFormat)
+  }
+  
+  private func registerClasses(_ classes: [Options.Type]) throws {
+    for aClass in classes {
+      print("registering class \(String(describing: aClass))")
+      context.setObject(aClass.self, forKeyedSubscript: String(describing: aClass.self) as NSString)
+      try checkForJSException()
+    }
   }
   
   /// Checks for an exception in the JS context and throws an error if one is

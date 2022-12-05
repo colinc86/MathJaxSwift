@@ -52,8 +52,8 @@ extension MathJax {
     return try callFunction(.mml2chtml, with: [
       input,
       inline,
-      try containerOptions.json(),
-      try outputOptions.json()
+      containerOptions,
+      outputOptions
     ])
   }
   

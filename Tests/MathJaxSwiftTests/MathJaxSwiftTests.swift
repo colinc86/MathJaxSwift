@@ -5,6 +5,12 @@ final class MathJaxSwiftTests: XCTestCase {
   
   static let texInput = "\\frac{2}{3}"
   static let amInput = "2/3"
+  static let identityScript = #"""
+function identity(argument) {
+    console.log(argument.json())
+    return argument;
+}
+"""#
   
   func testBundle() throws {
     let mathjax = try MathJax()
@@ -87,6 +93,8 @@ final class MathJaxSwiftTests: XCTestCase {
   }
   
 }
+
+// MARK: Helpers
 
 extension MathJaxSwiftTests {
   
