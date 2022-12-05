@@ -1,5 +1,5 @@
 //
-//  CHTMLOutputProcessorConfiguration.swift
+//  CHTMLOutputProcessorOptions.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
+public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
   
   // MARK: Default values
   

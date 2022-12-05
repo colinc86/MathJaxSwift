@@ -1,5 +1,5 @@
 //
-//  SVGContainerConfiguration.swift
+//  SVGContainerOptions.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class SVGContainerConfiguration: CHTMLContainerConfiguration {
+public class SVGContainerOptions: ContainerOptions {
   
   // MARK: Default values
   

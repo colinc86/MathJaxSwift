@@ -1,23 +1,13 @@
 //
-//  CHTMLContainerConfiguration.swift
+//  ContainerOptions.swift
 //  MathJaxSwift
 //
-//  Created by Colin Campbell on 11/29/22.
+//  Created by Colin Campbell on 12/5/22.
 //
 
 import Foundation
 
-public typealias ContainerConfiguration = CHTMLContainerConfiguration
-
-public class CHTMLContainerConfiguration: Encodable {
-  
-  // MARK: Types
-  
-  public enum ConfigurationError: Error {
-    
-    /// The configuration was unable to be encoded in to UTF-8 character data.
-    case unableToEncodeConfiguration
-  }
+public class ContainerOptions: Options {
   
   // MARK: Default values
   
@@ -61,26 +51,3 @@ public class CHTMLContainerConfiguration: Encodable {
   }
   
 }
-
-// MARK: Public methods
-
-extension CHTMLContainerConfiguration {
-  
-  /// Gets a JSON representation of the receiver.
-  ///
-  /// - Returns: A JSON string.
-  public func json() throws -> String {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.withoutEscapingSlashes]
-    
-    let data = try encoder.encode(self)
-    guard let json = String(data: data, encoding: .utf8) else {
-      throw ConfigurationError.unableToEncodeConfiguration
-    }
-    
-    return json
-  }
-  
-}
-
-

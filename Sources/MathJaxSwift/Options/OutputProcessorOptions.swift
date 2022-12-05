@@ -1,5 +1,5 @@
 //
-//  OutputProcessorConfiguration.swift
+//  OutputProcessorOptions.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class OutputProcessorConfiguration: Encodable {
+public class OutputProcessorOptions: Options {
   
   // MARK: Types
   
@@ -212,23 +212,4 @@ public class OutputProcessorConfiguration: Encodable {
   
 }
 
-// MARK: Public methods
 
-extension OutputProcessorConfiguration {
-  
-  /// Gets a JSON representation of the receiver.
-  ///
-  /// - Returns: A JSON string.
-  public func json() throws -> String {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.withoutEscapingSlashes]
-    
-    let data = try encoder.encode(self)
-    guard let json = String(data: data, encoding: .utf8) else {
-      throw ConfigurationError.unableToEncodeConfiguration
-    }
-    
-    return json
-  }
-  
-}

@@ -14,23 +14,23 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The SVG container configuration.
-  ///   - outputConfig: The SVG output processor configuration.
+  ///   - containerOptions: The SVG container options.
+  ///   - outputOptions: The SVG output processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
-    containerConfig: SVGContainerConfiguration = SVGContainerConfiguration(),
-    outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration(),
+    containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
       try mathjax.tex2svg(
         input,
         inline: inline,
-        containerConfig: containerConfig,
-        outputConfig: outputConfig
+        containerOptions: containerOptions,
+        outputOptions: outputOptions
       )
     }
   }
@@ -40,20 +40,20 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The SVG container configuration.
-  ///   - outputConfig: The SVG output processor configuration.
+  ///   - containerOptions: The SVG container options.
+  ///   - outputOptions: The SVG output processor options.
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
-    containerConfig: SVGContainerConfiguration = SVGContainerConfiguration(),
-    outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration()
+    containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2svg, with: [
       input,
       inline,
-      try containerConfig.json(),
-      try outputConfig.json()
+      try containerOptions.json(),
+      try outputOptions.json()
     ])
   }
   

@@ -14,23 +14,23 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing MathML.
   ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The CHTML container configuration.
-  ///   - outputConfig: The CHTML output processor configuration.
+  ///   - containerOptions: The CHTML container options.
+  ///   - outputOptions: The CHTML output processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: CHTML formatted output.
   public func mml2chtml(
     _ input: String,
     inline: Bool = false,
-    containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
-    outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration(),
+    containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
       try self.mml2chtml(
         input,
         inline: inline,
-        containerConfig: containerConfig,
-        outputConfig: outputConfig
+        containerOptions: containerOptions,
+        outputOptions: outputOptions
       )
     }
   }
@@ -40,20 +40,20 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing MathML.
   ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The CHTML container configuration.
-  ///   - outputConfig: The CHTML output processor configuration.
+  ///   - containerOptions: The CHTML container options.
+  ///   - outputOptions: The CHTML output processor options.
   /// - Returns: CHTML formatted output.
   public func mml2chtml(
     _ input: String,
     inline: Bool = false,
-    containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
-    outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration()
+    containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.mml2chtml, with: [
       input,
       inline,
-      try containerConfig.json(),
-      try outputConfig.json()
+      try containerOptions.json(),
+      try outputOptions.json()
     ])
   }
   

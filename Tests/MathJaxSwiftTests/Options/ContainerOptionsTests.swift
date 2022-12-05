@@ -1,16 +1,16 @@
 import XCTest
 @testable import MathJaxSwift
 
-final class ContainerConfigurationTests: XCTestCase {
+final class ContainerOptionsTests: XCTestCase {
   
   func testCHTMLContainerJSON() throws {
-    let json = try CHTMLContainerConfiguration().json()
+    let json = try CHTMLContainerOptions().json()
     XCTAssertNoThrow(json)
     XCTAssertFalse(json.isEmpty)
   }
   
   func testSVGContainerJSON() throws {
-    let json = try SVGContainerConfiguration().json()
+    let json = try SVGContainerOptions().json()
     XCTAssertNoThrow(json)
     XCTAssertFalse(json.isEmpty)
   }

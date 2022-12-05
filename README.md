@@ -171,30 +171,30 @@ func myAsyncMethod() async throws {
 </math>
 ```
 
-### Configurations
+### Options
 
-All of the methods that output SVG and HTML each support configurations passed as parameters; container and output configurations.
+All of the methods that output SVG and HTML each support options passed as parameters; container and output options.
 
-#### Container Configurations
+#### Container Options
 
-To set parameters such as the font size, height, container width, etc., use either the `CHTMLContainerConfiguration` or `SVGContainerConfiguration` type.
+To set parameters such as the font size, height, container width, etc., use either the `CHTMLContainerOptions` or `SVGContainerOptions` type.
 
-For example, to set the font's size, create a container configuration and set the `em` and `ex` parameters.
+For example, to set the font's size, create a container options instance and set the `em` and `ex` parameters.
 
-#### Output Processor Configurations
+#### Output Processor Options
 
-The MathJax HTML and SVG output processors are also configurable using the same method as above, but by setting the `outputConfig` parameter to one of `CHTMLOutputProcessorConfiguration` or `SVGOutputProcessorConfiguration`.
+The MathJax HTML and SVG output processors are also configurable using the same method as above, but by setting the `outputOptions` parameter to one of `CHTMLOutputProcessorOptions` or `SVGOutputProcessorOptions`.
 
-For more information on the types of properties that can be set on the processor configurations, see [MathJax's Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html).
+For more information on the types of properties that can be set on the processor options, see [MathJax's Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html).
 
 ```swift
-let containerConfig = CHTMLContainerConfiguration(em: 24, ex: 12)
-let outputConfig = CHTMLOutputProcessorConfiguration(scale: 2, fontCache: .none)
+let containerOptions = CHTMLContainerOptions(em: 24, ex: 12)
+let outputOptions = CHTMLOutputProcessorOptions(scale: 2, fontCache: .none)
 
 let html = try await mathjax.tex2chtml(
   "\\text{Hello}, \\TeX{}!", 
-  containerConfig: containerConfig, 
-  outputConfig: outputConfig)
+  containerOptions: containerOptions, 
+  outputOptions: outputOptions)
 ```
 
 ### MathJax Version
