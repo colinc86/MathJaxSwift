@@ -8,9 +8,8 @@
 import Foundation
 
 @objc public protocol SVGOutputProcessorOptionsJSExports: Options {
-  var fontCache: String { get set }
+  var fontCache: SVGOutputProcessorOptions.FontCache { get set }
   var internalSpeechTitles: Bool { get set }
-  
   var scale: Double { get set }
   var minScale: Double { get set }
   var mtextInheritFont: Bool { get set }
@@ -27,23 +26,13 @@ import Foundation
 
 @objc public class SVGOutputProcessorOptions: OutputProcessorOptions, SVGOutputProcessorOptionsJSExports {
   
-//  // MARK: Types
-//
-//  public enum FontCache: String, Codable {
-//
-//    /// No font cache should be used.
-//    case none
-//
-//    /// The local font cache should be used.
-//    case local
-//
-//    /// The global font cache should be used.
-//    case global
-//  }
+  // MARK: Types
+  
+  public typealias FontCache = String
   
   // MARK: Default values
   
-  public static let defaultFontCache: String = "local"
+  public static let defaultFontCache: FontCache = .local
   public static let defaultInternalSpeechTitles: Bool = true
   
   // MARK: Properties
@@ -65,7 +54,7 @@ import Foundation
   ///
   /// - Note: The default value is `local`.
   /// - SeeAlso: [SVG Output Processor Options](https://docs.mathjax.org/en/latest/options/output/svg.html#output-fontcache)
-  dynamic public var fontCache: String
+  dynamic public var fontCache: FontCache
   
   /// This tells the SVG output jax whether to put speech text into `<title>`
   /// elements within the SVG (when set to `true`), or to use an aria-label
@@ -83,7 +72,7 @@ import Foundation
   // MARK: Initializers
   
   public init(
-    fontCache: String = defaultFontCache,
+    fontCache: FontCache = defaultFontCache,
     internalSpeechTitles: Bool = defaultInternalSpeechTitles,
     scale: Double = defaultScale,
     minScale: Double = defaultMinScale,
@@ -116,4 +105,17 @@ import Foundation
     )
   }
   
+}
+
+// MARK: FontCache values
+
+extension SVGOutputProcessorOptions.FontCache {
+  /// No font cache should be used.
+  static let none = SVGOutputProcessorOptions.FontCache("none")
+  
+  /// The local font cache should be used.
+  static let local = SVGOutputProcessorOptions.FontCache("local")
+  
+  /// The global font cache should be used.
+  static let global = SVGOutputProcessorOptions.FontCache("global")
 }

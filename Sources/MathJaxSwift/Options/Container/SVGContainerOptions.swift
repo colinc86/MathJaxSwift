@@ -11,7 +11,6 @@ import JavaScriptCore
 @objc public protocol SVGContainerOptionsJSExports: JSExport {
   var styles: Bool { get set }
   var container: Bool { get set }
-  
   var em: Double { get set }
   var ex: Double { get set }
   var width: Double { get set }

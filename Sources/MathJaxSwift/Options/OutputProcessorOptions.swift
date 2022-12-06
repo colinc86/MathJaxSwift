@@ -9,19 +9,9 @@ import Foundation
 
 @objc public class OutputProcessorOptions: NSObject, Options {
   
-//  // MARK: Types
-//
-//  @objc public enum DisplayAlignment: String, Codable {
-//
-//    /// Align content left.
-//    case left
-//
-//    /// Align content center.
-//    case center
-//
-//    /// Align content right.
-//    case right
-//  }
+  // MARK: Types
+  
+  public typealias DisplayAlignment = String
   
   // MARK: Default values
   
@@ -35,7 +25,7 @@ import Foundation
   public static let defaultMathmlSpacing: Bool = false
   public static let defaultSkipAttributes: [String: Bool] = [:]
   public static let defaultExFactor: Double = 0.5
-  public static let defaultDisplayAlign: String = "center"
+  public static let defaultDisplayAlign: DisplayAlignment = .center
   public static let defaultDisplayIndent: Double = 0
   
   // MARK: Properties
@@ -161,7 +151,7 @@ import Foundation
   ///
   /// - Note: The default value is `center`.
   /// - SeeAlso: [Output Processor Options](https://docs.mathjax.org/en/latest/options/output/index.html#output-displayalign)
-  @objc dynamic public var displayAlign: String
+  @objc dynamic public var displayAlign: DisplayAlignment
   
   /// This gives the amount of indentation that should be used for displayed
   /// equations.
@@ -187,7 +177,7 @@ import Foundation
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
-    displayAlign: String = defaultDisplayAlign,
+    displayAlign: DisplayAlignment = defaultDisplayAlign,
     displayIndent: Double = defaultDisplayIndent
   ) {
     self.scale = scale
@@ -204,6 +194,19 @@ import Foundation
     self.displayIndent = displayIndent
   }
   
+}
+
+// MARK: DisplayAlignment values
+
+extension OutputProcessorOptions.DisplayAlignment {
+  /// Align content left.
+  static let left = OutputProcessorOptions.DisplayAlignment("left")
+  
+  /// Align content center.
+  static let center = OutputProcessorOptions.DisplayAlignment("center")
+  
+  /// Align content right.
+  static let right = OutputProcessorOptions.DisplayAlignment("right")
 }
 
 

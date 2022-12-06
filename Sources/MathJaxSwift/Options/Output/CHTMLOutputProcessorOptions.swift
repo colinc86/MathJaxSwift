@@ -12,7 +12,6 @@ import JavaScriptCore
   var matchFontHeight: Bool { get set }
   var fontURL: URL { get set }
   var adaptiveCSS: Bool { get set }
-  
   var scale: Double { get set }
   var minScale: Double { get set }
   var mtextInheritFont: Bool { get set }
