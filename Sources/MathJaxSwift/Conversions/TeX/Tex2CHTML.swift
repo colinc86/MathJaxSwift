@@ -13,8 +13,9 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing TeX.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerOptions: The CHTML container options.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The CHTML output processor options.
@@ -22,8 +23,9 @@ extension MathJax {
   /// - Returns: CHTML formatted output.
   public func tex2chtml(
     _ input: String,
-    inline: Bool = false,
-    containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
@@ -32,8 +34,9 @@ extension MathJax {
     return try await perform(on: queue) { mathjax in
       try mathjax.tex2chtml(
         input,
-        inline: inline,
-        containerOptions: containerOptions,
+        css: css,
+        assistiveMml: assistiveMml,
+        conversionOptions: conversionOptions,
         documentOptions: documentOptions,
         inputOptions: inputOptions,
         outputOptions: outputOptions
@@ -45,24 +48,27 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing TeX.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerOptions: The CHTML container options.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The CHTML output processor options.
   /// - Returns: CHTML formatted output.
   public func tex2chtml(
     _ input: String,
-    inline: Bool = false,
-    containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2chtml, with: [
       input,
-      inline,
-      containerOptions,
+      css,
+      assistiveMml,
+      conversionOptions,
       documentOptions,
       inputOptions,
       outputOptions

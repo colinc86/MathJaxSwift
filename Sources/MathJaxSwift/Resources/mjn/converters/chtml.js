@@ -81,7 +81,7 @@ export class CommonHTMLConverter {
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static createCHTML(input, inputJax, css, assistiveMml, conversionOptions, containerOptions, documentOptions, chtmlOptions) {
+  static createCHTML(input, inputJax, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions) {
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
     

@@ -13,8 +13,11 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing TeX.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerOptions: The SVG container options.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
+  ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The SVG output processor options.
@@ -22,8 +25,11 @@ extension MathJax {
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
-    inline: Bool = false,
-    containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
@@ -32,8 +38,11 @@ extension MathJax {
     return try await perform(on: queue) { mathjax in
       try mathjax.tex2svg(
         input,
-        inline: inline,
-        containerOptions: containerOptions,
+        css: css,
+        assistiveMml: assistiveMml,
+        container: container,
+        styles: styles,
+        conversionOptions: conversionOptions,
         documentOptions: documentOptions,
         inputOptions: inputOptions,
         outputOptions: outputOptions
@@ -45,24 +54,33 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing TeX.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerOptions: The SVG container options.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
+  ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The SVG output processor options.
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
-    inline: Bool = false,
-    containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2svg, with: [
       input,
-      inline,
-      containerOptions,
+      css,
+      assistiveMml,
+      container,
+      styles,
+      conversionOptions,
       documentOptions,
       inputOptions,
       outputOptions
