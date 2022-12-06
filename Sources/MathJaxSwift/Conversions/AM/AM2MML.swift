@@ -13,14 +13,14 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing ASCIIMath.
-  ///   - inline: Process the math as inline or not.
+  ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The ASCIIMath input processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: MathML formatted output.
   public func am2mml(
     _ input: String,
-    inline: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
     queue: DispatchQueue = .global()
@@ -28,7 +28,7 @@ extension MathJax {
     return try await perform(on: queue) { mathjax in
       try mathjax.am2mml(
         input,
-        inline: inline,
+        conversionOptions: conversionOptions,
         documentOptions: documentOptions,
         inputOptions: inputOptions
       )
@@ -39,19 +39,19 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing ASCIIMath.
-  ///   - inline: Process the math as inline or not.
+  ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The ASCIIMath input processor options.
   /// - Returns: MathML formatted output.
   public func am2mml(
     _ input: String,
-    inline: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions()
   ) throws -> String {
     return try callFunction(.am2mml, with: [
       input,
-      inline,
+      conversionOptions,
       documentOptions,
       inputOptions
     ])

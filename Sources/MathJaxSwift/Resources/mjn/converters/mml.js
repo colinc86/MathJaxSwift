@@ -22,28 +22,28 @@ export class MathMLConverter {
    * Converts a TeX input string to MathML.
    *
    * @param {string} input The TeX input string.
-   * @param {boolean} inline Whether or not the TeX should be rendered inline.
+   * @param {object} conversionOptions The MathJax conversion options.
    * @param {object} documentOptions The math document options.
    * @param {object} texOptions The TeX input options.
    * @return {string} The MathML formatted string.
    */
-  static tex2mml(input, inline, documentOptions, texOptions) {
+  static tex2mml(input, conversionOptions, documentOptions, texOptions) {
     const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
-    return MathMLConverter.createMML(input, tex, inline, documentOptions);
+    return MathMLConverter.createMML(input, tex, conversionOptions, documentOptions);
   }
   
   /**
    * Converts an ASCIIMath input string to MathML.
    *
    * @param {string} input The ASCIIMath input string.
-   * @param {boolean} inline Whether or not the ASCIIMath should be rendered inline.
+   * @param {object} conversionOptions The MathJax conversion options.
    * @param {object} documentOptions The math document options.
    * @param {object} asciimathOptions The ASCIIMath input options.
    * @return {string} The MathML formatted string.
    */
-  static am2mml(input, inline, documentOptions, asciimathOptions) {
+  static am2mml(input, conversionOptions, documentOptions, asciimathOptions) {
     const asciimath = new AsciiMath(JSON.parse(JSON.stringify(asciimathOptions)));
-    return MathMLConverter.createMML(input, asciimath, inline, documentOptions);
+    return MathMLConverter.createMML(input, asciimath, conversionOptions, documentOptions);
   }
   
   /**
@@ -51,11 +51,11 @@ export class MathMLConverter {
    *
    * @param {string} input The input string.
    * @param {object} inputJax The InputJax object.
-   * @param {boolean} inline Whether or not the input should be rendered inline.
+   * @param {object} conversionOptions The MathJax conversion options.
    * @param {object} documentOptions The math document options.
    * @return {string} The MathML formatted string.
    */
-  static createMML(input, inputJax, inline, documentOptions) {
+  static createMML(input, inputJax, conversionOptions, documentOptions) {
     const adaptor = liteAdaptor();
     const html = new HTMLDocument('', adaptor, {
       InputJax: inputJax,
@@ -67,7 +67,15 @@ export class MathMLConverter {
     
     const visitor = new SerializedMmlVisitor();
     const toMathML = (node => visitor.visitTree(node, html));
-    return toMathML(html.convert(input || '', {display: !inline, end: STATE.CONVERT}));
+    return toMathML(html.convert(input || '', {
+      display: conversionOptions.display,
+      em: conversionOptions.em,
+      ex: conversionOptions.ex,
+      containerWidth: conversionOptions.containerWidth,
+      lineWidth: conversionOptions.lineWidth,
+      scale: conversionOptions.scale,
+      end: STATE.CONVERT
+    }));
   }
   
 }

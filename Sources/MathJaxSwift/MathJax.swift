@@ -76,15 +76,14 @@ public final class MathJax {
     
     // Register our options classes
     try registerClasses([
-      CHTMLContainerOptions.self,
-      SVGContainerOptions.self,
       CHTMLOutputProcessorOptions.self,
       SVGOutputProcessorOptions.self,
       TexInputProcessorOptions.self,
       MMLInputProcessorOptions.self,
       MMLInputProcessorOptions.Verify.self,
       AMInputProcessorOptions.self,
-      DocumentOptions.self
+      DocumentOptions.self,
+      ConversionOptions.self
     ])
     
     // Load the bundles for the preferred output formats
