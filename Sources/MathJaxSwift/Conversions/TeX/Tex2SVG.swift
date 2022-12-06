@@ -15,6 +15,7 @@ extension MathJax {
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The SVG container options.
+  ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The SVG output processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: SVG formatted output.
@@ -22,6 +23,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -30,6 +32,7 @@ extension MathJax {
         input,
         inline: inline,
         containerOptions: containerOptions,
+        inputOptions: inputOptions,
         outputOptions: outputOptions
       )
     }
@@ -41,18 +44,21 @@ extension MathJax {
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The SVG container options.
+  ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The SVG output processor options.
   /// - Returns: SVG formatted output.
   public func tex2svg(
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2svg, with: [
       input,
       inline,
       containerOptions,
+      inputOptions,
       outputOptions
     ])
   }

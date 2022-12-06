@@ -23,10 +23,11 @@ export class MathMLConverter {
    *
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
+   * @param {object} texOptions The TeX input options.
    * @return {string} The MathML formatted string.
    */
-  static tex2mml(input, inline) {
-    const tex = new TeX({packages: FILTERED_PACKAGES.split(/\s*,\s*/)});
+  static tex2mml(input, inline, texOptions) {
+    const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
     return MathMLConverter.createMML(input, tex, inline);
   }
   

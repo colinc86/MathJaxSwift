@@ -33,11 +33,12 @@ export class SVGConverter {
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
    * @param {object} containerOptions The SVG container configuration.
+   * @param {object} texOptions The TeX input options.
    * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static tex2svg(input, inline, containerOptions, svgOptions) {
-    const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
+  static tex2svg(input, inline, containerOptions, texOptions, svgOptions) {
+    const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
     return SVGConverter.createSVG(input, tex, inline, containerOptions, svgOptions);
   }
   

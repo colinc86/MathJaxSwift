@@ -79,7 +79,8 @@ public final class MathJax {
       CHTMLContainerOptions.self,
       SVGContainerOptions.self,
       CHTMLOutputProcessorOptions.self,
-      SVGOutputProcessorOptions.self
+      SVGOutputProcessorOptions.self,
+      TeXInputProcessorOptions.self
     ])
     
     // Load the bundles for the preferred output formats

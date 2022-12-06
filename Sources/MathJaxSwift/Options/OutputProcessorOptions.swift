@@ -12,6 +12,16 @@ import Foundation
   // MARK: Types
   
   public typealias DisplayAlignment = String
+  public struct DisplayAlignments {
+    /// Align content left.
+    public static let left = DisplayAlignment("left")
+    
+    /// Align content center.
+    public static let center = DisplayAlignment("center")
+    
+    /// Align content right.
+    public static let right = DisplayAlignment("right")
+  }
   
   // MARK: Default values
   
@@ -25,7 +35,7 @@ import Foundation
   public static let defaultMathmlSpacing: Bool = false
   public static let defaultSkipAttributes: [String: Bool] = [:]
   public static let defaultExFactor: Double = 0.5
-  public static let defaultDisplayAlign: DisplayAlignment = .center
+  public static let defaultDisplayAlign: DisplayAlignment = DisplayAlignments.center
   public static let defaultDisplayIndent: Double = 0
   
   // MARK: Properties
@@ -195,18 +205,3 @@ import Foundation
   }
   
 }
-
-// MARK: DisplayAlignment values
-
-extension OutputProcessorOptions.DisplayAlignment {
-  /// Align content left.
-  static let left = OutputProcessorOptions.DisplayAlignment("left")
-  
-  /// Align content center.
-  static let center = OutputProcessorOptions.DisplayAlignment("center")
-  
-  /// Align content right.
-  static let right = OutputProcessorOptions.DisplayAlignment("right")
-}
-
-

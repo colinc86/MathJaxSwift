@@ -11,7 +11,7 @@ const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
 
-const PACKAGES = AllPackages.sort().join(', ');
+//const PACKAGES = AllPackages.sort().join(', ');
 
 /**
  * Converts TeX, MathML, and AsciiMath input to CommonHTML.
@@ -24,11 +24,12 @@ export class CommonHTMLConverter {
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} texOptions The TeX input options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static tex2chtml(input, inline, containerOptions, chtmlOptions) {
-    const tex = new TeX({packages: PACKAGES.split(/\s*,\s*/)});
+  static tex2chtml(input, inline, containerOptions, texOptions, chtmlOptions) {
+    const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
     return CommonHTMLConverter.createCHTML(input, tex, inline, containerOptions, chtmlOptions);
   }
   
@@ -74,7 +75,7 @@ export class CommonHTMLConverter {
     const adaptor = liteAdaptor({fontSize: containerOptions.em});
     const handler = RegisterHTMLHandler(adaptor);
     if (containerOptions.assistiveMml) AssistiveMmlHandler(handler);
-    const chtml = new CHTML(JSON.stringify(chtmlOptions));
+    const chtml = new CHTML(JSON.parse(JSON.stringify(chtmlOptions)));
     const html = mathjax.document('', {InputJax: inputJax, OutputJax: chtml});
     const node = html.convert(input || '', {
       display: !inline,

@@ -29,10 +29,20 @@ import Foundation
   // MARK: Types
   
   public typealias FontCache = String
+  public struct FontCaches {
+    /// No font cache should be used.
+    public static let none = FontCache("none")
+    
+    /// The local font cache should be used.
+    public static let local = FontCache("local")
+    
+    /// The global font cache should be used.
+    public static let global = FontCache("global")
+  }
   
   // MARK: Default values
   
-  public static let defaultFontCache: FontCache = .local
+  public static let defaultFontCache: FontCache = FontCaches.local
   public static let defaultInternalSpeechTitles: Bool = true
   
   // MARK: Properties
@@ -105,17 +115,4 @@ import Foundation
     )
   }
   
-}
-
-// MARK: FontCache values
-
-extension SVGOutputProcessorOptions.FontCache {
-  /// No font cache should be used.
-  static let none = SVGOutputProcessorOptions.FontCache("none")
-  
-  /// The local font cache should be used.
-  static let local = SVGOutputProcessorOptions.FontCache("local")
-  
-  /// The global font cache should be used.
-  static let global = SVGOutputProcessorOptions.FontCache("global")
 }
