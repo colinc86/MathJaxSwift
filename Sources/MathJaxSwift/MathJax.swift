@@ -83,13 +83,12 @@ public final class MathJax {
       TexInputProcessorOptions.self,
       MMLInputProcessorOptions.self,
       MMLInputProcessorOptions.Verify.self,
-      AMInputProcessorOptions.self
+      AMInputProcessorOptions.self,
+      DocumentOptions.self
     ])
     
     // Load the bundles for the preferred output formats
     try loadBundles(with: preferredOutputFormats)
-    
-    
   }
   
   /// Initializes a new `MathJax` instance.

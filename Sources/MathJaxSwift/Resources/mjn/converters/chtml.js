@@ -24,13 +24,14 @@ export class CommonHTMLConverter {
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} documentOptions The math document options.
    * @param {object} texOptions The TeX input options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static tex2chtml(input, inline, containerOptions, texOptions, chtmlOptions) {
+  static tex2chtml(input, inline, containerOptions, documentOptions, texOptions, chtmlOptions) {
     const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
-    return CommonHTMLConverter.createCHTML(input, tex, inline, containerOptions, chtmlOptions);
+    return CommonHTMLConverter.createCHTML(input, tex, inline, containerOptions, documentOptions, chtmlOptions);
   }
   
   /**
@@ -39,13 +40,14 @@ export class CommonHTMLConverter {
    * @param {string} input The MathML input string.
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} documentOptions The math document options.
    * @param {object} mathmlOptions The MathML input options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static mml2chtml(input, inline, containerOptions, mathmlOptions, chtmlOptions) {
+  static mml2chtml(input, inline, containerOptions, documentOptions, mathmlOptions, chtmlOptions) {
     const mml = new MathML(JSON.parse(JSON.stringify(mathmlOptions)));
-    return CommonHTMLConverter.createCHTML(input, mml, inline, containerOptions, chtmlOptions);
+    return CommonHTMLConverter.createCHTML(input, mml, inline, containerOptions, documentOptions, chtmlOptions);
   }
   
   /**
@@ -54,13 +56,14 @@ export class CommonHTMLConverter {
    * @param {string} input The ASCIIMath input string.
    * @param {boolean} inline Whether or not the ASCIIMath should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} documentOptions The math document options.
    * @param {object} asciimathOptions The ASCIIMath input options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static am2chtml(input, inline, containerOptions, asciimathOptions, chtmlOptions) {
+  static am2chtml(input, inline, containerOptions, documentOptions, asciimathOptions, chtmlOptions) {
     const asciimath = new AsciiMath(JSON.parse(JSON.stringify(asciimathOptions)));
-    return CommonHTMLConverter.createCHTML(input, asciimath, inline, containerOptions, chtmlOptions);
+    return CommonHTMLConverter.createCHTML(input, asciimath, inline, containerOptions, documentOptions, chtmlOptions);
   }
   
   /**
@@ -70,15 +73,26 @@ export class CommonHTMLConverter {
    * @param {object} inputJax The InputJax object.
    * @param {boolean} inline Whether or not the input should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} documentOptions The math document options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static createCHTML(input, inputJax, inline, containerOptions, chtmlOptions) {
-    const adaptor = liteAdaptor({fontSize: containerOptions.em});
+  static createCHTML(input, inputJax, inline, containerOptions, documentOptions, chtmlOptions) {
+    const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
+    
     if (containerOptions.assistiveMml) AssistiveMmlHandler(handler);
+    
     const chtml = new CHTML(JSON.parse(JSON.stringify(chtmlOptions)));
-    const html = mathjax.document('', {InputJax: inputJax, OutputJax: chtml});
+    const html = mathjax.document('', {
+      InputJax: inputJax,
+      OutputJax: chtml,
+      skipHtmlTags: documentOptions.skipHtmlTags,
+      includeHtmlTags: documentOptions.includeHtmlTags,
+      ignoreHtmlClass: documentOptions.ignoreHtmlClass,
+      processHtmlClass: documentOptions.processHtmlClass
+    });
+    
     const node = html.convert(input || '', {
       display: !inline,
       em: containerOptions.em,

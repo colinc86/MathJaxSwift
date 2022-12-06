@@ -14,12 +14,14 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
+  ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: MathML formatted output.
   public func tex2mml(
     _ input: String,
     inline: Bool = false,
+    documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -27,6 +29,7 @@ extension MathJax {
       try mathjax.tex2mml(
         input,
         inline: inline,
+        documentOptions: documentOptions,
         inputOptions: inputOptions
       )
     }
@@ -37,16 +40,19 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
+  ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   /// - Returns: MathML formatted output.
   public func tex2mml(
     _ input: String,
     inline: Bool = false,
+    documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2mml, with: [
       input,
       inline,
+      documentOptions,
       inputOptions
     ])
   }

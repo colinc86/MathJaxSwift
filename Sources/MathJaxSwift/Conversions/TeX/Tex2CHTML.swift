@@ -15,6 +15,7 @@ extension MathJax {
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The CHTML container options.
+  ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The CHTML output processor options.
   ///   - queue: The queue to execute the conversion on.
@@ -23,6 +24,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     queue: DispatchQueue = .global()
@@ -32,6 +34,7 @@ extension MathJax {
         input,
         inline: inline,
         containerOptions: containerOptions,
+        documentOptions: documentOptions,
         inputOptions: inputOptions,
         outputOptions: outputOptions
       )
@@ -44,6 +47,7 @@ extension MathJax {
   ///   - input: The input string containing TeX.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The CHTML container options.
+  ///   - documentOptions: The math document options.
   ///   - inputOptions: The TeX input processor options.
   ///   - outputOptions: The CHTML output processor options.
   /// - Returns: CHTML formatted output.
@@ -51,6 +55,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
@@ -58,6 +63,7 @@ extension MathJax {
       input,
       inline,
       containerOptions,
+      documentOptions,
       inputOptions,
       outputOptions
     ])

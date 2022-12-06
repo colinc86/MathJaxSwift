@@ -15,6 +15,7 @@ extension MathJax {
   ///   - input: The input string containing MathML.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The CHTML container options.
+  ///   - documentOptions: The math document options.
   ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The CHTML output processor options.
   ///   - queue: The queue to execute the conversion on.
@@ -23,6 +24,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     queue: DispatchQueue = .global()
@@ -32,6 +34,7 @@ extension MathJax {
         input,
         inline: inline,
         containerOptions: containerOptions,
+        documentOptions: documentOptions,
         inputOptions: inputOptions,
         outputOptions: outputOptions
       )
@@ -43,6 +46,7 @@ extension MathJax {
   /// - Parameters:
   ///   - input: The input string containing MathML.
   ///   - inline: Process the math as inline or not.
+  ///   - documentOptions: The math document options.
   ///   - containerOptions: The CHTML container options.
   ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The CHTML output processor options.
@@ -51,6 +55,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
@@ -58,6 +63,7 @@ extension MathJax {
       input,
       inline,
       containerOptions,
+      documentOptions,
       inputOptions,
       outputOptions
     ])

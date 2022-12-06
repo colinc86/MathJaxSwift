@@ -33,13 +33,14 @@ export class SVGConverter {
    * @param {string} input The TeX input string.
    * @param {boolean} inline Whether or not the TeX should be rendered inline.
    * @param {object} containerOptions The SVG container configuration.
+   * @param {object} documentOptions The math document options.
    * @param {object} texOptions The TeX input options.
    * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static tex2svg(input, inline, containerOptions, texOptions, svgOptions) {
+  static tex2svg(input, inline, containerOptions, documentOptions, texOptions, svgOptions) {
     const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
-    return SVGConverter.createSVG(input, tex, inline, containerOptions, svgOptions);
+    return SVGConverter.createSVG(input, tex, inline, containerOptions, documentOptions, svgOptions);
   }
   
   /**
@@ -48,13 +49,14 @@ export class SVGConverter {
    * @param {string} input The MathML input string.
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
    * @param {object} containerOptions The SVG container configuration.
+   * @param {object} documentOptions The math document options.
    * @param {object} mathmlOptions The MathML input options.
    * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static mml2svg(input, inline, containerOptions, mathmlOptions, svgOptions) {
+  static mml2svg(input, inline, containerOptions, documentOptions, mathmlOptions, svgOptions) {
     const mml = new MathML(JSON.parse(JSON.stringify(mathmlOptions)));
-    return SVGConverter.createSVG(input, mml, inline, containerOptions, svgOptions);
+    return SVGConverter.createSVG(input, mml, inline, containerOptions, documentOptions, svgOptions);
   }
   
   /**
@@ -64,15 +66,26 @@ export class SVGConverter {
    * @param {object} inputJax The InputJax object.
    * @param {boolean} inline Whether or not the input should be rendered inline.
    * @param {object} containerOptions The SVG container configuration.
+   * @param {object} documentOptions The math document options.
    * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static createSVG(input, inputJax, inline, containerOptions, svgOptions) {
+  static createSVG(input, inputJax, inline, containerOptions, documentOptions, svgOptions) {
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
+    
     if (containerOptions.assistiveMml) AssistiveMmlHandler(handler);
+    
     const svg = new SVG(JSON.stringify(svgOptions));
-    const html = mathjax.document('', {InputJax: inputJax, OutputJax: svg});
+    const html = mathjax.document('', {
+      InputJax: inputJax,
+      OutputJax: svg,
+      skipHtmlTags: documentOptions.skipHtmlTags,
+      includeHtmlTags: documentOptions.includeHtmlTags,
+      ignoreHtmlClass: documentOptions.ignoreHtmlClass,
+      processHtmlClass: documentOptions.processHtmlClass
+    });
+    
     const node = html.convert(input || '', {
       display: !inline,
       em: containerOptions.em,
