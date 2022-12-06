@@ -39,11 +39,12 @@ export class CommonHTMLConverter {
    * @param {string} input The MathML input string.
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} mathmlOptions The MathML input options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static mml2chtml(input, inline, containerOptions, chtmlOptions) {
-    const mml = new MathML();
+  static mml2chtml(input, inline, containerOptions, mathmlOptions, chtmlOptions) {
+    const mml = new MathML(JSON.parse(JSON.stringify(mathmlOptions)));
     return CommonHTMLConverter.createCHTML(input, mml, inline, containerOptions, chtmlOptions);
   }
   

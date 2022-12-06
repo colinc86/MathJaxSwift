@@ -48,11 +48,12 @@ export class SVGConverter {
    * @param {string} input The MathML input string.
    * @param {boolean} inline Whether or not the MathML should be rendered inline.
    * @param {object} containerOptions The SVG container configuration.
+   * @param {object} mathmlOptions The MathML input options.
    * @param {object} svgOptions The SVG output configuration.
    * @return {string} The SVG formatted string.
    */
-  static mml2svg(input, inline, containerOptions, svgOptions) {
-    const mml = new MathML();
+  static mml2svg(input, inline, containerOptions, mathmlOptions, svgOptions) {
+    const mml = new MathML(JSON.parse(JSON.stringify(mathmlOptions)));
     return SVGConverter.createSVG(input, mml, inline, containerOptions, svgOptions);
   }
   

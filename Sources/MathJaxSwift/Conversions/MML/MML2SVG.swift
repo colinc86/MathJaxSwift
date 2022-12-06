@@ -15,6 +15,7 @@ extension MathJax {
   ///   - input: The input string containing MathML.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The SVG container options.
+  ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The SVG output processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: SVG formatted output.
@@ -22,6 +23,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    inputOptions: MathMLInputProcessorOptions = MathMLInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -30,6 +32,7 @@ extension MathJax {
         input,
         inline: inline,
         containerOptions: containerOptions,
+        inputOptions: inputOptions,
         outputOptions: outputOptions
       )
     }
@@ -41,18 +44,21 @@ extension MathJax {
   ///   - input: The input string containing MathML.
   ///   - inline: Process the math as inline or not.
   ///   - containerOptions: The SVG container options.
+  ///   - inputOptions: The MathML input processor options.
   ///   - outputOptions: The SVG output processor options.
   /// - Returns: SVG formatted output.
   public func mml2svg(
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
+    inputOptions: MathMLInputProcessorOptions = MathMLInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.mml2svg, with: [
       input,
       inline,
       containerOptions,
+      inputOptions,
       outputOptions
     ])
   }
