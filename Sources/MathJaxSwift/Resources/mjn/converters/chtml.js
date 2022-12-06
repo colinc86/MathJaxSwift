@@ -74,7 +74,7 @@ export class CommonHTMLConverter {
     const adaptor = liteAdaptor({fontSize: containerOptions.em});
     const handler = RegisterHTMLHandler(adaptor);
     if (containerOptions.assistiveMml) AssistiveMmlHandler(handler);
-    const chtml = new CHTML(JSON.parse(chtmlOptions));
+    const chtml = new CHTML(JSON.stringify(chtmlOptions));
     const html = mathjax.document('', {InputJax: inputJax, OutputJax: chtml});
     const node = html.convert(input || '', {
       display: !inline,

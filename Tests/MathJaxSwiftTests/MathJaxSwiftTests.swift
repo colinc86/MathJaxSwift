@@ -7,7 +7,6 @@ final class MathJaxSwiftTests: XCTestCase {
   static let amInput = "2/3"
   static let identityScript = #"""
 function identity(argument) {
-    console.log(argument.json())
     return argument;
 }
 """#

@@ -7,25 +7,43 @@
 
 import Foundation
 
-@objc public class SVGOutputProcessorOptions: OutputProcessorOptions {
+@objc public protocol SVGOutputProcessorOptionsJSExports: Options {
+  var fontCache: String { get set }
+  var internalSpeechTitles: Bool { get set }
   
-  // MARK: Types
+  var scale: Double { get set }
+  var minScale: Double { get set }
+  var mtextInheritFont: Bool { get set }
+  var merrorInheritFont: Bool { get set }
+  var mtextFont: String { get set }
+  var merrorFont: String { get set }
+  var unknownFamily: String { get set }
+  var mathmlSpacing: Bool { get set }
+  var skipAttributes: [String: Bool] { get set }
+  var exFactor: Double { get set }
+  var displayAlign: String { get set }
+  var displayIndent: Double { get set }
+}
+
+@objc public class SVGOutputProcessorOptions: OutputProcessorOptions, SVGOutputProcessorOptionsJSExports {
   
-  public enum FontCache: String, Codable {
-    
-    /// No font cache should be used.
-    case none
-    
-    /// The local font cache should be used.
-    case local
-    
-    /// The global font cache should be used.
-    case global
-  }
+//  // MARK: Types
+//
+//  public enum FontCache: String, Codable {
+//
+//    /// No font cache should be used.
+//    case none
+//
+//    /// The local font cache should be used.
+//    case local
+//
+//    /// The global font cache should be used.
+//    case global
+//  }
   
   // MARK: Default values
   
-  public static let defaultFontCache: FontCache = .local
+  public static let defaultFontCache: String = "local"
   public static let defaultInternalSpeechTitles: Bool = true
   
   // MARK: Properties
@@ -47,7 +65,7 @@ import Foundation
   ///
   /// - Note: The default value is `local`.
   /// - SeeAlso: [SVG Output Processor Options](https://docs.mathjax.org/en/latest/options/output/svg.html#output-fontcache)
-  dynamic public var fontCache: FontCache
+  dynamic public var fontCache: String
   
   /// This tells the SVG output jax whether to put speech text into `<title>`
   /// elements within the SVG (when set to `true`), or to use an aria-label
@@ -65,7 +83,7 @@ import Foundation
   // MARK: Initializers
   
   public init(
-    fontCache: FontCache = defaultFontCache,
+    fontCache: String = defaultFontCache,
     internalSpeechTitles: Bool = defaultInternalSpeechTitles,
     scale: Double = defaultScale,
     minScale: Double = defaultMinScale,
@@ -77,7 +95,7 @@ import Foundation
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
-    displayAlign: DisplayAlignment = defaultDisplayAlign,
+    displayAlign: String = defaultDisplayAlign,
     displayIndent: Double = defaultDisplayIndent
   ) {
     self.fontCache = fontCache
@@ -96,21 +114,6 @@ import Foundation
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
-  }
-  
-  public override func json() -> String {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    
-    guard let data = try? encoder.encode(self) else {
-      return "{}"
-    }
-    
-    guard let jsonString = String(data: data, encoding: .utf8) else {
-      return "{}"
-    }
-    
-    return jsonString
   }
   
 }

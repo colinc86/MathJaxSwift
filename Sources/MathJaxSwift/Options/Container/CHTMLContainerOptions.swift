@@ -6,5 +6,14 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-public typealias CHTMLContainerOptions = ContainerOptions
+@objc public protocol CHTMLContainerOptionsJSExports: JSExport {
+  var em: Double { get set }
+  var ex: Double { get set }
+  var width: Double { get set }
+  var css: Bool { get set }
+  var assistiveMml: Bool { get set }
+}
+
+@objc public class CHTMLContainerOptions: ContainerOptions, CHTMLContainerOptionsJSExports {}

@@ -8,4 +8,4 @@
 import Foundation
 import JavaScriptCore
 
-public protocol Options: Encodable {}
+@objc public protocol Options: JSExport {}

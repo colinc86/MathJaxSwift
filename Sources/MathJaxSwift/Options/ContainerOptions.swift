@@ -6,14 +6,8 @@
 //
 
 import Foundation
-import JavaScriptCore
 
-@objc protocol ContainerOptionsJSExports: JSExport {
-  var em: Double
-  var ex: Double
-}
-
-public class ContainerOptions: Options {
+@objc public class ContainerOptions: NSObject, Options {
   
   // MARK: Default values
   
@@ -26,19 +20,19 @@ public class ContainerOptions: Options {
   // MARK: Properties
   
   /// The em-size in pixels.
-  dynamic public var em: Double
+  @objc dynamic public var em: Double
   
   /// The ex-size in pixels.
-  dynamic public var ex: Double
+  @objc dynamic public var ex: Double
   
   /// The width of the container in pixels.
-  dynamic public var width: Double
+  @objc dynamic public var width: Double
   
   /// Whether the required CSS is output instead.
-  dynamic public var css: Bool
+  @objc dynamic public var css: Bool
   
   /// Whether to include assistive MathML output.
-  dynamic public var assistiveMml: Bool
+  @objc dynamic public var assistiveMml: Bool
   
   // MARK: Initializers
   

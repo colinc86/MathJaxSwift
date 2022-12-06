@@ -6,8 +6,28 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-@objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions {
+@objc public protocol CHTMLOutputProcessorOptionsJSExports: JSExport {
+  var matchFontHeight: Bool { get set }
+  var fontURL: URL { get set }
+  var adaptiveCSS: Bool { get set }
+  
+  var scale: Double { get set }
+  var minScale: Double { get set }
+  var mtextInheritFont: Bool { get set }
+  var merrorInheritFont: Bool { get set }
+  var mtextFont: String { get set }
+  var merrorFont: String { get set }
+  var unknownFamily: String { get set }
+  var mathmlSpacing: Bool { get set }
+  var skipAttributes: [String: Bool] { get set }
+  var exFactor: Double { get set }
+  var displayAlign: String { get set }
+  var displayIndent: Double { get set }
+}
+
+@objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions, CHTMLOutputProcessorOptionsJSExports {
   
   // MARK: Default values
   
@@ -72,7 +92,7 @@ import Foundation
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
-    displayAlign: DisplayAlignment = defaultDisplayAlign,
+    displayAlign: String = defaultDisplayAlign,
     displayIndent: Double = defaultDisplayIndent
   ) {
     self.matchFontHeight = matchFontHeight
@@ -92,21 +112,6 @@ import Foundation
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
-  }
-  
-  public override func json() -> String {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    
-    guard let data = try? encoder.encode(self) else {
-      return "{}"
-    }
-    
-    guard let jsonString = String(data: data, encoding: .utf8) else {
-      return "{}"
-    }
-    
-    return jsonString
   }
   
 }

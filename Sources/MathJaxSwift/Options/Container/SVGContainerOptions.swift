@@ -6,8 +6,20 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-@objc public class SVGContainerOptions: ContainerOptions {
+@objc public protocol SVGContainerOptionsJSExports: JSExport {
+  var styles: Bool { get set }
+  var container: Bool { get set }
+  
+  var em: Double { get set }
+  var ex: Double { get set }
+  var width: Double { get set }
+  var css: Bool { get set }
+  var assistiveMml: Bool { get set }
+}
+
+@objc public class SVGContainerOptions: ContainerOptions, SVGContainerOptionsJSExports {
   
   // MARK: Default values
   
@@ -41,21 +53,6 @@ import Foundation
       width: width,
       css: css,
       assistiveMml: assistiveMml)
-  }
-  
-  public override func json() -> String {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    
-    guard let data = try? encoder.encode(self) else {
-      return "{}"
-    }
-    
-    guard let jsonString = String(data: data, encoding: .utf8) else {
-      return "{}"
-    }
-    
-    return jsonString
   }
   
 }

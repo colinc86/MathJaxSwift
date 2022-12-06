@@ -69,7 +69,7 @@ export class SVGConverter {
     const adaptor = liteAdaptor();
     const handler = RegisterHTMLHandler(adaptor);
     if (containerOptions.assistiveMml) AssistiveMmlHandler(handler);
-    const svg = new SVG(JSON.parse(svgOptions));
+    const svg = new SVG(JSON.stringify(svgOptions));
     const html = mathjax.document('', {InputJax: inputJax, OutputJax: svg});
     const node = html.convert(input || '', {
       display: !inline,
