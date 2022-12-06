@@ -20,7 +20,7 @@ extension MathJax {
   public func tex2mml(
     _ input: String,
     inline: Bool = false,
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
@@ -42,7 +42,7 @@ extension MathJax {
   public func tex2mml(
     _ input: String,
     inline: Bool = false,
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions()
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2mml, with: [
       input,

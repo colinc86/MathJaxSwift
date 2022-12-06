@@ -23,7 +23,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -51,7 +51,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2svg, with: [

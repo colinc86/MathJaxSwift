@@ -36,10 +36,11 @@ export class MathMLConverter {
    *
    * @param {string} input The ASCIIMath input string.
    * @param {boolean} inline Whether or not the ASCIIMath should be rendered inline.
+   * @param {object} asciimathOptions The ASCIIMath input options.
    * @return {string} The MathML formatted string.
    */
-  static am2mml(input, inline) {
-    const asciimath = new AsciiMath();
+  static am2mml(input, inline, asciimathOptions) {
+    const asciimath = new AsciiMath(JSON.parse(JSON.stringify(asciimathOptions)));
     return MathMLConverter.createMML(input, asciimath, inline);
   }
   

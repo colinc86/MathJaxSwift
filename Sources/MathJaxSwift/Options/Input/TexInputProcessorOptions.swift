@@ -8,7 +8,7 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol TeXInputProcessorOptionsJSExports: JSExport {
+@objc public protocol TexInputProcessorOptionsJSExports: JSExport {
   var packages: [String] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }
@@ -16,15 +16,15 @@ import JavaScriptCore
   var processRefs: Bool { get set }
   var processEnvironments: Bool { get set }
   var digits: String { get set }
-  var tags: TeXInputProcessorOptions.Tag { get set }
-  var tagSide: TeXInputProcessorOptions.TagSide { get set }
+  var tags: TexInputProcessorOptions.Tag { get set }
+  var tagSide: TexInputProcessorOptions.TagSide { get set }
   var tagIndent: String { get set }
   var useLabelIds: Bool { get set }
   var maxMacros: Int { get set }
   var maxBuffer: Int { get set }
 }
 
-@objc public class TeXInputProcessorOptions: InputProcessorOptions, TeXInputProcessorOptionsJSExports {
+@objc public class TexInputProcessorOptions: InputProcessorOptions, TexInputProcessorOptionsJSExports {
   
   // MARK: Types
   

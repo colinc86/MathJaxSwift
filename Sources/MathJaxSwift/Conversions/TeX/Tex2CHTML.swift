@@ -23,7 +23,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -51,7 +51,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: CHTMLContainerOptions = CHTMLContainerOptions(),
-    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2chtml, with: [

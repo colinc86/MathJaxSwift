@@ -54,11 +54,12 @@ export class CommonHTMLConverter {
    * @param {string} input The ASCIIMath input string.
    * @param {boolean} inline Whether or not the ASCIIMath should be rendered inline.
    * @param {object} containerOptions The CommonHTML container options.
+   * @param {object} asciimathOptions The ASCIIMath input options.
    * @param {object} chtmlOptions The CommonHTML output options.
    * @return {string} The CommonHTML formatted string.
    */
-  static am2chtml(input, inline, containerOptions, chtmlOptions) {
-    const asciimath = new AsciiMath();
+  static am2chtml(input, inline, containerOptions, asciimathOptions, chtmlOptions) {
+    const asciimath = new AsciiMath(JSON.parse(JSON.stringify(asciimathOptions)));
     return CommonHTMLConverter.createCHTML(input, asciimath, inline, containerOptions, chtmlOptions);
   }
   

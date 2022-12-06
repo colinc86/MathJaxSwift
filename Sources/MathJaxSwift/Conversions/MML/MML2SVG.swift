@@ -23,7 +23,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
-    inputOptions: MathMLInputProcessorOptions = MathMLInputProcessorOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -51,7 +51,7 @@ extension MathJax {
     _ input: String,
     inline: Bool = false,
     containerOptions: SVGContainerOptions = SVGContainerOptions(),
-    inputOptions: MathMLInputProcessorOptions = MathMLInputProcessorOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.mml2svg, with: [

@@ -8,10 +8,10 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol MathMLInputProcessorOptionsJSExports: JSExport {
-  var parseAs: MathMLInputProcessorOptions.Parser { get set }
+@objc public protocol MMLInputProcessorOptionsJSExports: JSExport {
+  var parseAs: MMLInputProcessorOptions.Parser { get set }
   var forceReparse: Bool { get set }
-  var verify: MathMLInputProcessorOptions.Verify { get set }
+  var verify: MMLInputProcessorOptions.Verify { get set }
 }
 
 @objc public protocol VerifyJSExports: JSExport {
@@ -22,7 +22,7 @@ import JavaScriptCore
   var fixMtables: Bool { get set }
 }
 
-@objc public class MathMLInputProcessorOptions: InputProcessorOptions, MathMLInputProcessorOptionsJSExports {
+@objc public class MMLInputProcessorOptions: InputProcessorOptions, MMLInputProcessorOptionsJSExports {
   
   // MARK: Types
   
