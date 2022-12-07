@@ -8,7 +8,7 @@
     border="0" alt="Powered by MathJax" />
 </a>
 
-`MathJaxSwift` converts and renders math expressions in Swift by incorporating [MathJax](https://github.com/mathjax/MathJax)[^1] source code and using the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework. It wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
+`MathJaxSwift` converts and renders math expressions in Swift by incorporating [MathJax](https://github.com/mathjax/MathJax)[^1] source code and using the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework. It wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift.
 
 [^1]: `MathJaxSwift` is not affiliated with [MathJax](https://github.com/mathjax/MathJax) or any of its related entities.
 
@@ -17,7 +17,7 @@
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.2.2")
+.package(url: "https://github.com/colinc86/MathJaxSwift", branch: "main")
 ```
 
 ## Usage
@@ -155,28 +155,6 @@ catch {
 
 See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more details.
 
-### Block Rendering
-
-Use the `inline` parameter to specify whether or not the input should be interpreted as inline text. Input is interpreted as `inline=false` by default which results in block output.
-
-```swift
-func myAsyncMethod() async throws {
-  let mml = try await mathjax.tex2mml("\\frac{2}{3}", inline: true)
-  print(mml)
-}
-```
-
-> Compare the following MathML output to the output of the previous example.
-
-```xml
-<math xmlns="http://www.w3.org/1998/Math/MathML">
-  <mfrac>
-    <mn>2</mn>
-    <mn>3</mn>
-  </mfrac>
-</math>
-```
-
 ### Options
 
 Each of the methods have various options that can be passed. Options are segmented in to
@@ -258,23 +236,3 @@ To get around the limitations of the `JSContext` class, the package uses [Webpac
 `mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions.
 
 After making modifications to `index.js`, it should be rebuilt with `npm run build` executed in the `mjn` directory which will recreate the bundle files.
-
-### Performance
-
-As described in the [Preferred Output Formats](https://github.com/colinc86/MathJaxSwift#preferred-output-formats) section, you can lazily load the package's bundles. This will greatly improve load times and reduce overhead.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/load_time_light.png">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/images/load_time_dark.png">
-  <img alt="Average Load Times (seconds)" src="./assets/images/load_time_dark.png" width=400px, height=auto>
-</picture>
-
-For example, if you only need CommonHTML formatted output, you can reduce loading overhead over 50% by only initializing with `chtml` set as the preferred output format.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/execution_time_light.png">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/images/execution_time_dark.png">
-  <img alt="Average Execution Times (seconds)" src="./assets/images/execution_time_dark.png" width=400px, height=auto>
-</picture>
-
-Execution times are benchmarked with the XCTest `measure` method on a MacBook Pro, M1 Max, 64 GB, macOS Ventura 13.0.1.

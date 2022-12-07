@@ -16,7 +16,7 @@ extension MathJax {
   ///   - css: Whether the document's CSS should be output.
   ///   - assistiveMml: Whether the include assistive MathML output.
   ///   - container: Whether the document's outer HTML should be returned.
-  ///   - styles: Whether CSS styles should be included.
+  ///   - styles: Whether CSS styles should be included. (Default is `true`.)
   ///   - conversionOptions: The MathJax conversion options.
   ///   - documentOptions: The math document options.
   ///   - inputOptions: The MathML input processor options.
@@ -28,7 +28,7 @@ extension MathJax {
     css: Bool = false,
     assistiveMml: Bool = false,
     container: Bool = false,
-    styles: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
@@ -68,7 +68,7 @@ extension MathJax {
     css: Bool = false,
     assistiveMml: Bool = false,
     container: Bool = false,
-    styles: Bool = false,
+    styles: Bool = true,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
