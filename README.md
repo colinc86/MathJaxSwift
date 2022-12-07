@@ -1,10 +1,16 @@
 # MathJaxSwift
 
-Converts and renders math expressions in Swift using [MathJax](https://github.com/mathjax/MathJax) and the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework.
-
 [![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![iOS Version](https://img.shields.io/badge/iOS-%3E%3D13-informational) ![macOS Version](https://img.shields.io/badge/macOS-%3E%3D10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
 
-`MathJaxSwift` wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
+<a href="https://www.mathjax.org">
+    <img title="Powered by MathJax"
+    src="https://www.mathjax.org/badge/badge.gif"
+    border="0" alt="Powered by MathJax" />
+</a>
+
+`MathJaxSwift` converts and renders math expressions in Swift by incorporating [MathJax](https://github.com/mathjax/MathJax)[^1] source code and using the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework. It wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
+
+[^1]: `MathJaxSwift` is not affiliated with [MathJax](https://github.com/mathjax/MathJax) or any of its related entities.
 
 ## Installation
 
