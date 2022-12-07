@@ -1,13 +1,38 @@
 //
-//  CHTMLOutputProcessorConfiguration.swift
+//  CHTMLOutputProcessorOptions.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
 //
 
 import Foundation
+import JavaScriptCore
 
-public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
+@objc public protocol CHTMLOutputProcessorOptionsJSExports: JSExport {
+  var matchFontHeight: Bool { get set }
+  var fontURL: URL { get set }
+  var adaptiveCSS: Bool { get set }
+  var scale: Double { get set }
+  var minScale: Double { get set }
+  var mtextInheritFont: Bool { get set }
+  var merrorInheritFont: Bool { get set }
+  var mtextFont: String { get set }
+  var merrorFont: String { get set }
+  var unknownFamily: String { get set }
+  var mathmlSpacing: Bool { get set }
+  var skipAttributes: [String: Bool] { get set }
+  var exFactor: Double { get set }
+  var displayAlign: String { get set }
+  var displayIndent: Double { get set }
+}
+
+/// The options below control the operation of the [CommonHTML output processor](https://docs.mathjax.org/en/latest/output/html.html#html-output)
+/// that is run when you include `output/chtml` in the load array of the loader
+/// block of your MathJax configuration, or if you load a combined component
+/// that includes the CommonHTML output jax. They are listed with their default
+/// values. To set any of these options, include a chtml section in your
+/// `MathJax` global object.
+@objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions, CHTMLOutputProcessorOptionsJSExports {
   
   // MARK: Default values
   
@@ -31,7 +56,7 @@ public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
   ///
   /// - Note: The default value is `true`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-matchfontheight)
-  public let matchFontHeight: Bool
+  dynamic public var matchFontHeight: Bool
   
   /// This is the URL to the location where the MathJax fonts are stored.
   ///
@@ -40,7 +65,7 @@ public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
   ///
   /// - Note: The default value is `"https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2"`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-fonturl)
-  public let fontURL: URL
+  dynamic public var fontURL: URL
   
   /// This setting controls how the CommonHTML output jax handles the CSS styles
   /// that it generates.
@@ -54,7 +79,7 @@ public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
   ///
   /// - Note: The default value is `true`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-adaptivecss)
-  public let adaptiveCSS: Bool
+  dynamic public var adaptiveCSS: Bool
   
   // MARK: Initializers
   
@@ -62,8 +87,8 @@ public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
     matchFontHeight: Bool = defaultMatchFontHeight,
     fontURL: URL = defaultFontURL,
     adaptiveCSS: Bool = defaultAdaptiveCSS,
-    scale: Float = defaultScale,
-    minScale: Float = defaultMinScale,
+    scale: Double = defaultScale,
+    minScale: Double = defaultMinScale,
     mtextInheritFont: Bool = defaultMtextInheritFont,
     merrorInheritFont: Bool = defaultMerrorInheritFont,
     mtextFont: String = defaultMtextFont,
@@ -71,9 +96,9 @@ public class CHTMLOutputProcessorConfiguration: OutputProcessorConfiguration {
     unknownFamily: String = defaultUnknownFamily,
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
-    exFactor: Float = defaultExFactor,
-    displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Float = defaultDisplayIndent
+    exFactor: Double = defaultExFactor,
+    displayAlign: String = defaultDisplayAlign,
+    displayIndent: Double = defaultDisplayIndent
   ) {
     self.matchFontHeight = matchFontHeight
     self.fontURL = fontURL

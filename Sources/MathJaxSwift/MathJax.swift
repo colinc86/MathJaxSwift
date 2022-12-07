@@ -13,49 +13,6 @@ public final class MathJax {
   
   // MARK: Types
   
-  /// An error thrown by the `MathJax` package.
-  public enum MJError: Error, CustomStringConvertible {
-    case unknown
-    case deallocatedSelf
-    case unableToCreateContext
-    case javascriptException(value: String?)
-    
-    case missingPackageFile
-    case missingDependencyInformation
-    case missingBundle(url: URL)
-    case missingModule
-    case missingClass
-    case missingFunction(name: String)
-    
-    case unexpectedVersion(version: String)
-    
-    case conversionFailed
-    case conversionUnknownError
-    case conversionInvalidFormat
-    
-    public var description: String {
-      switch self {
-      case .unknown:                        return "An unknown error occurred."
-      case .deallocatedSelf:                return "An internal error occurred."
-      case .unableToCreateContext:          return "The required JavaScript context could not be created."
-      case .javascriptException(let value): return "The JavaScript context threw an exception: \(value ?? "(unknown)")"
-        
-      case .missingPackageFile:             return "The npm package-lock file was missing or is inaccessible."
-      case .missingDependencyInformation:   return "The mathjax-full node module metadata was missing."
-      case .missingBundle(let url):         return "The bundled JavaScript file at \(url) is missing or is inaccessible."
-      case .missingModule:                  return "The module is missing or is inaccessible."
-      case .missingClass:                   return "The class is missing or is inaccessible."
-      case .missingFunction(let name):      return "The function, \(name), is missing or is inaccessible."
-        
-      case .unexpectedVersion(let version): return "The MathJax version (\(version)) was not the expected version (\(Constants.expectedMathJaxVersion))."
-      
-      case .conversionFailed:               return "The function failed to convert the input string."
-      case .conversionUnknownError:         return "The conversion failed for an unknown reason."
-      case .conversionInvalidFormat:        return "The output format was invalid."
-      }
-    }
-  }
-  
   /// The npm `mathjax-full` metadata.
   public struct Metadata: Codable {
     
@@ -116,6 +73,18 @@ public final class MathJax {
       throw MJError.unableToCreateContext
     }
     context = ctx
+    
+    // Register our options classes
+    try registerClasses([
+      CHTMLOutputProcessorOptions.self,
+      SVGOutputProcessorOptions.self,
+      TexInputProcessorOptions.self,
+      MMLInputProcessorOptions.self,
+      MMLInputProcessorOptions.Verify.self,
+      AMInputProcessorOptions.self,
+      DocumentOptions.self,
+      ConversionOptions.self
+    ])
     
     // Load the bundles for the preferred output formats
     try loadBundles(with: preferredOutputFormats)
@@ -202,6 +171,13 @@ extension MathJax {
     
     // Save the supported format
     supportedOutputFormats.append(outputFormat)
+  }
+  
+  private func registerClasses(_ classes: [JSExport.Type]) throws {
+    for aClass in classes {
+      context.setObject(aClass.self, forKeyedSubscript: String(describing: aClass.self) as NSString)
+      try checkForJSException()
+    }
   }
   
   /// Checks for an exception in the JS context and throws an error if one is

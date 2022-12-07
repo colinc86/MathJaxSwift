@@ -1,10 +1,16 @@
 # MathJaxSwift
 
-Converts and renders math expressions in Swift using [MathJax](https://github.com/mathjax/MathJax) and the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework.
+[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![Swift Version](https://img.shields.io/badge/Swift-5.5-orange?logo=swift) ![iOS Version](https://img.shields.io/badge/iOS-13-informational) ![macOS Version](https://img.shields.io/badge/macOS-10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![iOS Version](https://img.shields.io/badge/iOS-%3E%3D13-informational) ![macOS Version](https://img.shields.io/badge/macOS-%3E%3D10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+<a href="https://www.mathjax.org">
+    <img title="Powered by MathJax"
+    src="https://www.mathjax.org/badge/badge.gif"
+    border="0" alt="Powered by MathJax" />
+</a>
 
-`MathJaxSwift` wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
+`MathJaxSwift` converts and renders math expressions in Swift by incorporating [MathJax](https://github.com/mathjax/MathJax)[^1] source code and using the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework. It wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift through the `JavaScriptCore` framework.
+
+[^1]: `MathJaxSwift` is not affiliated with [MathJax](https://github.com/mathjax/MathJax) or any of its related entities.
 
 ## Installation
 
@@ -171,30 +177,62 @@ func myAsyncMethod() async throws {
 </math>
 ```
 
-### Configurations
+### Options
 
-All of the methods that output SVG and HTML each support configurations passed as parameters; container and output configurations.
+Each of the methods have various options that can be passed. Options are segmented in to
 
-#### Container Configurations
+- Document options
+- Conversion options
+- Input processor options
+- Output processor options
 
-To set parameters such as the font size, height, container width, etc., use either the `CHTMLContainerConfiguration` or `SVGContainerConfiguration` type.
+#### Document Options
 
-For example, to set the font's size, create a container configuration and set the `em` and `ex` parameters.
-
-#### Output Processor Configurations
-
-The MathJax HTML and SVG output processors are also configurable using the same method as above, but by setting the `outputConfig` parameter to one of `CHTMLOutputProcessorConfiguration` or `SVGOutputProcessorConfiguration`.
-
-For more information on the types of properties that can be set on the processor configurations, see [MathJax's Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html).
+Document options let you control the document created by MathJax. They apply to every conversion method and let you specify MathJax document-specific options. 
 
 ```swift
-let containerConfig = CHTMLContainerConfiguration(em: 24, ex: 12)
-let outputConfig = CHTMLOutputProcessorConfiguration(scale: 2, fontCache: .none)
+// Add to the `skipHtmlTags` array.
+var docOptions = DocumentOptions()
+docOptions.skipHtmlTags.append("example")
 
-let html = try await mathjax.tex2chtml(
-  "\\text{Hello}, \\TeX{}!", 
-  containerConfig: containerConfig, 
-  outputConfig: outputConfig)
+// Process the input using the new options
+let output = try! tex2chtml("\\text{Hello, }$\\LaTeX$\\text{!}", documentOptions: docOptions)
+```
+
+#### Conversion Options
+
+These options, as with document options, apply to to every conversion method. Although, the options' `display` property only pertains to methods that take TeX input. They let you set input conversion options such as `em` and `ex` sizes, container and line widths, and `scale`.
+
+```swift
+// Process the TeX input as a block instead of inline
+let convOptions = ConversionOptions(display: true)
+let output = try! tex2chtml("\\text{Hello, }$\\LaTeX$\\text{!}", conversionOptions: convOptions)
+```
+
+#### Processor Options
+
+The input and output of each of the conversion methods is configurable through various processor options. For example, if you are calling the `tex2svg` conversion method, then you can configure the input and output with `TexInputProcessorOptions` and `SVGOutputProcessorOptions`, respectively.
+
+```swift
+let inputOptions = TexInputProcessorOptions(processEscapes: true)
+let outputOptions = SVGOutputProcessorOptions(displayIndent: 0.5)
+let svg = try! mathjax.tex2svg("\\text{Hello, }\\LaTeX\\text{!}", inputOptions: inputOptions, outputOptions: outputOptions)
+```
+
+### Error Handling
+
+Each of the conversion methods are throwing methods, but you can also catch errors from MathJax using options.
+
+```swift
+let documentOptions = DocumentOptions { doc, math, err in
+  // Do something with the compile error...
+}, typesetError: { doc, math, err in
+  // Do something with the typeset error...
+}
+
+let inputOptions = TexInputProcessorOptions { jax, err in
+  // Do something with the TeX format error...
+}
 ```
 
 ### MathJax Version
