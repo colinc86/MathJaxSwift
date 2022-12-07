@@ -175,7 +175,6 @@ extension MathJax {
   
   private func registerClasses(_ classes: [JSExport.Type]) throws {
     for aClass in classes {
-      print("registering class \(String(describing: aClass))")
       context.setObject(aClass.self, forKeyedSubscript: String(describing: aClass.self) as NSString)
       try checkForJSException()
     }

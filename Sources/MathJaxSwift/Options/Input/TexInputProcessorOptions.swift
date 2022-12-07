@@ -22,11 +22,21 @@ import JavaScriptCore
   var useLabelIds: Bool { get set }
   var maxMacros: Int { get set }
   var maxBuffer: Int { get set }
+  var baseURL: String? { get set }
+  var formatError: TexInputProcessorOptions.ErrorFunction? { get set }
 }
 
+/// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
+/// that is run when you include `input/tex`, `input/tex-full`, or
+/// `input/tex-base` in the load array of the loader block of your MathJax
+/// configuration, or if you load a combined component that includes the TeX
+/// input jax. They are listed with their default values. To set any of these
+/// options, include a tex section in your `MathJax` global object.
 @objc public class TexInputProcessorOptions: InputProcessorOptions, TexInputProcessorOptionsJSExports {
   
   // MARK: Types
+  
+  public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
   
   public typealias Tag = String
   public struct Tags {
@@ -64,6 +74,8 @@ import JavaScriptCore
   public static let defaultUseLabelIds: Bool = true
   public static let defaultMaxMacros: Int = 10000
   public static let defaultMaxBuffer: Int = 5 * 1024
+  public static let defaultBaseURL: String? = nil
+  public static let defaultFormatError: ErrorFunction? = nil
   
   // MARK: Properties
   
@@ -275,6 +287,25 @@ import JavaScriptCore
   /// - SeeAlso: [TeX Input Processor Options](https://docs.mathjax.org/en/latest/options/input/tex.html#tex-maxbuffer)
   dynamic public var maxBuffer: Int
   
+  /// This is the base URL to use when creating links to tagged equations (via
+  /// `\ref{}` or `\eqref{}`) when there is a `<base>` element in the document
+  /// that would affect those links.
+  ///
+  /// You can set this value by hand if MathJax doesn’t produce the correct
+  /// link.
+  dynamic public var baseURL: String?
+  
+  /// This is a function that is called when the TeX input jax reports a syntax
+  /// or other error in the TeX that it is processing.
+  ///
+  /// The default is to generate an `<merror>` MathML element with the message
+  /// indicating the error that occurred. You can override the function to
+  /// perform other tasks, like recording the message, replacing the message
+  /// with an alternative message, or throwing the error so that MathJax will
+  /// stop at that point (you can catch the error using promises or a
+  /// `try/catch` block).
+  dynamic public var formatError: ErrorFunction?
+  
   // MARK: Initializers
   
   public init(
@@ -290,7 +321,9 @@ import JavaScriptCore
     tagIndent: String = defaultTagIndent,
     useLabelIds: Bool = defaultUseLabelIds,
     maxMacros: Int = defaultMaxMacros,
-    maxBuffer: Int = defaultMaxBuffer
+    maxBuffer: Int = defaultMaxBuffer,
+    baseURL: String? = defaultBaseURL,
+    formatError: ErrorFunction? = defaultFormatError
   ) {
     self.packages = packages
     self.inlineMath = inlineMath
@@ -305,6 +338,8 @@ import JavaScriptCore
     self.useLabelIds = useLabelIds
     self.maxMacros = maxMacros
     self.maxBuffer = maxBuffer
+    self.baseURL = baseURL
+    self.formatError = formatError
   }
   
 }

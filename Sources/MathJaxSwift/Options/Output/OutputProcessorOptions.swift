@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// There are a number of configuration options that are common to all the
+/// output processors. These are described following the links below, which give
+/// the options that are specific to the particular output jax.
+///
+/// - [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html)
+/// - [SVG Output Processor Options](https://docs.mathjax.org/en/latest/options/output/svg.html)
 @objc public class OutputProcessorOptions: NSObject, Options {
   
   // MARK: Types

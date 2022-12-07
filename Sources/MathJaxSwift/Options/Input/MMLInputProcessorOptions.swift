@@ -11,6 +11,7 @@ import JavaScriptCore
 @objc public protocol MMLInputProcessorOptionsJSExports: JSExport {
   var parseAs: MMLInputProcessorOptions.Parser { get set }
   var forceReparse: Bool { get set }
+  var parseError: MMLInputProcessorOptions.ErrorFunction? { get set }
   var verify: MMLInputProcessorOptions.Verify { get set }
 }
 
@@ -22,9 +23,17 @@ import JavaScriptCore
   var fixMtables: Bool { get set }
 }
 
+/// The options below control the operation of the [MathML input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#mathml-input)
+/// that is run when you include `input/mml` in the load array of the loader
+/// block of your MathJax configuration, or if you load a combined component
+/// that includes the MathML input jax. They are listed with their default
+/// values. To set any of these options, include an mml section in your
+/// `MathJax` global object.
 @objc public class MMLInputProcessorOptions: InputProcessorOptions, MMLInputProcessorOptionsJSExports {
   
   // MARK: Types
+  
+  public typealias ErrorFunction = @convention(block) (_ node: JSValue?) -> Void
   
   public typealias Parser = String
   public struct Parsers {
@@ -128,6 +137,7 @@ import JavaScriptCore
   
   public static let defaultParseAs: Parser = Parsers.html
   public static let defaultForceReparse: Bool = false
+  public static let defaultParseError: ErrorFunction? = nil
   public static let defaultVerify: Verify = Verify()
   
   // MARK: Properties
@@ -154,6 +164,16 @@ import JavaScriptCore
   /// - SeeAlso: [MathML Input Processor Options](https://docs.mathjax.org/en/latest/options/input/mathml.html#mathml-forcereparse)
   dynamic public var forceReparse: Bool
   
+  /// Specifies a function to be called when there is a parsing error in the
+  /// MathML (usually only happens with XML parsing).
+  ///
+  /// The node is a DOM node containing the error text. Your function can
+  /// process that in any way it sees fit. The default is to call the MathML
+  /// input processor’s error function with the text of the error (which will
+  /// create an merror node with the error message). Note that this function
+  /// runs with this being the MathML input processor object.
+  dynamic public var parseError: ErrorFunction?
+  
   /// This object controls what verification/modifications are to be performed
   /// on the MathML that is being processed by MathJax.
   ///
@@ -165,10 +185,12 @@ import JavaScriptCore
   public init(
     parseAs: Parser = defaultParseAs,
     forceReparse: Bool = defaultForceReparse,
+    parseError: ErrorFunction? = defaultParseError,
     verify: Verify = defaultVerify
   ) {
     self.parseAs = parseAs
     self.forceReparse = forceReparse
+    self.parseError = parseError
     self.verify = verify
   }
 }

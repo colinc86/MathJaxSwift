@@ -13,9 +13,19 @@ import JavaScriptCore
   var includeHtmlTags: [String: String] { get set }
   var ignoreHtmlClass: String { get set }
   var processHtmlClass: String { get set }
+  var compileError: DocumentOptions.ErrorFunction? { get set }
+  var typesetError: DocumentOptions.ErrorFunction? { get set }
 }
 
+/// The options below control the operation of the `MathDocument` object created
+/// by MathJax to process the mathematics in your web page. They are listed with
+/// their default values. To set any of these options, include an options
+/// section in your `MathJax` global object.
 @objc public class DocumentOptions: NSObject, Options, DocumentOptionsExports {
+  
+  // MARK: Types
+  
+  public typealias ErrorFunction = @convention(block) (_ doc: JSValue?, _ math: JSValue?, _ err: JSValue?) -> Void
   
   // MARK: Default values
   
@@ -38,6 +48,8 @@ import JavaScriptCore
   
   public static let defaultIgnoreHtmlClass: String = "tex2jax_ignore"
   public static let defaultProcessHtmlClass: String = "tex2jax_process"
+  public static let defaultCompileError: ErrorFunction? = nil
+  public static let defaultTypesetError: ErrorFunction? = nil
   
   // MARK: Properties
   
@@ -114,18 +126,47 @@ import JavaScriptCore
   /// - SeeAlso: [Document Options](https://docs.mathjax.org/en/latest/options/document.html#document-processhtmlclass)
   dynamic public var processHtmlClass: String
   
+  /// This is the function called whenever there is an uncaught error while an
+  /// input jax is running (i.e., during the document’s `compile()` call).
+  ///
+  /// The arguments are the `MathDocument` in which the error occurred, the
+  /// `MathItem` for the expression where it occurred, and the `Error` object
+  /// for the uncaught error. The default action is to call the document’s
+  /// default `compileError()` function, which sets `math.root` to a math
+  /// element containing an error message (i.e.,
+  /// `<math><merror><mtext>Math input error<mtext></merror></math>)`. You can
+  /// replace this with your own function for trapping run-time errors in the
+  /// input processors.
+  dynamic public var compileError: ErrorFunction?
+  
+  /// This is the function called whenever there is an uncaught error while an
+  /// output jax is running (i.e., during the document’s `typeset()` call).
+  ///
+  /// The arguments are the `MathDocument` in which the error occurred, the
+  /// `MathItem` for the expression where it occurred, and the `Error` object
+  /// for the uncaught error. The default action is to call the document’s
+  /// default `typesetError()` function, which sets `math.typesetRoot` to a
+  /// `<span>` element containing the text `Math output error`. You can replace
+  /// this with your own function for trapping run-time errors in the output
+  /// processors.
+  dynamic public var typesetError: ErrorFunction?
+  
   // MARK: Initializers
   
   public init(
     skipHtmlTags: [String] = defaultSkipHtmlTags,
     includeHtmlTags: [String: String] = defaultIncludedHtmlTags,
     ignoreHtmlClass: String = defaultIgnoreHtmlClass,
-    processHtmlClass: String = defaultProcessHtmlClass
+    processHtmlClass: String = defaultProcessHtmlClass,
+    compileError: ErrorFunction? = defaultCompileError,
+    typesetError: ErrorFunction? = defaultTypesetError
   ) {
     self.skipHtmlTags = skipHtmlTags
     self.includeHtmlTags = includeHtmlTags
     self.ignoreHtmlClass = ignoreHtmlClass
     self.processHtmlClass = processHtmlClass
+    self.compileError = compileError
+    self.typesetError = typesetError
   }
   
 }
