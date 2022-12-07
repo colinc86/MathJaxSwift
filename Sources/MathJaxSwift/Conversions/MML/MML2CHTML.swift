@@ -13,24 +13,33 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The CHTML container configuration.
-  ///   - outputConfig: The CHTML output processor configuration.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The MathML input processor options.
+  ///   - outputOptions: The CHTML output processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: CHTML formatted output.
   public func mml2chtml(
     _ input: String,
-    inline: Bool = false,
-    containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
-    outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration(),
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
       try self.mml2chtml(
         input,
-        inline: inline,
-        containerConfig: containerConfig,
-        outputConfig: outputConfig
+        css: css,
+        assistiveMml: assistiveMml,
+        conversionOptions: conversionOptions,
+        documentOptions: documentOptions,
+        inputOptions: inputOptions,
+        outputOptions: outputOptions
       )
     }
   }
@@ -39,21 +48,31 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The CHTML container configuration.
-  ///   - outputConfig: The CHTML output processor configuration.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - containerOptions: The CHTML container options.
+  ///   - inputOptions: The MathML input processor options.
+  ///   - outputOptions: The CHTML output processor options.
   /// - Returns: CHTML formatted output.
   public func mml2chtml(
     _ input: String,
-    inline: Bool = false,
-    containerConfig: CHTMLContainerConfiguration = CHTMLContainerConfiguration(),
-    outputConfig: CHTMLOutputProcessorConfiguration = CHTMLOutputProcessorConfiguration()
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.mml2chtml, with: [
       input,
-      inline,
-      try containerConfig.json(),
-      try outputConfig.json()
+      css,
+      assistiveMml,
+      conversionOptions,
+      documentOptions,
+      inputOptions,
+      outputOptions
     ])
   }
   
