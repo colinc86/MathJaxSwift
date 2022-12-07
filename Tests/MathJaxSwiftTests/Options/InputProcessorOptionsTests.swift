@@ -14,7 +14,7 @@ final class InputProcessorOptionsTests: XCTestCase {
     context?.evaluateScript(MathJaxSwiftTests.identityScript)
     XCTAssertNil(context?.exception)
     
-    let inputOptions = TexInputProcessorOptions(packages: ["test"])
+    let inputOptions = TexInputProcessorOptions()
     let createOptions = context?.objectForKeyedSubscript("identity")
     XCTAssertNotNil(createOptions)
     

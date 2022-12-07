@@ -9,9 +9,8 @@ const {AssistiveMmlHandler} = require('mathjax-full/js/a11y/assistive-mml.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
-// We don't actually need every package loaded, but we want them all available
-// to Webpack during runtime.
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+const PACKAGES = AllPackages.sort().join(', ').split(/\s*,\s*/);
 
 const CSS = [
   'svg a{fill:blue;stroke:blue}',
@@ -43,6 +42,7 @@ export class SVGConverter {
    * @return {string} The SVG formatted string.
    */
   static tex2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, texOptions, svgOptions) {
+    texOptions.packages = PACKAGES;
     const tex = new TeX(texOptions);
     return SVGConverter.createSVG(input, tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
   }

@@ -9,7 +9,7 @@ import Foundation
 import JavaScriptCore
 
 @objc public protocol TexInputProcessorOptionsJSExports: JSExport {
-  var packages: [String] { get set }
+//  var packages: [String] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }
   var processEscapes: Bool { get set }
@@ -61,7 +61,7 @@ import JavaScriptCore
   
   // MARK: Default values
   
-  public static let defaultPackages: [String] = ["base"]
+//  public static let defaultPackages: [String] = ["base"]
   public static let defaultInlineMath: [[String]] = [["\\(", "\\)"]]
   public static let defaultDisplayMath: [[String]] = [["$$", "$$"], ["\\[", "\\]"]]
   public static let defaultProcessEscapes: Bool = false
@@ -79,66 +79,66 @@ import JavaScriptCore
   
   // MARK: Properties
   
-  /// This array lists the names of the packages that should be initialized by
-  /// the TeX input processor.
-  ///
-  /// The [input/tex](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
-  /// and [input/tex-full](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
-  /// components automatically add to this list the packages that they load. If
-  /// you explicitly load addition tex extensions, you should add them to this
-  /// list. For example:
-  ///
-  /// ```javascript
-  /// MathJax = {
-  ///   loader: {load: ['[tex]/enclose']},
-  ///   tex: {
-  ///     packages: {'[+]': ['enclose']}
-  ///   }
-  /// };
-  /// ```
-  ///
-  /// This loads the [enclose](https://docs.mathjax.org/en/latest/input/tex/extensions/enclose.html#tex-enclose)
-  /// extension and acticates it by including it in the package list.
-  ///
-  /// You can remove packages from the default list using `'[-]'` rather than
-  /// `[+]`, as in the followiong example:
-  ///
-  /// ```javascript
-  /// MathJax = {
-  ///   tex: {
-  ///     packages: {'[-]': ['noundefined']}
-  ///   }
-  /// };
-  /// ```
-  ///
-  /// This would disable the
-  /// [noundefined](https://docs.mathjax.org/en/latest/input/tex/extensions/noundefined.html#tex-noundefined)
-  /// extension, so that unknown macro names would cause error messages rather
-  /// than be displayed in red.
-  ///
-  /// If you need to both remove some default packages and add new ones, you can
-  /// do so by including both within the braces:
-  ///
-  /// ```javascript
-  /// MathJax = {
-  ///   loader: {load: ['[tex]/enclose']},
-  ///   tex: {
-  ///     packages: {'[-]': ['noundefined', 'autoload'], '[+]': ['enclose']}
-  ///   }
-  /// };
-  /// ```
-  ///
-  /// This disables the
-  /// [noundefined](https://docs.mathjax.org/en/latest/input/tex/extensions/noundefined.html#tex-noundefined)
-  /// and
-  /// [autoload](https://docs.mathjax.org/en/latest/input/tex/extensions/autoload.html#tex-autoload)
-  /// extensions, and adds in the
-  /// [enclose](https://docs.mathjax.org/en/latest/input/tex/extensions/enclose.html#tex-enclose)
-  /// extension.
-  ///
-  /// - Note: The default value is `["base"]`.
-  /// - SeeAlso: [TeX Input Processor Options](https://docs.mathjax.org/en/latest/options/input/tex.html#tex-packages)
-  dynamic public var packages: [String]
+//  /// This array lists the names of the packages that should be initialized by
+//  /// the TeX input processor.
+//  ///
+//  /// The [input/tex](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
+//  /// and [input/tex-full](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
+//  /// components automatically add to this list the packages that they load. If
+//  /// you explicitly load addition tex extensions, you should add them to this
+//  /// list. For example:
+//  ///
+//  /// ```javascript
+//  /// MathJax = {
+//  ///   loader: {load: ['[tex]/enclose']},
+//  ///   tex: {
+//  ///     packages: {'[+]': ['enclose']}
+//  ///   }
+//  /// };
+//  /// ```
+//  ///
+//  /// This loads the [enclose](https://docs.mathjax.org/en/latest/input/tex/extensions/enclose.html#tex-enclose)
+//  /// extension and acticates it by including it in the package list.
+//  ///
+//  /// You can remove packages from the default list using `'[-]'` rather than
+//  /// `[+]`, as in the followiong example:
+//  ///
+//  /// ```javascript
+//  /// MathJax = {
+//  ///   tex: {
+//  ///     packages: {'[-]': ['noundefined']}
+//  ///   }
+//  /// };
+//  /// ```
+//  ///
+//  /// This would disable the
+//  /// [noundefined](https://docs.mathjax.org/en/latest/input/tex/extensions/noundefined.html#tex-noundefined)
+//  /// extension, so that unknown macro names would cause error messages rather
+//  /// than be displayed in red.
+//  ///
+//  /// If you need to both remove some default packages and add new ones, you can
+//  /// do so by including both within the braces:
+//  ///
+//  /// ```javascript
+//  /// MathJax = {
+//  ///   loader: {load: ['[tex]/enclose']},
+//  ///   tex: {
+//  ///     packages: {'[-]': ['noundefined', 'autoload'], '[+]': ['enclose']}
+//  ///   }
+//  /// };
+//  /// ```
+//  ///
+//  /// This disables the
+//  /// [noundefined](https://docs.mathjax.org/en/latest/input/tex/extensions/noundefined.html#tex-noundefined)
+//  /// and
+//  /// [autoload](https://docs.mathjax.org/en/latest/input/tex/extensions/autoload.html#tex-autoload)
+//  /// extensions, and adds in the
+//  /// [enclose](https://docs.mathjax.org/en/latest/input/tex/extensions/enclose.html#tex-enclose)
+//  /// extension.
+//  ///
+//  /// - Note: The default value is `["base"]`.
+//  /// - SeeAlso: [TeX Input Processor Options](https://docs.mathjax.org/en/latest/options/input/tex.html#tex-packages)
+//  dynamic public var packages: [String]
   
   /// This is an array of pairs of strings that are to be used as in-line math
   /// delimiters.
@@ -309,7 +309,7 @@ import JavaScriptCore
   // MARK: Initializers
   
   public init(
-    packages: [String] = defaultPackages,
+//    packages: [String] = defaultPackages,
     inlineMath: [[String]] = defaultInlineMath,
     displayMath: [[String]] = defaultDisplayMath,
     processEscapes: Bool = defaultProcessEscapes,
@@ -325,7 +325,7 @@ import JavaScriptCore
     baseURL: String? = defaultBaseURL,
     formatError: ErrorFunction? = defaultFormatError
   ) {
-    self.packages = packages
+//    self.packages = packages
     self.inlineMath = inlineMath
     self.displayMath = displayMath
     self.processEscapes = processEscapes

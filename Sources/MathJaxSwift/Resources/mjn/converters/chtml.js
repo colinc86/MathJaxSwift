@@ -10,9 +10,8 @@ const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
-// We don't actually need every package loaded, but we want them all available
-// to Webpack during runtime.
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+const PACKAGES = AllPackages.sort().join(', ').split(/\s*,\s*/);
 
 /**
  * Converts TeX, MathML, and AsciiMath input to CommonHTML.
@@ -32,6 +31,7 @@ export class CommonHTMLConverter {
    * @return {string} The CommonHTML formatted string.
    */
   static tex2chtml(input, css, assistiveMml, conversionOptions, documentOptions, texOptions, chtmlOptions) {
+    texOptions.packages = PACKAGES;
     const tex = new TeX(texOptions);
     return CommonHTMLConverter.createCHTML(input, tex, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
   }
