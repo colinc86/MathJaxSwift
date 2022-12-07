@@ -10,6 +10,10 @@ const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
+// We don't actually need every package loaded, but we want them all available
+// to Webpack during runtime.
+const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+
 /**
  * Converts TeX, MathML, and AsciiMath input to CommonHTML.
  */

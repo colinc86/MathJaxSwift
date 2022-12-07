@@ -9,6 +9,10 @@ const {AssistiveMmlHandler} = require('mathjax-full/js/a11y/assistive-mml.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
+// We don't actually need every package loaded, but we want them all available
+// to Webpack during runtime.
+const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+
 const CSS = [
   'svg a{fill:blue;stroke:blue}',
   '[data-mml-node="merror"]>g{fill:red;stroke:red}',
