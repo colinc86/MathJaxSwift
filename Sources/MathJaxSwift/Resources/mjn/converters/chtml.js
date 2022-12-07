@@ -31,7 +31,7 @@ export class CommonHTMLConverter {
    * @return {string} The CommonHTML formatted string.
    */
   static tex2chtml(input, css, assistiveMml, conversionOptions, documentOptions, texOptions, chtmlOptions) {
-    const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
+    const tex = new TeX(texOptions);
     return CommonHTMLConverter.createCHTML(input, tex, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
   }
   
@@ -48,7 +48,7 @@ export class CommonHTMLConverter {
    * @return {string} The CommonHTML formatted string.
    */
   static mml2chtml(input, css, assistiveMml, conversionOptions, documentOptions, mathmlOptions, chtmlOptions) {
-    const mml = new MathML(JSON.parse(JSON.stringify(mathmlOptions)));
+    const mml = new MathML(mathmlOptions);
     return CommonHTMLConverter.createCHTML(input, mml, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
   }
   
@@ -65,7 +65,7 @@ export class CommonHTMLConverter {
    * @return {string} The CommonHTML formatted string.
    */
   static am2chtml(input, css, assistiveMml, conversionOptions, documentOptions, asciimathOptions, chtmlOptions) {
-    const asciimath = new AsciiMath(JSON.parse(JSON.stringify(asciimathOptions)));
+    const asciimath = new AsciiMath(asciimathOptions);
     return CommonHTMLConverter.createCHTML(input, asciimath, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
   }
   
@@ -86,18 +86,11 @@ export class CommonHTMLConverter {
     const handler = RegisterHTMLHandler(adaptor);
     
     if (assistiveMml) AssistiveMmlHandler(handler);
+    documentOptions.InputJax = inputJax;
+    documentOptions.OutputJax = new CHTML(chtmlOptions);
     
-    const chtml = new CHTML(JSON.parse(JSON.stringify(chtmlOptions)));
-    const html = mathjax.document('', {
-      InputJax: inputJax,
-      OutputJax: chtml,
-      skipHtmlTags: documentOptions.skipHtmlTags,
-      includeHtmlTags: documentOptions.includeHtmlTags,
-      ignoreHtmlClass: documentOptions.ignoreHtmlClass,
-      processHtmlClass: documentOptions.processHtmlClass
-    });
-    
-    const node = html.convert(input || '', JSON.parse(JSON.stringify(conversionOptions)));
+    const html = mathjax.document('', documentOptions);
+    const node = html.convert(input || '', conversionOptions);
     
     if (css) {
       return adaptor.textContent(chtml.styleSheet(html));

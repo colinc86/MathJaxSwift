@@ -42,7 +42,7 @@ export class SVGConverter {
    * @return {string} The SVG formatted string.
    */
   static tex2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, texOptions, svgOptions) {
-    const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
+    const tex = new TeX(texOptions);
     return SVGConverter.createSVG(input, tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
   }
   
@@ -61,7 +61,7 @@ export class SVGConverter {
    * @return {string} The SVG formatted string.
    */
   static mml2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, mathmlOptions, svgOptions) {
-    const mml = new MathML(JSON.parse(JSON.stringify(mathmlOptions)));
+    const mml = new MathML(mathmlOptions);
     return SVGConverter.createSVG(input, mml, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
   }
   
@@ -84,18 +84,11 @@ export class SVGConverter {
     const handler = RegisterHTMLHandler(adaptor);
     
     if (assistiveMml) AssistiveMmlHandler(handler);
+    documentOptions.InputJax = inputJax;
+    documentOptions.OutputJax = new SVG(svgOptions);
     
-    const svg = new SVG(JSON.parse(JSON.stringify(svgOptions)));
-    const html = mathjax.document('', {
-      InputJax: inputJax,
-      OutputJax: svg,
-      skipHtmlTags: documentOptions.skipHtmlTags,
-      includeHtmlTags: documentOptions.includeHtmlTags,
-      ignoreHtmlClass: documentOptions.ignoreHtmlClass,
-      processHtmlClass: documentOptions.processHtmlClass
-    });
-    
-    const node = html.convert(input || '', JSON.parse(JSON.stringify(conversionOptions)));
+    const html = mathjax.document('', documentOptions);
+    const node = html.convert(input || '', conversionOptions);
     
     if (css) {
       return adaptor.textContent(svg.styleSheet(html));

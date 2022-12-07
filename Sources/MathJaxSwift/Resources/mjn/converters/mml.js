@@ -28,7 +28,7 @@ export class MathMLConverter {
    * @return {string} The MathML formatted string.
    */
   static tex2mml(input, conversionOptions, documentOptions, texOptions) {
-    const tex = new TeX(JSON.parse(JSON.stringify(texOptions)));
+    const tex = new TeX(texOptions);
     return MathMLConverter.createMML(input, tex, conversionOptions, documentOptions);
   }
   
@@ -42,7 +42,7 @@ export class MathMLConverter {
    * @return {string} The MathML formatted string.
    */
   static am2mml(input, conversionOptions, documentOptions, asciimathOptions) {
-    const asciimath = new AsciiMath(JSON.parse(JSON.stringify(asciimathOptions)));
+    const asciimath = new AsciiMath(asciimathOptions);
     return MathMLConverter.createMML(input, asciimath, conversionOptions, documentOptions);
   }
   
@@ -56,26 +56,14 @@ export class MathMLConverter {
    * @return {string} The MathML formatted string.
    */
   static createMML(input, inputJax, conversionOptions, documentOptions) {
-    const adaptor = liteAdaptor();
-    const html = new HTMLDocument('', adaptor, {
-      InputJax: inputJax,
-      skipHtmlTags: documentOptions.skipHtmlTags,
-      includeHtmlTags: documentOptions.includeHtmlTags,
-      ignoreHtmlClass: documentOptions.ignoreHtmlClass,
-      processHtmlClass: documentOptions.processHtmlClass
-    });
+    conversionOptions.end = STATE.CONVERT;
+    documentOptions.InputJax = inputJax;
     
+    const adaptor = liteAdaptor();
+    const html = new HTMLDocument('', adaptor, documentOptions);
     const visitor = new SerializedMmlVisitor();
     const toMathML = (node => visitor.visitTree(node, html));
-    return toMathML(html.convert(input || '', {
-      display: conversionOptions.display,
-      em: conversionOptions.em,
-      ex: conversionOptions.ex,
-      containerWidth: conversionOptions.containerWidth,
-      lineWidth: conversionOptions.lineWidth,
-      scale: conversionOptions.scale,
-      end: STATE.CONVERT
-    }));
+    return toMathML(html.convert(input || '', conversionOptions));
   }
   
 }
