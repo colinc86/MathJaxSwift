@@ -9,9 +9,6 @@ const {AssistiveMmlHandler} = require('mathjax-full/js/a11y/assistive-mml.js');
 const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
-const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
-
-//const PACKAGES = AllPackages.sort().join(', ');
 
 /**
  * Converts TeX, MathML, and AsciiMath input to CommonHTML.

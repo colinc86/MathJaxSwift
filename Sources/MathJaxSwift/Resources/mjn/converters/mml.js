@@ -8,11 +8,6 @@ const {STATE} = require('mathjax-full/js/core/MathItem.js');
 const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
-const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
-
-const PACKAGES = AllPackages.sort().join(', ');
-const FILTERED_PACKAGES = AllPackages.filter((name) => name !== 'bussproofs').sort().join(', ');
-
 /**
  * Converts Tex and AsciiMath to MathML.
  */
