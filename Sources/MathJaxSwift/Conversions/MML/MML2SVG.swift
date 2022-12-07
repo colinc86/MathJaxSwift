@@ -13,24 +13,39 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The SVG container configuration.
-  ///   - outputConfig: The SVG output processor configuration.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The MathML input processor options.
+  ///   - outputOptions: The SVG output processor options.
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: SVG formatted output.
   public func mml2svg(
     _ input: String,
-    inline: Bool = false,
-    containerConfig: SVGContainerConfiguration = SVGContainerConfiguration(),
-    outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration(),
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
       try mathjax.mml2svg(
         input,
-        inline: inline,
-        containerConfig: containerConfig,
-        outputConfig: outputConfig
+        css: css,
+        assistiveMml: assistiveMml,
+        container: container,
+        styles: styles,
+        conversionOptions: conversionOptions,
+        documentOptions: documentOptions,
+        inputOptions: inputOptions,
+        outputOptions: outputOptions
       )
     }
   }
@@ -39,21 +54,36 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
-  ///   - inline: Process the math as inline or not.
-  ///   - containerConfig: The SVG container configuration.
-  ///   - outputConfig: The SVG output processor configuration.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The MathML input processor options.
+  ///   - outputOptions: The SVG output processor options.
   /// - Returns: SVG formatted output.
   public func mml2svg(
     _ input: String,
-    inline: Bool = false,
-    containerConfig: SVGContainerConfiguration = SVGContainerConfiguration(),
-    outputConfig: SVGOutputProcessorConfiguration = SVGOutputProcessorConfiguration()
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.mml2svg, with: [
       input,
-      inline,
-      try containerConfig.json(),
-      try outputConfig.json()
+      css,
+      assistiveMml,
+      container,
+      styles,
+      conversionOptions,
+      documentOptions,
+      inputOptions,
+      outputOptions
     ])
   }
   

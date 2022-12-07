@@ -1,5 +1,5 @@
 //
-//  SVGOutputConfiguration.swift
+//  SVGOutputProcessorOptions.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
@@ -7,25 +7,48 @@
 
 import Foundation
 
-public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
+@objc public protocol SVGOutputProcessorOptionsJSExports: Options {
+  var fontCache: SVGOutputProcessorOptions.FontCache { get set }
+  var internalSpeechTitles: Bool { get set }
+  var scale: Double { get set }
+  var minScale: Double { get set }
+  var mtextInheritFont: Bool { get set }
+  var merrorInheritFont: Bool { get set }
+  var mtextFont: String { get set }
+  var merrorFont: String { get set }
+  var unknownFamily: String { get set }
+  var mathmlSpacing: Bool { get set }
+  var skipAttributes: [String: Bool] { get set }
+  var exFactor: Double { get set }
+  var displayAlign: String { get set }
+  var displayIndent: Double { get set }
+}
+
+/// The options below control the operation of the [SVG output processor](https://docs.mathjax.org/en/latest/output/svg.html#svg-output)
+/// that is run when you include `output/svg` in the load array of the loader
+/// block of your MathJax configuration, or if you load a combined component
+/// that includes the CommonHTML output jax. They are listed with their default
+/// values. To set any of these options, include an svg section in your
+/// `MathJax` global object.
+@objc public class SVGOutputProcessorOptions: OutputProcessorOptions, SVGOutputProcessorOptionsJSExports {
   
   // MARK: Types
   
-  public enum FontCache: String, Codable {
-    
+  public typealias FontCache = String
+  public struct FontCaches {
     /// No font cache should be used.
-    case none
+    public static let none = FontCache("none")
     
     /// The local font cache should be used.
-    case local
+    public static let local = FontCache("local")
     
     /// The global font cache should be used.
-    case global
+    public static let global = FontCache("global")
   }
   
   // MARK: Default values
   
-  public static let defaultFontCache: FontCache = .local
+  public static let defaultFontCache: FontCache = FontCaches.local
   public static let defaultInternalSpeechTitles: Bool = true
   
   // MARK: Properties
@@ -47,7 +70,7 @@ public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
   ///
   /// - Note: The default value is `local`.
   /// - SeeAlso: [SVG Output Processor Options](https://docs.mathjax.org/en/latest/options/output/svg.html#output-fontcache)
-  public let fontCache: FontCache
+  dynamic public var fontCache: FontCache
   
   /// This tells the SVG output jax whether to put speech text into `<title>`
   /// elements within the SVG (when set to `true`), or to use an aria-label
@@ -60,15 +83,15 @@ public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
   ///
   /// - Note: The default value is `true`.
   /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-internalspeechtitles)
-  public let internalSpeechTitles: Bool
+  dynamic public var internalSpeechTitles: Bool
   
   // MARK: Initializers
   
   public init(
     fontCache: FontCache = defaultFontCache,
     internalSpeechTitles: Bool = defaultInternalSpeechTitles,
-    scale: Float = defaultScale,
-    minScale: Float = defaultMinScale,
+    scale: Double = defaultScale,
+    minScale: Double = defaultMinScale,
     mtextInheritFont: Bool = defaultMtextInheritFont,
     merrorInheritFont: Bool = defaultMerrorInheritFont,
     mtextFont: String = defaultMtextFont,
@@ -76,9 +99,9 @@ public class SVGOutputProcessorConfiguration: OutputProcessorConfiguration {
     unknownFamily: String = defaultUnknownFamily,
     mathmlSpacing: Bool = defaultMathmlSpacing,
     skipAttributes: [String: Bool] = defaultSkipAttributes,
-    exFactor: Float = defaultExFactor,
-    displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Float = defaultDisplayIndent
+    exFactor: Double = defaultExFactor,
+    displayAlign: String = defaultDisplayAlign,
+    displayIndent: Double = defaultDisplayIndent
   ) {
     self.fontCache = fontCache
     self.internalSpeechTitles = internalSpeechTitles
