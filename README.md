@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![iOS Version](https://img.shields.io/badge/iOS-%3E%3D13-informational) ![macOS Version](https://img.shields.io/badge/macOS-%3E%3D10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![Swift Version](https://img.shields.io/badge/Swift-5.5-orange?logo=swift) ![iOS Version](https://img.shields.io/badge/iOS-13-informational) ![macOS Version](https://img.shields.io/badge/macOS-10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
 
 <a href="https://www.mathjax.org">
     <img title="Powered by MathJax"
