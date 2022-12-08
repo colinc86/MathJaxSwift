@@ -9,7 +9,7 @@ const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
-const FILTERED_PACKAGES = AllPackages.filter((name) => name !== 'bussproofs').sort().join(', ').split(/\s*,\s*/);
+const PACKAGES = AllPackages.sort();
 
 /**
  * Converts Tex and AsciiMath to MathML.
@@ -26,7 +26,6 @@ export class MathMLConverter {
    * @return {string} The MathML formatted string.
    */
   static tex2mml(input, conversionOptions, documentOptions, texOptions) {
-    texOptions.packages = FILTERED_PACKAGES;
     const tex = new TeX(texOptions);
     return MathMLConverter.createMML(input, tex, conversionOptions, documentOptions);
   }
