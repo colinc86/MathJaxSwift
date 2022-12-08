@@ -10,7 +10,7 @@ const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
 const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
-const PACKAGES = AllPackages.sort().join(', ').split(/\s*,\s*/);
+const PACKAGES = AllPackages.sort();
 
 const CSS = [
   'svg a{fill:blue;stroke:blue}',
@@ -42,7 +42,6 @@ export class SVGConverter {
    * @return {string} The SVG formatted string.
    */
   static tex2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, texOptions, svgOptions) {
-    texOptions.packages = PACKAGES;
     const tex = new TeX(texOptions);
     return SVGConverter.createSVG(input, tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
   }
