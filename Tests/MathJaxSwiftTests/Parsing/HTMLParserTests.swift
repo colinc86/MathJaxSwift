@@ -7,7 +7,7 @@ final class HTMLParserTests: XCTestCase {
   
   func testValidate() throws {
     XCTAssertThrowsError(try HTMLParser.shared.validate(errorData)) { error in
-      guard let error = error as? MJError else {
+      guard let error = error as? MathJaxError else {
         XCTFail("Unknown error.")
         return
       }

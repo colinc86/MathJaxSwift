@@ -65,12 +65,12 @@ public final class MathJax {
     // Make sure we're using the correct MathJax version
     let metadata = try MathJax.metadata()
     guard metadata.version == Constants.expectedMathJaxVersion else {
-      throw MJError.unexpectedVersion(version: metadata.version)
+      throw MathJaxError.unexpectedVersion(version: metadata.version)
     }
 
     // Create the JavaScript context
     guard let ctx = JSContext() else {
-      throw MJError.unableToCreateContext
+      throw MathJaxError.unableToCreateContext
     }
     context = ctx
     
@@ -110,7 +110,7 @@ extension MathJax {
   public static func metadata() throws -> Metadata {
     // Get the URL of the package-lock.json file.
     guard let packageLockURL = Constants.URLs.packageLock else {
-      throw MJError.missingPackageFile
+      throw MathJaxError.missingPackageFile
     }
     
     // Get the file's data.
@@ -118,7 +118,7 @@ extension MathJax {
     
     // Find the mathjax module and return its metadata.
     guard let dependency = package.dependencies[Constants.Names.Modules.mathjax] else {
-      throw MJError.missingDependencyInformation
+      throw MathJaxError.missingDependencyInformation
     }
     return dependency
   }
@@ -152,12 +152,12 @@ extension MathJax {
     
     // Get the url
     guard let url = outputFormat.url else {
-      throw MJError.unknown
+      throw MathJaxError.unknown
     }
     
     // Check to see if the file exists
     guard FileManager.default.isReadableFile(atPath: url.path) else {
-      throw MJError.missingBundle(url: url)
+      throw MathJaxError.missingBundle(url: url)
     }
     
     // Load the file contents
@@ -189,7 +189,7 @@ extension MathJax {
     }
     
     // Throw its string value.
-    throw MJError.javascriptException(value: exception.toString())
+    throw MathJaxError.javascriptException(value: exception.toString())
   }
   
   /// Calls the function with the given arguments.
@@ -199,46 +199,73 @@ extension MathJax {
   ///   - arguments: The arguments to pass to the function.
   /// - Returns: The function's return value.
   internal func callFunction(_ function: Function, with arguments: [Any]) throws -> String {
-    // Lazily load the bundle that owns the function if it hasn't been loaded
-    if !supportedOutputFormats.contains(function.outputFormat) {
-      try loadBundle(with: function.outputFormat)
+    var error: Error?
+    let output = callFunction(function, with: arguments, error: &error)
+    if let error = error {
+      throw error
     }
-    
-    // Get the module's JS value
-    guard let module = context.objectForKeyedSubscript(function.jsModuleName) else {
-      throw MJError.missingModule
+    return output
+  }
+  
+  /// Calls the function with the given arguments and stores any errors produced
+  /// to an inout parameter.
+  ///
+  /// - Parameters:
+  ///   - function: The function to call.
+  ///   - arguments: The arguments to pass to the function.
+  ///   - error: The error that was produced by the function call.
+  /// - Returns: The function's return value.
+  internal func callFunction(_ function: Function, with arguments: [Any], error: inout Error?) -> String {
+    var output = ""
+    do {
+      // Lazily load the bundle that owns the function if it hasn't been loaded
+      if !supportedOutputFormats.contains(function.outputFormat) {
+        try loadBundle(with: function.outputFormat)
+      }
+      
+      // Get the module's JS value
+      guard let module = context.objectForKeyedSubscript(function.jsModuleName) else {
+        throw MathJaxError.missingModule
+      }
+      
+      // Get the class's JS value
+      guard let converter = module.objectForKeyedSubscript(function.className) else {
+        throw MathJaxError.missingClass
+      }
+      
+      // Get the function's JS value
+      guard let jsFunction = converter.objectForKeyedSubscript(function.name) else {
+        throw MathJaxError.missingFunction(name: function.name)
+      }
+      
+      // Call the function and get its return value
+      guard let value = jsFunction.call(withArguments: arguments) else {
+        throw MathJaxError.conversionFailed
+      }
+      
+      // Make sure no exceptions were thrown.
+      try checkForJSException()
+      
+      // Make sure the value isn't undefined.
+      guard !value.isUndefined else {
+        throw MathJaxError.conversionUnknownError
+      }
+      
+      // Get the string value and return it
+      guard let stringValue = value.toString() else {
+        throw MathJaxError.conversionInvalidFormat
+      }
+      
+      // Capture the output
+      output = stringValue
+      
+      // Validate and return the string
+      return try function.outputParser.validate(stringValue)
     }
-    
-    // Get the class's JS value
-    guard let converter = module.objectForKeyedSubscript(function.className) else {
-      throw MJError.missingClass
+    catch let callError {
+      error = callError
+      return output
     }
-    
-    // Get the function's JS value
-    guard let jsFunction = converter.objectForKeyedSubscript(function.name) else {
-      throw MJError.missingFunction(name: function.name)
-    }
-    
-    // Call the function and get its return value
-    guard let value = jsFunction.call(withArguments: arguments) else {
-      throw MJError.conversionFailed
-    }
-    
-    // Make sure no exceptions were thrown.
-    try checkForJSException()
-    
-    // Make sure the value isn't undefined.
-    guard !value.isUndefined else {
-      throw MJError.conversionUnknownError
-    }
-    
-    // Get the string value and return it
-    guard let stringValue = value.toString() else {
-      throw MJError.conversionInvalidFormat
-    }
-    
-    // Validate and return the string
-    return try function.outputParser.validate(stringValue)
   }
   
   /// Performs the throwing closure asynchronously.
@@ -250,7 +277,7 @@ extension MathJax {
   internal func perform(on queue: DispatchQueue, _ block: @escaping (MathJax) throws -> String) async throws -> String {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {
-        continuation.resume(throwing: MJError.deallocatedSelf)
+        continuation.resume(throwing: MathJaxError.deallocatedSelf)
         return
       }
       

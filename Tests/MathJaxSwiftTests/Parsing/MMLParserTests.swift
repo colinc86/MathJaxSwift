@@ -7,7 +7,7 @@ final class MMLParserTests: XCTestCase {
   
   func testValidate() throws {
     XCTAssertThrowsError(try MMLParser.shared.validate(errorData)) { error in
-      guard let error = error as? MJError else {
+      guard let error = error as? MathJaxError else {
         XCTFail("Unknown error.")
         return
       }

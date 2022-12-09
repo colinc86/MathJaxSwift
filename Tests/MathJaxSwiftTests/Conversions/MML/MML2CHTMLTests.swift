@@ -13,7 +13,15 @@ final class MML2CHTMLTests: XCTestCase {
   
   func testMML2CHTMLSync() throws {
     let output = try mathjax.mml2chtml(mmlData)
+    XCTAssertNoThrow(output)
     XCTAssertEqual(output, chtmlData)
+  }
+  
+  func testMML2CHTMLSyncError() throws {
+    var error: Error?
+    let output = mathjax.mml2chtml(mmlData, error: &error)
+    XCTAssertEqual(output, chtmlData)
+    XCTAssertNil(error)
   }
   
   func testMML2CHTMLAsync() async throws {

@@ -12,7 +12,15 @@ final class AM2MMLTests: XCTestCase {
   
   func testAM2MMLSync() throws {
     let output = try mathjax.am2mml(MathJaxSwiftTests.amInput)
+    XCTAssertNoThrow(output)
     XCTAssertEqual(output, mmlData)
+  }
+  
+  func testAM2MMLSyncError() throws {
+    var error: Error?
+    let output = mathjax.am2mml(MathJaxSwiftTests.amInput, error: &error)
+    XCTAssertEqual(output, mmlData)
+    XCTAssertNil(error)
   }
   
   func testAM2MMLAsync() async throws {
