@@ -7,7 +7,7 @@ final class SVGParserTests: XCTestCase {
   
   func testValidate() throws {
     XCTAssertThrowsError(try SVGParser.shared.validate(errorData)) { error in
-      guard let error = error as? MJError else {
+      guard let error = error as? MathJaxError else {
         XCTFail("Unknown error.")
         return
       }

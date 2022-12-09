@@ -57,4 +57,28 @@ extension MathJax {
     ])
   }
   
+  /// Converts a TeX input string to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing TeX.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - error: The error produced by the conversion.
+  /// - Returns: MathML formatted output.
+  public func tex2mml(
+    _ input: String,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
+    error: inout Error?
+  ) -> String {
+    return callFunction(.tex2mml, with: [
+      input,
+      conversionOptions,
+      documentOptions,
+      inputOptions
+    ], error: &error)
+  }
+  
 }

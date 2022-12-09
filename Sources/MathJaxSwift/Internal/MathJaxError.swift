@@ -1,5 +1,5 @@
 //
-//  MJError.swift
+//  MathJaxError.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 12/5/22.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// An error thrown by the `MathJax` package.
-public enum MJError: Error, CustomStringConvertible, Equatable {
+public enum MathJaxError: Error, CustomStringConvertible, Equatable {
   case unknown
   case deallocatedSelf
   case unableToCreateContext

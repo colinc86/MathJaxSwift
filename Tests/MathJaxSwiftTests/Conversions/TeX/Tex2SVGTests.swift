@@ -4,6 +4,7 @@ import XCTest
 final class Tex2SVGTests: XCTestCase {
   
   let svgData = MathJaxSwiftTests.loadString(fromFile: "No Error/testSVG", withExtension: "svg")
+  let svgErrorData = MathJaxSwiftTests.loadString(fromFile: "Error/testSVG", withExtension: "svg")
   var mathjax: MathJax!
   
   override func setUp() async throws {
@@ -15,6 +16,25 @@ final class Tex2SVGTests: XCTestCase {
     XCTAssertEqual(output, svgData)
   }
   
+  func testTex2SVGSyncNoError() throws {
+    var error: Error?
+    let output = mathjax.tex2svg(MathJaxSwiftTests.texInput, error: &error)
+    XCTAssertEqual(output, svgData)
+    XCTAssertNil(error)
+  }
+  
+  func testTex2SVGSyncError() throws {
+    var error: Error?
+    let output = mathjax.tex2svg(MathJaxSwiftTests.texErrorInput, error: &error)
+    XCTAssertEqual(output, svgErrorData)
+    if let error = error as? MathJaxError {
+      XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
+    else {
+      XCTFail("Unknown error.")
+    }
+  }
+  
   func testTex2SVGAsync() async throws {
     let output = try await mathjax.tex2svg(MathJaxSwiftTests.texInput)
     XCTAssertNoThrow(output)
@@ -23,11 +43,11 @@ final class Tex2SVGTests: XCTestCase {
   
   func testTex2SVGError() {
     XCTAssertThrowsError(try mathjax.tex2svg(MathJaxSwiftTests.texErrorInput)) { error in
-      guard let error = error as? MJError else {
+      guard let error = error as? MathJaxError else {
         XCTFail("Unknown error.")
         return
       }
-      XCTAssertEqual(error, MJError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+      XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
     }
   }
   
