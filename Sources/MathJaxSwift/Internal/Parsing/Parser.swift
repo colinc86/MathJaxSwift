@@ -51,7 +51,7 @@ extension Parser {
     }
     
     // Throw the error
-    throw MJError.conversionError(error: errorText)
+    throw MathJaxError.conversionError(error: errorText)
   }
   
 }

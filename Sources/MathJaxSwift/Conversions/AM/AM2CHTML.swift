@@ -32,7 +32,7 @@ extension MathJax {
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
-      try self.am2chtml(
+      try mathjax.am2chtml(
         input,
         css: css,
         assistiveMml: assistiveMml,
@@ -73,6 +73,39 @@ extension MathJax {
       inputOptions,
       outputOptions
     ])
+  }
+  
+  /// Converts an ASCIIMath input string to CHTML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing ASCIIMath.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - outputOptions: The CHTML output processor options.
+  ///   - error: The error produced by the conversion.
+  /// - Returns: CHTML formatted output.
+  public func am2chtml(
+    _ input: String,
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
+    error: inout Error?
+  ) -> String {
+    return callFunction(.am2chtml, with: [
+      input,
+      css,
+      assistiveMml,
+      conversionOptions,
+      documentOptions,
+      inputOptions,
+      outputOptions
+    ], error: &error)
   }
   
 }

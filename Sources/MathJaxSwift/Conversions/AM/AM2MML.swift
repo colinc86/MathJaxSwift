@@ -57,4 +57,28 @@ extension MathJax {
     ])
   }
   
+  /// Converts an ASCIIMath input string to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing ASCIIMath.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - error: The error produced by the conversion.
+  /// - Returns: MathML formatted output.
+  public func am2mml(
+    _ input: String,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    error: inout Error?
+  ) -> String {
+    return callFunction(.am2mml, with: [
+      input,
+      conversionOptions,
+      documentOptions,
+      inputOptions
+    ], error: &error)
+  }
+  
 }

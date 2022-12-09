@@ -13,7 +13,15 @@ final class MML2SVGTests: XCTestCase {
   
   func testMML2SVGSync() throws {
     let output = try mathjax.mml2svg(mmlData)
+    XCTAssertNoThrow(output)
     XCTAssertEqual(output, svgData)
+  }
+  
+  func testMML2SVGSyncError() throws {
+    var error: Error?
+    let output = mathjax.mml2svg(mmlData, error: &error)
+    XCTAssertEqual(output, svgData)
+    XCTAssertNil(error)
   }
   
   func testMML2SVGAsync() async throws {
