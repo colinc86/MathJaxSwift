@@ -76,6 +76,7 @@ internal enum Function: String {
     }
   }
   
+  /// The output parser to use with this function.
   var outputParser: Parser {
     switch self {
     case .tex2chtml, .mml2chtml, .am2chtml:
