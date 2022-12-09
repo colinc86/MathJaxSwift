@@ -8,7 +8,7 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol DocumentOptionsExports: JSExport {
+@objc internal protocol DocumentOptionsExports: JSExport {
   var skipHtmlTags: [String] { get set }
   var includeHtmlTags: [String: String] { get set }
   var ignoreHtmlClass: String { get set }

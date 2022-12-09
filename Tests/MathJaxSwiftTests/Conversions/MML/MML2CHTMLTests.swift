@@ -3,8 +3,8 @@ import XCTest
 
 final class MML2CHTMLTests: XCTestCase {
   
-  let mmlData = MathJaxSwiftTests.loadString(fromFile: "testMML", withExtension: "xml")
-  let chtmlData = MathJaxSwiftTests.loadString(fromFile: "testCHTML", withExtension: "html")
+  let mmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testMML", withExtension: "xml")
+  let chtmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testCHTML", withExtension: "html")
   var mathjax: MathJax!
   
   override func setUp() async throws {

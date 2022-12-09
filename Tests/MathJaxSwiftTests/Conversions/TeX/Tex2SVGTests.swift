@@ -3,7 +3,7 @@ import XCTest
 
 final class Tex2SVGTests: XCTestCase {
   
-  let svgData = MathJaxSwiftTests.loadString(fromFile: "testSVG", withExtension: "svg")
+  let svgData = MathJaxSwiftTests.loadString(fromFile: "No Error/testSVG", withExtension: "svg")
   var mathjax: MathJax!
   
   override func setUp() async throws {
@@ -19,6 +19,16 @@ final class Tex2SVGTests: XCTestCase {
     let output = try await mathjax.tex2svg(MathJaxSwiftTests.texInput)
     XCTAssertNoThrow(output)
     XCTAssertEqual(output, svgData)
+  }
+  
+  func testTex2SVGError() {
+    XCTAssertThrowsError(try mathjax.tex2svg(MathJaxSwiftTests.texErrorInput)) { error in
+      guard let error = error as? MJError else {
+        XCTFail("Unknown error.")
+        return
+      }
+      XCTAssertEqual(error, MJError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
   }
   
   func testTex2SVGTime() {

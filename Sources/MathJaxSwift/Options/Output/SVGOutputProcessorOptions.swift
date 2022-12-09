@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc public protocol SVGOutputProcessorOptionsJSExports: Options {
+@objc internal protocol SVGOutputProcessorOptionsJSExports: Options {
   var fontCache: SVGOutputProcessorOptions.FontCache { get set }
   var internalSpeechTitles: Bool { get set }
   var scale: Double { get set }

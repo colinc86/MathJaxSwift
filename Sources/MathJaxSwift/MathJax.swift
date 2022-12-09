@@ -215,12 +215,12 @@ extension MathJax {
     }
     
     // Get the function's JS value
-    guard let function = converter.objectForKeyedSubscript(function.name) else {
+    guard let jsFunction = converter.objectForKeyedSubscript(function.name) else {
       throw MJError.missingFunction(name: function.name)
     }
     
     // Call the function and get its return value
-    guard let value = function.call(withArguments: arguments) else {
+    guard let value = jsFunction.call(withArguments: arguments) else {
       throw MJError.conversionFailed
     }
     
@@ -236,7 +236,9 @@ extension MathJax {
     guard let stringValue = value.toString() else {
       throw MJError.conversionInvalidFormat
     }
-    return stringValue
+    
+    // Validate and return the string
+    return try function.outputParser.validate(stringValue)
   }
   
   /// Performs the throwing closure asynchronously.

@@ -3,7 +3,7 @@ import XCTest
 
 final class Tex2CHTMLTests: XCTestCase {
   
-  let chtmlData = MathJaxSwiftTests.loadString(fromFile: "testCHTML", withExtension: "html")
+  let chtmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testCHTML", withExtension: "html")
   var mathjax: MathJax!
   
   override func setUp() async throws {
@@ -19,6 +19,16 @@ final class Tex2CHTMLTests: XCTestCase {
     let output = try await mathjax.tex2chtml(MathJaxSwiftTests.texInput)
     XCTAssertNoThrow(output)
     XCTAssertEqual(output, chtmlData)
+  }
+  
+  func testTex2CHTMLError() {
+    XCTAssertThrowsError(try mathjax.tex2chtml(MathJaxSwiftTests.texErrorInput)) { error in
+      guard let error = error as? MJError else {
+        XCTFail("Unknown error.")
+        return
+      }
+      XCTAssertEqual(error, MJError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
   }
   
   func testTex2CHTMLTime() {

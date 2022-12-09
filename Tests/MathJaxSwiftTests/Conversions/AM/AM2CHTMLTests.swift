@@ -3,7 +3,7 @@ import XCTest
 
 final class AM2CHTMLTests: XCTestCase {
   
-  let chtmlData = MathJaxSwiftTests.loadString(fromFile: "testAMCHTML", withExtension: "html")
+  let chtmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testAMCHTML", withExtension: "html")
   var mathjax: MathJax!
   
   override func setUp() async throws {

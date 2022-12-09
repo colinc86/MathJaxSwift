@@ -3,8 +3,8 @@ import XCTest
 
 final class MML2SVGTests: XCTestCase {
   
-  let mmlData = MathJaxSwiftTests.loadString(fromFile: "testMML", withExtension: "xml")
-  let svgData = MathJaxSwiftTests.loadString(fromFile: "testSVG", withExtension: "svg")
+  let mmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testMML", withExtension: "xml")
+  let svgData = MathJaxSwiftTests.loadString(fromFile: "No Error/testSVG", withExtension: "svg")
   var mathjax: MathJax!
   
   override func setUp() async throws {
