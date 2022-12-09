@@ -8,7 +8,7 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol AMInputProcessorOptionsJSExports: JSExport {
+@objc internal protocol AMInputProcessorOptionsJSExports: JSExport {
   var fixphi: Bool { get set }
   var displaystyle: Bool { get set }
   var decimalsign: String { get set }

@@ -3,7 +3,7 @@ import XCTest
 
 final class Tex2MMLTests: XCTestCase {
   
-  let mmlData = MathJaxSwiftTests.loadString(fromFile: "testMML", withExtension: "xml")
+  let mmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testMML", withExtension: "xml")
   var mathjax: MathJax!
   
   override func setUp() async throws {
@@ -19,6 +19,16 @@ final class Tex2MMLTests: XCTestCase {
     let output = try await mathjax.tex2mml(MathJaxSwiftTests.texInput)
     XCTAssertNoThrow(output)
     XCTAssertEqual(output, mmlData)
+  }
+  
+  func testTex2MMLError() {
+    XCTAssertThrowsError(try mathjax.tex2mml(MathJaxSwiftTests.texErrorInput)) { error in
+      guard let error = error as? MJError else {
+        XCTFail("Unknown error.")
+        return
+      }
+      XCTAssertEqual(error, MJError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
   }
   
   func testTex2MMLTime() {

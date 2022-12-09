@@ -8,4 +8,4 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol Options: JSExport {}
+@objc internal protocol Options: JSExport {}

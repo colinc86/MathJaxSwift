@@ -8,7 +8,7 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol TexInputProcessorOptionsJSExports: JSExport {
+@objc internal protocol TexInputProcessorOptionsJSExports: JSExport {
   var packages: [TexInputProcessorOptions.Package] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }

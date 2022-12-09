@@ -8,7 +8,7 @@
 import Foundation
 
 /// An error thrown by the `MathJax` package.
-public enum MJError: Error, CustomStringConvertible {
+public enum MJError: Error, CustomStringConvertible, Equatable {
   case unknown
   case deallocatedSelf
   case unableToCreateContext
@@ -26,6 +26,7 @@ public enum MJError: Error, CustomStringConvertible {
   case conversionFailed
   case conversionUnknownError
   case conversionInvalidFormat
+  case conversionError(error: String)
   
   public var description: String {
     switch self {
@@ -46,6 +47,7 @@ public enum MJError: Error, CustomStringConvertible {
     case .conversionFailed:               return "The function failed to convert the input string."
     case .conversionUnknownError:         return "The conversion failed for an unknown reason."
     case .conversionInvalidFormat:        return "The output format was invalid."
+    case .conversionError(let error):     return error
     }
   }
 }

@@ -8,14 +8,14 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol MMLInputProcessorOptionsJSExports: JSExport {
+@objc internal protocol MMLInputProcessorOptionsJSExports: JSExport {
   var parseAs: MMLInputProcessorOptions.Parser { get set }
   var forceReparse: Bool { get set }
   var parseError: MMLInputProcessorOptions.ErrorFunction? { get set }
   var verify: MMLInputProcessorOptions.Verify { get set }
 }
 
-@objc public protocol VerifyJSExports: JSExport {
+@objc internal protocol VerifyJSExports: JSExport {
   var checkArity: Bool { get set }
   var checkAttributes: Bool { get set }
   var fullErrors: Bool { get set }
