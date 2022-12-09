@@ -4,6 +4,8 @@ import XCTest
 final class MathJaxSwiftTests: XCTestCase {
   
   static let texInput = "\\frac{2}{3}"
+  static let texErrorInput = "$V_{\\mathrm{eb}}\\gtrsim7V_{\\mathrm{A}}$"
+  static let texErrorOutput = "Undefined control sequence \\gtrsim"
   static let amInput = "2/3"
   static let identityScript = #"""
 function identity(argument) {

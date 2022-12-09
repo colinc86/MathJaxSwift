@@ -8,7 +8,7 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol ConversionOptionsExports: JSExport {
+@objc internal protocol ConversionOptionsExports: JSExport {
   var display: Bool { get set }
   var em: Double { get set }
   var ex: Double { get set }

@@ -3,7 +3,7 @@ import XCTest
 
 final class AM2MMLTests: XCTestCase {
   
-  let mmlData = MathJaxSwiftTests.loadString(fromFile: "testAMMML", withExtension: "xml")
+  let mmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testAMMML", withExtension: "xml")
   var mathjax: MathJax!
   
   override func setUp() async throws {
