@@ -30,7 +30,7 @@ export class CommonHTMLConverter {
    * @return {string} The CommonHTML formatted string.
    */
   static tex2chtml(input, css, assistiveMml, conversionOptions, documentOptions, texOptions, chtmlOptions) {
-    texOptions.packages = AllPackages;
+    texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) || (name === 'base')));
     const tex = new TeX(texOptions);
     return CommonHTMLConverter.createCHTML(input, tex, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
   }

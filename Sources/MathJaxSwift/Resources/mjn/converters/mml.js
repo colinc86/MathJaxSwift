@@ -25,7 +25,7 @@ export class MathMLConverter {
    * @return {string} The MathML formatted string.
    */
   static tex2mml(input, conversionOptions, documentOptions, texOptions) {
-    texOptions.packages = AllPackages.filter((name) => name !== 'bussproofs');
+    texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) && ((name !== 'bussproofs') || (name === 'base'))));
     const tex = new TeX(texOptions);
     return MathMLConverter.createMML(input, tex, conversionOptions, documentOptions);
   }
