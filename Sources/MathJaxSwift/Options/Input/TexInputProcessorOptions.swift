@@ -9,7 +9,6 @@ import Foundation
 import JavaScriptCore
 
 @objc internal protocol TexInputProcessorOptionsJSExports: JSExport {
-  var packages: [TexInputProcessorOptions.Package] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }
   var processEscapes: Bool { get set }
@@ -24,17 +23,6 @@ import JavaScriptCore
   var maxBuffer: Int { get set }
   var baseURL: String? { get set }
   var formatError: TexInputProcessorOptions.ErrorFunction? { get set }
-  var ams: [String: Any]? { get set }
-  var amscd: [String: Any]? { get set }
-  var autoload: [String: Any]? { get set }
-  var color: [String: Any]? { get set }
-  var configmacros: [String: Any]? { get set }
-  var mathtools: [String: Any]? { get set }
-  var noundefined: [String: Any]? { get set }
-  var physics: [String: Any]? { get set }
-  var require: [String: Any]? { get set }
-  var setoptions: [String: Any]? { get set }
-  var tagformat: [String: Any]? { get set }
 }
 
 /// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
@@ -48,72 +36,6 @@ import JavaScriptCore
   // MARK: Types
   
   public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
-  
-  public typealias Package = String
-  public struct Packages {
-    public static let action = "action"
-    public static let ams = "ams"
-    public static let amscd = "amscd"
-    public static let base = "base"
-    public static let bbox = "bbox"
-    public static let boldsymbol = "boldsymbol"
-    public static let braket = "braket"
-    public static let bussproofs = "bussproofs"
-    public static let cancel = "cancel"
-    public static let cases = "cases"
-    public static let centernot = "centernot"
-    public static let color = "color"
-    public static let colortbl = "colortbl"
-    public static let configmacros = "configmacros"
-    public static let empheq = "empheq"
-    public static let enclose = "enclose"
-    public static let extpfeil = "extpfeil"
-    public static let gensymb = "gensymb"
-    public static let html = "html"
-    public static let mathtools = "mathtools"
-    public static let mhchem = "mhchem"
-    public static let newcommand = "newcommand"
-    public static let noerrors = "noerrors"
-    public static let noundefined = "noundefined"
-    public static let tagformat = "tagformat"
-    public static let textcomp = "textcomp"
-    public static let textmacros = "textmacros"
-    public static let unicode = "unicode"
-    public static let upgreek = "upgreek"
-    public static let verb = "verb"
-    public static let all = [
-      action,
-      ams,
-      amscd,
-      base,
-      bbox,
-      boldsymbol,
-      braket,
-      bussproofs,
-      cancel,
-      cases,
-      centernot,
-      color,
-      colortbl,
-      configmacros,
-      empheq,
-      enclose,
-      extpfeil,
-      gensymb,
-      html,
-      mathtools,
-      mhchem,
-      newcommand,
-      noerrors,
-      noundefined,
-      tagformat,
-      textcomp,
-      textmacros,
-      unicode,
-      upgreek,
-      verb
-    ]
-  }
   
   public typealias Tag = String
   public struct Tags {
@@ -138,7 +60,6 @@ import JavaScriptCore
   
   // MARK: Default values
   
-  public static let defaultPackages: [Package] = [Packages.base]
   public static let defaultInlineMath: [[String]] = [["\\(", "\\)"]]
   public static let defaultDisplayMath: [[String]] = [["$$", "$$"], ["\\[", "\\]"]]
   public static let defaultProcessEscapes: Bool = false
@@ -155,67 +76,6 @@ import JavaScriptCore
   public static let defaultFormatError: ErrorFunction? = nil
   
   // MARK: Properties
-  
-  /// This array lists the names of the packages that should be initialized by
-  /// the TeX input processor.
-  ///
-  /// The [input/tex](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
-  /// and [input/tex-full](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
-  /// components automatically add to this list the packages that they load. If
-  /// you explicitly load addition tex extensions, you should add them to this
-  /// list. For example:
-  ///
-  /// ```javascript
-  /// MathJax = {
-  ///   loader: {load: ['[tex]/enclose']},
-  ///   tex: {
-  ///     packages: {'[+]': ['enclose']}
-  ///   }
-  /// };
-  /// ```
-  ///
-  /// This loads the [enclose](https://docs.mathjax.org/en/latest/input/tex/extensions/enclose.html#tex-enclose)
-  /// extension and acticates it by including it in the package list.
-  ///
-  /// You can remove packages from the default list using `'[-]'` rather than
-  /// `[+]`, as in the followiong example:
-  ///
-  /// ```javascript
-  /// MathJax = {
-  ///   tex: {
-  ///     packages: {'[-]': ['noundefined']}
-  ///   }
-  /// };
-  /// ```
-  ///
-  /// This would disable the
-  /// [noundefined](https://docs.mathjax.org/en/latest/input/tex/extensions/noundefined.html#tex-noundefined)
-  /// extension, so that unknown macro names would cause error messages rather
-  /// than be displayed in red.
-  ///
-  /// If you need to both remove some default packages and add new ones, you can
-  /// do so by including both within the braces:
-  ///
-  /// ```javascript
-  /// MathJax = {
-  ///   loader: {load: ['[tex]/enclose']},
-  ///   tex: {
-  ///     packages: {'[-]': ['noundefined', 'autoload'], '[+]': ['enclose']}
-  ///   }
-  /// };
-  /// ```
-  ///
-  /// This disables the
-  /// [noundefined](https://docs.mathjax.org/en/latest/input/tex/extensions/noundefined.html#tex-noundefined)
-  /// and
-  /// [autoload](https://docs.mathjax.org/en/latest/input/tex/extensions/autoload.html#tex-autoload)
-  /// extensions, and adds in the
-  /// [enclose](https://docs.mathjax.org/en/latest/input/tex/extensions/enclose.html#tex-enclose)
-  /// extension.
-  ///
-  /// - Note: The default value is `["base"]`.
-  /// - SeeAlso: [TeX Input Processor Options](https://docs.mathjax.org/en/latest/options/input/tex.html#tex-packages)
-  dynamic public var packages: [Package]
   
   /// This is an array of pairs of strings that are to be used as in-line math
   /// delimiters.
@@ -400,7 +260,6 @@ import JavaScriptCore
   // MARK: Initializers
   
   public init(
-    packages: [Package] = defaultPackages,
     inlineMath: [[String]] = defaultInlineMath,
     displayMath: [[String]] = defaultDisplayMath,
     processEscapes: Bool = defaultProcessEscapes,
@@ -416,7 +275,6 @@ import JavaScriptCore
     baseURL: String? = defaultBaseURL,
     formatError: ErrorFunction? = defaultFormatError
   ) {
-    self.packages = packages
     self.inlineMath = inlineMath
     self.displayMath = displayMath
     self.processEscapes = processEscapes
