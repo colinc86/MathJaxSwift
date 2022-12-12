@@ -9,7 +9,7 @@ import Foundation
 import JavaScriptCore
 
 @objc internal protocol TexInputProcessorOptionsJSExports: JSExport {
-  var packages: [TexInputProcessorOptions.Package] { get set }
+  var loadPackages: [TexInputProcessorOptions.Package] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }
   var processEscapes: Bool { get set }
@@ -138,7 +138,7 @@ import JavaScriptCore
   
   // MARK: Default values
   
-  public static let defaultPackages: [Package] = [Packages.base]
+  public static let defaultLoadPackages: [Package] = [Packages.base]
   public static let defaultInlineMath: [[String]] = [["\\(", "\\)"]]
   public static let defaultDisplayMath: [[String]] = [["$$", "$$"], ["\\[", "\\]"]]
   public static let defaultProcessEscapes: Bool = false
@@ -215,7 +215,7 @@ import JavaScriptCore
   ///
   /// - Note: The default value is `["base"]`.
   /// - SeeAlso: [TeX Input Processor Options](https://docs.mathjax.org/en/latest/options/input/tex.html#tex-packages)
-  dynamic public var packages: [Package]
+  dynamic public var loadPackages: [Package]
   
   /// This is an array of pairs of strings that are to be used as in-line math
   /// delimiters.
@@ -400,7 +400,7 @@ import JavaScriptCore
   // MARK: Initializers
   
   public init(
-    packages: [Package] = defaultPackages,
+    loadPackages: [Package] = defaultLoadPackages,
     inlineMath: [[String]] = defaultInlineMath,
     displayMath: [[String]] = defaultDisplayMath,
     processEscapes: Bool = defaultProcessEscapes,
@@ -416,7 +416,7 @@ import JavaScriptCore
     baseURL: String? = defaultBaseURL,
     formatError: ErrorFunction? = defaultFormatError
   ) {
-    self.packages = packages
+    self.loadPackages = loadPackages
     self.inlineMath = inlineMath
     self.displayMath = displayMath
     self.processEscapes = processEscapes

@@ -5,6 +5,7 @@ final class Tex2MMLTests: XCTestCase {
   
   let mmlData = MathJaxSwiftTests.loadString(fromFile: "No Error/testMML", withExtension: "xml")
   let mmlErrorData = MathJaxSwiftTests.loadString(fromFile: "Error/testMML", withExtension: "xml")
+  let mmlErrorDataNoErrors = MathJaxSwiftTests.loadString(fromFile: "Error/testMMLnoerrors", withExtension: "xml")
   var mathjax: MathJax!
   
   override func setUp() async throws {
@@ -28,6 +29,24 @@ final class Tex2MMLTests: XCTestCase {
     var error: Error?
     let output = mathjax.tex2mml(MathJaxSwiftTests.texErrorInput, error: &error)
     XCTAssertEqual(output, mmlErrorData)
+    if let error = error as? MathJaxError {
+      XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
+    else {
+      XCTFail("Unknown error.")
+    }
+  }
+  
+  func testTex2MMLSyncErrorNoErrors() throws {
+    var error: Error?
+    let output = mathjax.tex2mml(
+      MathJaxSwiftTests.texErrorInput,
+      inputOptions: TexInputProcessorOptions(
+        loadPackages: [
+          TexInputProcessorOptions.Packages.base,
+          TexInputProcessorOptions.Packages.noerrors]),
+      error: &error)
+    XCTAssertEqual(output, mmlErrorDataNoErrors)
     if let error = error as? MathJaxError {
       XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
     }
