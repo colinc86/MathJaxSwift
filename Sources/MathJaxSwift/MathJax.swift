@@ -78,7 +78,7 @@ public final class MathJax {
     try registerClasses([
       CHTMLOutputProcessorOptions.self,
       SVGOutputProcessorOptions.self,
-      TexInputProcessorOptions.self,
+      TeXInputProcessorOptions.self,
       MMLInputProcessorOptions.self,
       MMLInputProcessorOptions.Verify.self,
       AMInputProcessorOptions.self,

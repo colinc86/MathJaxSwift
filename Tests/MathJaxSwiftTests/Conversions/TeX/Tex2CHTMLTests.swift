@@ -41,10 +41,10 @@ final class Tex2CHTMLTests: XCTestCase {
     var error: Error?
     let output = mathjax.tex2chtml(
       MathJaxSwiftTests.texErrorInput,
-      inputOptions: TexInputProcessorOptions(
+      inputOptions: TeXInputProcessorOptions(
         loadPackages: [
-          TexInputProcessorOptions.Packages.base,
-          TexInputProcessorOptions.Packages.noerrors]),
+          TeXInputProcessorOptions.Packages.base,
+          TeXInputProcessorOptions.Packages.noerrors]),
       error: &error)
     XCTAssertEqual(output, chtmlErrorDataNoErrors)
     if let error = error as? MathJaxError {

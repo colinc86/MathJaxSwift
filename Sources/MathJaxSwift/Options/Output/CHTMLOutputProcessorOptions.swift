@@ -34,6 +34,14 @@ import JavaScriptCore
 /// `MathJax` global object.
 @objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions, CHTMLOutputProcessorOptionsJSExports {
   
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case matchFontHeight
+    case fontURL
+    case adaptiveCSS
+  }
+  
   // MARK: Default values
   
   public static let defaultMatchFontHeight: Bool = true
@@ -117,6 +125,22 @@ import JavaScriptCore
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
+  }
+  
+  public required init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    matchFontHeight = try container.decode(Bool.self, forKey: .matchFontHeight)
+    fontURL = try container.decode(URL.self, forKey: .fontURL)
+    adaptiveCSS = try container.decode(Bool.self, forKey: .adaptiveCSS)
+    try super.init(from: decoder)
+  }
+  
+  public override func encode(to encoder: Encoder) throws {
+    try super.encode(to: encoder)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(matchFontHeight, forKey: .matchFontHeight)
+    try container.encode(fontURL, forKey: .fontURL)
+    try container.encode(adaptiveCSS, forKey: .adaptiveCSS)
   }
   
 }

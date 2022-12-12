@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-@objc internal protocol SVGOutputProcessorOptionsJSExports: Options {
+@objc internal protocol SVGOutputProcessorOptionsJSExports: JSExport {
   var fontCache: SVGOutputProcessorOptions.FontCache { get set }
   var internalSpeechTitles: Bool { get set }
   var scale: Double { get set }
@@ -33,6 +34,11 @@ import Foundation
 @objc public class SVGOutputProcessorOptions: OutputProcessorOptions, SVGOutputProcessorOptionsJSExports {
   
   // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case fontCache
+    case internalSpeechTitles
+  }
   
   public typealias FontCache = String
   public struct FontCaches {
@@ -119,6 +125,20 @@ import Foundation
       displayAlign: displayAlign,
       displayIndent: displayIndent
     )
+  }
+  
+  public required init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    fontCache = try container.decode(FontCache.self, forKey: .fontCache)
+    internalSpeechTitles = try container.decode(Bool.self, forKey: .internalSpeechTitles)
+    try super.init(from: decoder)
+  }
+  
+  public override func encode(to encoder: Encoder) throws {
+    try super.encode(to: encoder)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(fontCache, forKey: .fontCache)
+    try container.encode(internalSpeechTitles, forKey: .internalSpeechTitles)
   }
   
 }

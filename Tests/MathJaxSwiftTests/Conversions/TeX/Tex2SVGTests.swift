@@ -40,10 +40,10 @@ final class Tex2SVGTests: XCTestCase {
     var error: Error?
     let output = mathjax.tex2svg(
       MathJaxSwiftTests.texErrorInput,
-      inputOptions: TexInputProcessorOptions(
+      inputOptions: TeXInputProcessorOptions(
         loadPackages: [
-          TexInputProcessorOptions.Packages.base,
-          TexInputProcessorOptions.Packages.noerrors]),
+          TeXInputProcessorOptions.Packages.base,
+          TeXInputProcessorOptions.Packages.noerrors]),
       error: &error)
     XCTAssertEqual(output, svgErrorDataNoErrors)
     if let error = error as? MathJaxError {
