@@ -21,9 +21,16 @@ import JavaScriptCore
 /// by MathJax to process the mathematics in your web page. They are listed with
 /// their default values. To set any of these options, include an options
 /// section in your `MathJax` global object.
-@objc public class DocumentOptions: NSObject, Options, DocumentOptionsExports {
+@objc public class DocumentOptions: NSObject, Codable, DocumentOptionsExports {
   
   // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case skipHtmlTags
+    case includeHtmlTags
+    case ignoreHtmlClass
+    case processHtmlClass
+  }
   
   public typealias ErrorFunction = @convention(block) (_ doc: JSValue?, _ math: JSValue?, _ err: JSValue?) -> Void
   

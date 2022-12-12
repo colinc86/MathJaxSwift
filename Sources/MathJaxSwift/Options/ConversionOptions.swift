@@ -17,7 +17,7 @@ import JavaScriptCore
   var scale: Double { get set }
 }
 
-@objc public class ConversionOptions: NSObject, Options, ConversionOptionsExports {
+@objc public class ConversionOptions: NSObject, Codable, ConversionOptionsExports {
   
   // MARK: Default values
   

@@ -27,4 +27,25 @@ final class ConversionOptionsTests: XCTestCase {
     XCTAssertEqual(inputOptions, obj)
   }
   
+  func testConversionOptionsAreCodable() throws {
+    let options = ConversionOptions(
+      display: true,
+      em: 100,
+      ex: 1,
+      containerWidth: -100,
+      lineWidth: 99.9,
+      scale: 2.0)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+    
+    let decodedOptions = try JSONDecoder().decode(ConversionOptions.self, from: optionsData)
+    XCTAssertNoThrow(decodedOptions)
+    XCTAssertEqual(options.display, decodedOptions.display)
+    XCTAssertEqual(options.em, decodedOptions.em)
+    XCTAssertEqual(options.ex, decodedOptions.ex)
+    XCTAssertEqual(options.containerWidth, decodedOptions.containerWidth)
+    XCTAssertEqual(options.lineWidth, decodedOptions.lineWidth)
+    XCTAssertEqual(options.scale, decodedOptions.scale)
+  }
+  
 }
