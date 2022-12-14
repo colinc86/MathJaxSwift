@@ -27,4 +27,23 @@ final class DocumentOptionsTests: XCTestCase {
     XCTAssertEqual(inputOptions, obj)
   }
   
+  func testDocumentOptionsAreCodable() throws {
+    let options = DocumentOptions(
+      skipHtmlTags: ["test"],
+      includeHtmlTags: ["test": "test"],
+      ignoreHtmlClass: "test",
+      processHtmlClass: "test",
+      compileError: nil,
+      typesetError: nil)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+    
+    let decodedOptions = try JSONDecoder().decode(DocumentOptions.self, from: optionsData)
+    XCTAssertNoThrow(decodedOptions)
+    XCTAssertEqual(options.skipHtmlTags, decodedOptions.skipHtmlTags)
+    XCTAssertEqual(options.includeHtmlTags, decodedOptions.includeHtmlTags)
+    XCTAssertEqual(options.ignoreHtmlClass, decodedOptions.ignoreHtmlClass)
+    XCTAssertEqual(options.processHtmlClass, decodedOptions.processHtmlClass)
+  }
+  
 }

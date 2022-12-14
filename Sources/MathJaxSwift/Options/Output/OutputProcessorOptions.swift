@@ -13,7 +13,7 @@ import Foundation
 ///
 /// - [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html)
 /// - [SVG Output Processor Options](https://docs.mathjax.org/en/latest/options/output/svg.html)
-@objc public class OutputProcessorOptions: NSObject, Options {
+@objc public class OutputProcessorOptions: NSObject, Codable {
   
   // MARK: Types
   

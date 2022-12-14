@@ -8,33 +8,22 @@
 import Foundation
 import JavaScriptCore
 
-@objc internal protocol TexInputProcessorOptionsJSExports: JSExport {
-  var loadPackages: [TexInputProcessorOptions.Package] { get set }
+@objc internal protocol TeXInputProcessorOptionsJSExports: JSExport {
+  var loadPackages: [TeXInputProcessorOptions.Package] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }
   var processEscapes: Bool { get set }
   var processRefs: Bool { get set }
   var processEnvironments: Bool { get set }
   var digits: String { get set }
-  var tags: TexInputProcessorOptions.Tag { get set }
-  var tagSide: TexInputProcessorOptions.TagSide { get set }
+  var tags: TeXInputProcessorOptions.Tag { get set }
+  var tagSide: TeXInputProcessorOptions.TagSide { get set }
   var tagIndent: String { get set }
   var useLabelIds: Bool { get set }
   var maxMacros: Int { get set }
   var maxBuffer: Int { get set }
   var baseURL: String? { get set }
-  var formatError: TexInputProcessorOptions.ErrorFunction? { get set }
-  var ams: [String: Any]? { get set }
-  var amscd: [String: Any]? { get set }
-  var autoload: [String: Any]? { get set }
-  var color: [String: Any]? { get set }
-  var configmacros: [String: Any]? { get set }
-  var mathtools: [String: Any]? { get set }
-  var noundefined: [String: Any]? { get set }
-  var physics: [String: Any]? { get set }
-  var require: [String: Any]? { get set }
-  var setoptions: [String: Any]? { get set }
-  var tagformat: [String: Any]? { get set }
+  var formatError: TeXInputProcessorOptions.ErrorFunction? { get set }
 }
 
 /// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
@@ -43,9 +32,26 @@ import JavaScriptCore
 /// configuration, or if you load a combined component that includes the TeX
 /// input jax. They are listed with their default values. To set any of these
 /// options, include a tex section in your `MathJax` global object.
-@objc public class TexInputProcessorOptions: InputProcessorOptions, TexInputProcessorOptionsJSExports {
+@objc public class TeXInputProcessorOptions: InputProcessorOptions, TeXInputProcessorOptionsJSExports {
   
   // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case loadPackages
+    case inlineMath
+    case displayMath
+    case processEscapes
+    case processRefs
+    case processEnvironments
+    case digits
+    case tags
+    case tagSide
+    case tagIndent
+    case useLabelIds
+    case maxMacros
+    case maxBuffer
+    case baseURL
+  }
   
   public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
   
@@ -383,20 +389,6 @@ import JavaScriptCore
   /// `try/catch` block).
   dynamic public var formatError: ErrorFunction?
   
-  // MARK: Package options
-  
-  dynamic public var ams: [String: Any]? = nil
-  dynamic public var amscd: [String: Any]? = nil
-  dynamic public var autoload: [String: Any]? = nil
-  dynamic public var color: [String: Any]? = nil
-  dynamic public var configmacros: [String: Any]? = nil
-  dynamic public var mathtools: [String: Any]? = nil
-  dynamic public var noundefined: [String: Any]? = nil
-  dynamic public var physics: [String: Any]? = nil
-  dynamic public var require: [String: Any]? = nil
-  dynamic public var setoptions: [String: Any]? = nil
-  dynamic public var tagformat: [String: Any]? = nil
-  
   // MARK: Initializers
   
   public init(
@@ -431,6 +423,45 @@ import JavaScriptCore
     self.maxBuffer = maxBuffer
     self.baseURL = baseURL
     self.formatError = formatError
+    super.init()
+  }
+  
+  public required init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    loadPackages = try container.decode([Package].self, forKey: .loadPackages)
+    inlineMath = try container.decode([[String]].self, forKey: .inlineMath)
+    displayMath = try container.decode([[String]].self, forKey: .displayMath)
+    processEscapes = try container.decode(Bool.self, forKey: .processEscapes)
+    processRefs = try container.decode(Bool.self, forKey: .processRefs)
+    processEnvironments = try container.decode(Bool.self, forKey: .processEnvironments)
+    digits = try container.decode(String.self, forKey: .digits)
+    tags = try container.decode(Tag.self, forKey: .tags)
+    tagSide = try container.decode(TagSide.self, forKey: .tagSide)
+    tagIndent = try container.decode(String.self, forKey: .tagIndent)
+    useLabelIds = try container.decode(Bool.self, forKey: .useLabelIds)
+    maxMacros = try container.decode(Int.self, forKey: .maxMacros)
+    maxBuffer = try container.decode(Int.self, forKey: .maxBuffer)
+    baseURL = try container.decode(String?.self, forKey: .baseURL)
+    try super.init(from: decoder)
+  }
+  
+  public override func encode(to encoder: Encoder) throws {
+    try super.encode(to: encoder)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(loadPackages, forKey: .loadPackages)
+    try container.encode(inlineMath, forKey: .inlineMath)
+    try container.encode(displayMath, forKey: .displayMath)
+    try container.encode(processEscapes, forKey: .processEscapes)
+    try container.encode(processRefs, forKey: .processRefs)
+    try container.encode(processEnvironments, forKey: .processEnvironments)
+    try container.encode(digits, forKey: .digits)
+    try container.encode(tags, forKey: .tags)
+    try container.encode(tagSide, forKey: .tagSide)
+    try container.encode(tagIndent, forKey: .tagIndent)
+    try container.encode(useLabelIds, forKey: .useLabelIds)
+    try container.encode(maxMacros, forKey: .maxMacros)
+    try container.encode(maxBuffer, forKey: .maxBuffer)
+    try container.encode(baseURL, forKey: .baseURL)
   }
   
 }
