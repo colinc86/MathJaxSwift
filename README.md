@@ -30,7 +30,7 @@
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.2.2")
+.package(url: "https://github.com/colinc86/MathJaxSwift", branch: "v4.0")
 ```
 
 ## 🎛️ Usage
