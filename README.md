@@ -154,28 +154,28 @@ See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more
 
 Each of the methods have various options that can be passed. The following options have been implemented.
 
-- [-] [Document options](#document-options)
+- [ ] [Document options](#document-options)
   - [x] Non-developer options
   - [ ] Developer options
 - [x] [Conversion options](#conversion-options)
-- [-] [Input processor options](#processor-options)
-  - [-] TeX
+- [ ] [Input processor options](#processor-options)
+  - [ ] TeX
     - [x] Non-developer
     - [ ] Developer
-    - [-] Extensions
+    - [ ] Extensions
       - [x] Configurable via dictionaries
       - [ ] Configurable via objects
-  - [-] AsciiMath
+  - [ ] AsciiMath
     - [x] Non-developer
     - [ ] Developer
-  - [-] MathML
+  - [ ] MathML
     - [x] Non-developer
     - [ ] Developer
-- [-] [Output processor options](#processor-options)
-  - [-] CHTML
+- [ ] [Output processor options](#processor-options)
+  - [ ] CHTML
     - [x] Non-developer
     - [ ] Developer
-  - [-] SVG
+  - [ ] SVG
     - [x] Non-developer
     - [ ] Developer
 - [ ] Safe extension options
