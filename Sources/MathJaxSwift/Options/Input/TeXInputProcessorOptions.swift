@@ -8,22 +8,22 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol TexInputProcessorOptionsJSExports: JSExport {
-  var packages: [String] { get set }
+@objc internal protocol TeXInputProcessorOptionsJSExports: JSExport {
+  var loadPackages: [TeXInputProcessorOptions.Package] { get set }
   var inlineMath: [[String]] { get set }
   var displayMath: [[String]] { get set }
   var processEscapes: Bool { get set }
   var processRefs: Bool { get set }
   var processEnvironments: Bool { get set }
   var digits: String { get set }
-  var tags: TexInputProcessorOptions.Tag { get set }
-  var tagSide: TexInputProcessorOptions.TagSide { get set }
+  var tags: TeXInputProcessorOptions.Tag { get set }
+  var tagSide: TeXInputProcessorOptions.TagSide { get set }
   var tagIndent: String { get set }
   var useLabelIds: Bool { get set }
   var maxMacros: Int { get set }
   var maxBuffer: Int { get set }
   var baseURL: String? { get set }
-  var formatError: TexInputProcessorOptions.ErrorFunction? { get set }
+  var formatError: TeXInputProcessorOptions.ErrorFunction? { get set }
 }
 
 /// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
@@ -32,11 +32,94 @@ import JavaScriptCore
 /// configuration, or if you load a combined component that includes the TeX
 /// input jax. They are listed with their default values. To set any of these
 /// options, include a tex section in your `MathJax` global object.
-@objc public class TexInputProcessorOptions: InputProcessorOptions, TexInputProcessorOptionsJSExports {
+@objc public class TeXInputProcessorOptions: InputProcessorOptions, TeXInputProcessorOptionsJSExports {
   
   // MARK: Types
   
+  internal enum CodingKeys: CodingKey {
+    case loadPackages
+    case inlineMath
+    case displayMath
+    case processEscapes
+    case processRefs
+    case processEnvironments
+    case digits
+    case tags
+    case tagSide
+    case tagIndent
+    case useLabelIds
+    case maxMacros
+    case maxBuffer
+    case baseURL
+  }
+  
   public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
+  
+  public typealias Package = String
+  public struct Packages {
+    public static let action = "action"
+    public static let ams = "ams"
+    public static let amscd = "amscd"
+    public static let base = "base"
+    public static let bbox = "bbox"
+    public static let boldsymbol = "boldsymbol"
+    public static let braket = "braket"
+    public static let bussproofs = "bussproofs"
+    public static let cancel = "cancel"
+    public static let cases = "cases"
+    public static let centernot = "centernot"
+    public static let color = "color"
+    public static let colortbl = "colortbl"
+    public static let configmacros = "configmacros"
+    public static let empheq = "empheq"
+    public static let enclose = "enclose"
+    public static let extpfeil = "extpfeil"
+    public static let gensymb = "gensymb"
+    public static let html = "html"
+    public static let mathtools = "mathtools"
+    public static let mhchem = "mhchem"
+    public static let newcommand = "newcommand"
+    public static let noerrors = "noerrors"
+    public static let noundefined = "noundefined"
+    public static let tagformat = "tagformat"
+    public static let textcomp = "textcomp"
+    public static let textmacros = "textmacros"
+    public static let unicode = "unicode"
+    public static let upgreek = "upgreek"
+    public static let verb = "verb"
+    public static let all = [
+      action,
+      ams,
+      amscd,
+      base,
+      bbox,
+      boldsymbol,
+      braket,
+      bussproofs,
+      cancel,
+      cases,
+      centernot,
+      color,
+      colortbl,
+      configmacros,
+      empheq,
+      enclose,
+      extpfeil,
+      gensymb,
+      html,
+      mathtools,
+      mhchem,
+      newcommand,
+      noerrors,
+      noundefined,
+      tagformat,
+      textcomp,
+      textmacros,
+      unicode,
+      upgreek,
+      verb
+    ]
+  }
   
   public typealias Tag = String
   public struct Tags {
@@ -61,7 +144,7 @@ import JavaScriptCore
   
   // MARK: Default values
   
-  public static let defaultPackages: [String] = ["base"]
+  public static let defaultLoadPackages: [Package] = [Packages.base]
   public static let defaultInlineMath: [[String]] = [["\\(", "\\)"]]
   public static let defaultDisplayMath: [[String]] = [["$$", "$$"], ["\\[", "\\]"]]
   public static let defaultProcessEscapes: Bool = false
@@ -138,7 +221,7 @@ import JavaScriptCore
   ///
   /// - Note: The default value is `["base"]`.
   /// - SeeAlso: [TeX Input Processor Options](https://docs.mathjax.org/en/latest/options/input/tex.html#tex-packages)
-  dynamic public var packages: [String]
+  dynamic public var loadPackages: [Package]
   
   /// This is an array of pairs of strings that are to be used as in-line math
   /// delimiters.
@@ -309,7 +392,7 @@ import JavaScriptCore
   // MARK: Initializers
   
   public init(
-    packages: [String] = defaultPackages,
+    loadPackages: [Package] = defaultLoadPackages,
     inlineMath: [[String]] = defaultInlineMath,
     displayMath: [[String]] = defaultDisplayMath,
     processEscapes: Bool = defaultProcessEscapes,
@@ -325,7 +408,7 @@ import JavaScriptCore
     baseURL: String? = defaultBaseURL,
     formatError: ErrorFunction? = defaultFormatError
   ) {
-    self.packages = packages
+    self.loadPackages = loadPackages
     self.inlineMath = inlineMath
     self.displayMath = displayMath
     self.processEscapes = processEscapes
@@ -340,6 +423,45 @@ import JavaScriptCore
     self.maxBuffer = maxBuffer
     self.baseURL = baseURL
     self.formatError = formatError
+    super.init()
+  }
+  
+  public required init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    loadPackages = try container.decode([Package].self, forKey: .loadPackages)
+    inlineMath = try container.decode([[String]].self, forKey: .inlineMath)
+    displayMath = try container.decode([[String]].self, forKey: .displayMath)
+    processEscapes = try container.decode(Bool.self, forKey: .processEscapes)
+    processRefs = try container.decode(Bool.self, forKey: .processRefs)
+    processEnvironments = try container.decode(Bool.self, forKey: .processEnvironments)
+    digits = try container.decode(String.self, forKey: .digits)
+    tags = try container.decode(Tag.self, forKey: .tags)
+    tagSide = try container.decode(TagSide.self, forKey: .tagSide)
+    tagIndent = try container.decode(String.self, forKey: .tagIndent)
+    useLabelIds = try container.decode(Bool.self, forKey: .useLabelIds)
+    maxMacros = try container.decode(Int.self, forKey: .maxMacros)
+    maxBuffer = try container.decode(Int.self, forKey: .maxBuffer)
+    baseURL = try container.decode(String?.self, forKey: .baseURL)
+    try super.init(from: decoder)
+  }
+  
+  public override func encode(to encoder: Encoder) throws {
+    try super.encode(to: encoder)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(loadPackages, forKey: .loadPackages)
+    try container.encode(inlineMath, forKey: .inlineMath)
+    try container.encode(displayMath, forKey: .displayMath)
+    try container.encode(processEscapes, forKey: .processEscapes)
+    try container.encode(processRefs, forKey: .processRefs)
+    try container.encode(processEnvironments, forKey: .processEnvironments)
+    try container.encode(digits, forKey: .digits)
+    try container.encode(tags, forKey: .tags)
+    try container.encode(tagSide, forKey: .tagSide)
+    try container.encode(tagIndent, forKey: .tagIndent)
+    try container.encode(useLabelIds, forKey: .useLabelIds)
+    try container.encode(maxMacros, forKey: .maxMacros)
+    try container.encode(maxBuffer, forKey: .maxBuffer)
+    try container.encode(baseURL, forKey: .baseURL)
   }
   
 }

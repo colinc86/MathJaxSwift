@@ -26,6 +26,16 @@ final class OutputProcessorOptionsTests: XCTestCase {
     XCTAssertEqual(inputOptions, obj)
   }
   
+  func testCHTMLOutputProcessorOptionsAreCodable() throws {
+    let options = CHTMLOutputProcessorOptions(matchFontHeight: true)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+    
+    let decodedOptions = try JSONDecoder().decode(CHTMLOutputProcessorOptions.self, from: optionsData)
+    XCTAssertNoThrow(decodedOptions)
+    XCTAssertEqual(options.matchFontHeight, decodedOptions.matchFontHeight)
+  }
+  
   func testSVGOutputProcessorIdentity() throws {
     let context = JSContext()
     XCTAssertNotNil(context)
@@ -46,6 +56,16 @@ final class OutputProcessorOptionsTests: XCTestCase {
     
     let obj = outputOptions?.toObjectOf(SVGOutputProcessorOptions.self) as? SVGOutputProcessorOptions
     XCTAssertEqual(inputOptions, obj)
+  }
+  
+  func testSVGOutputProcessorOptionsAreCodable() throws {
+    let options = SVGOutputProcessorOptions(fontCache: SVGOutputProcessorOptions.FontCaches.local)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+    
+    let decodedOptions = try JSONDecoder().decode(SVGOutputProcessorOptions.self, from: optionsData)
+    XCTAssertNoThrow(decodedOptions)
+    XCTAssertEqual(options.fontCache, decodedOptions.fontCache)
   }
   
 }

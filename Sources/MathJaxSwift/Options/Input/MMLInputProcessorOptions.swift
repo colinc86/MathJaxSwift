@@ -8,14 +8,14 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol MMLInputProcessorOptionsJSExports: JSExport {
+@objc internal protocol MMLInputProcessorOptionsJSExports: JSExport {
   var parseAs: MMLInputProcessorOptions.Parser { get set }
   var forceReparse: Bool { get set }
   var parseError: MMLInputProcessorOptions.ErrorFunction? { get set }
   var verify: MMLInputProcessorOptions.Verify { get set }
 }
 
-@objc public protocol VerifyJSExports: JSExport {
+@objc internal protocol VerifyJSExports: JSExport {
   var checkArity: Bool { get set }
   var checkAttributes: Bool { get set }
   var fullErrors: Bool { get set }
@@ -33,6 +33,12 @@ import JavaScriptCore
   
   // MARK: Types
   
+  internal enum CodingKeys: CodingKey {
+    case parseAs
+    case forceReparse
+    case verify
+  }
+  
   public typealias ErrorFunction = @convention(block) (_ node: JSValue?) -> Void
   
   public typealias Parser = String
@@ -44,7 +50,7 @@ import JavaScriptCore
     public static let xml: Parser = "xml"
   }
   
-  @objc public class Verify: NSObject, VerifyJSExports {
+  @objc public class Verify: NSObject, Codable, VerifyJSExports {
     
     // MARK: Default values
     
@@ -192,5 +198,24 @@ import JavaScriptCore
     self.forceReparse = forceReparse
     self.parseError = parseError
     self.verify = verify
+    super.init()
   }
+  
+  public required init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    parseAs = try container.decode(Parser.self, forKey: .parseAs)
+    forceReparse = try container.decode(Bool.self, forKey: .forceReparse)
+    parseError = nil
+    verify = try container.decode(Verify.self, forKey: .verify)
+    try super.init(from: decoder)
+  }
+  
+  public override func encode(to encoder: Encoder) throws {
+    try super.encode(to: encoder)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(parseAs, forKey: .parseAs)
+    try container.encode(forceReparse, forKey: .forceReparse)
+    try container.encode(verify, forKey: .verify)
+  }
+  
 }

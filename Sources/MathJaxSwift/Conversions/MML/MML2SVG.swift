@@ -87,4 +87,43 @@ extension MathJax {
     ])
   }
   
+  /// Converts a MathML input string to SVG.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing MathML.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The MathML input processor options.
+  ///   - outputOptions: The SVG output processor options.
+  ///   - error: The error produced by the conversion.
+  /// - Returns: SVG formatted output.
+  public func mml2svg(
+    _ input: String,
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: MMLInputProcessorOptions = MMLInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
+    error: inout Error?
+  ) -> String {
+    return callFunction(.mml2svg, with: [
+      input,
+      css,
+      assistiveMml,
+      container,
+      styles,
+      conversionOptions,
+      documentOptions,
+      inputOptions,
+      outputOptions
+    ], error: &error)
+  }
+  
 }

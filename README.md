@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![Swift Version](https://img.shields.io/badge/Swift-5.5-orange?logo=swift) ![iOS Version](https://img.shields.io/badge/iOS-13-informational) ![macOS Version](https://img.shields.io/badge/macOS-10.15-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![Swift Version](https://img.shields.io/badge/Swift-5.5-orange?logo=swift) ![macOS Version](https://img.shields.io/badge/macOS-10.15-informational) ![iOS Version](https://img.shields.io/badge/iOS-13-informational) ![tvOS Version](https://img.shields.io/badge/tvOS-13-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
 
 <a href="https://www.mathjax.org">
     <img title="Powered by MathJax"
@@ -8,19 +8,32 @@
     border="0" alt="Powered by MathJax" />
 </a>
 
-`MathJaxSwift` converts and renders math expressions in Swift by incorporating [MathJax](https://github.com/mathjax/MathJax)[^1] source code and using the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework. It wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift.
+`MathJaxSwift` converts and renders math expressions in Swift by incorporating [MathJax](https://github.com/mathjax/MathJax)[^1] source code and using the [JavaScriptCore](https://developer.apple.com/documentation/javascriptcore) framework. It wraps the MathJax conversion processes in convenient JavaScript methods [described here](https://github.com/mathjax/MathJax-demos-node/tree/master/direct) and exposes them to Swift _without_ using `WebKit`.
 
 [^1]: `MathJaxSwift` is not affiliated with [MathJax](https://github.com/mathjax/MathJax) or any of its related entities.
 
-## Installation
+- [Installation](#📦-installation)
+- [Usage](#🎛️-usage)
+  - [Available Methods](#🧰-available-methods)
+  - [Threading and Memory](#🧵-threading-and-memory)
+    - [Preferred Output Formats](#preferred-output-formats)
+  - [Options](#⚙️-options)
+    - [Document Options](#document-options)
+    - [Conversion Options](#conversion-options)
+    - [Processor Options](#processor-options)
+  - [Error Handling](#🚨-error-handling)
+  - [MathJax Version](#♾️-mathjax-version)
+- [Notes](#📓-notes)
+
+## 📦 Installation
 
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", branch: "main")
+.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.2.2")
 ```
 
-## Usage
+## 🎛️ Usage
 
 Import the package, create a `MathJax` instance, and convert an input string to a supported output format.
 
@@ -37,14 +50,14 @@ catch {
 ```
 
 > The example above converts the TeX input to SVG data that renders the following PNG.
+>
+> <picture>
+>   <source media="(prefers-color-scheme: dark)" srcset="./assets/images/hello_tex_light.png">
+>   <source media="(prefers-color-scheme: light)" srcset="./assets/images/hello_tex_dark.png">
+>   <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png" width=200px, height=auto>
+> </picture>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/images/hello_tex_light.png">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/images/hello_tex_dark.png">
-  <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png" width=200px, height=auto>
-</picture>
-
-### Available Methods
+### 🧰 Available Methods
 
 MathJaxSwift implements the following methods to convert [TeX](https://tug.org), [MathML](https://www.w3.org/TR/MathML/), and [AsciiMath](http://asciimath.org) to CommonHTML, MathML and SVG data.
 
@@ -58,11 +71,9 @@ MathJaxSwift implements the following methods to convert [TeX](https://tug.org),
 | `am2chtml`  | AsciiMath                               | cHTML         |
 | `am2mml`    | AsciiMath                               | MathML        |
 
-### Threading and Memory
+### 🧵 Threading and Memory
 
 Initializing an instance of `MathJax` should not be performed on the main queue to prevent blocking of the UI. You should also attempt to keep a single reference to an instance and submit your function calls to it instead of creating a new `MathJax` instance each time you need to convert.
-
-> An example of what to do: 
 
 ```swift
 import MathJaxSwift
@@ -80,22 +91,7 @@ class MyModel {
 }
 ```
 
-> An example of what _not_ to do: 
-
-```swift
-import MathJaxSwift
-
-class MyModel {
-  init() {}
-  
-  func convertTex(_ input: String) async throws -> String {
-    let mathjax = try MathJax()
-    return try await mathjax.tex2chtml(input)
-  }
-}
-```
-
-Each of the methods are also available with an `async` implementation. It is recommended that these methods are used over their synchronous counterparts wherever possible.
+Each of the methods are also available with an `async` implementation.
 
 ```swift
 func myAsyncMethod() async throws {
@@ -103,8 +99,6 @@ func myAsyncMethod() async throws {
   print(mml)
 }
 ```
-
-> Outputs the following MathML.
 
 ```xml
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -145,7 +139,8 @@ do {
   // output format.
   let mathjax = try MathJax(preferredOutputFormat: .chtml)
   
-  // The following is ok!
+  // It's ok to call `tex2mml` even though we set our preferred output format to
+  // `chtml`!
   let mml = try mathjax.tex2mml("\\text{Hello}, \\TeX{}!")
 }
 catch {
@@ -155,14 +150,45 @@ catch {
 
 See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more details.
 
-### Options
+### ⚙️ Options
 
-Each of the methods have various options that can be passed. Options are segmented in to
+Each of the methods have various options that can be passed. The following options have been implemented.
 
-- Document options
-- Conversion options
-- Input processor options
-- Output processor options
+- [ ] [Document options](#document-options)
+  - [x] Non-developer options
+  - [ ] Developer options
+- [x] [Conversion options](#conversion-options)
+- [ ] [Input processor options](#processor-options)
+  - [ ] TeX
+    - [x] Non-developer
+    - [ ] Developer
+    - [ ] Extensions
+      - [x] Configurable via dictionaries
+      - [ ] Configurable via objects
+  - [ ] AsciiMath
+    - [x] Non-developer
+    - [ ] Developer
+  - [ ] MathML
+    - [x] Non-developer
+    - [ ] Developer
+- [ ] [Output processor options](#processor-options)
+  - [ ] CHTML
+    - [x] Non-developer
+    - [ ] Developer
+  - [ ] SVG
+    - [x] Non-developer
+    - [ ] Developer
+- [ ] Safe extension options
+- [ ] Contextual menu options
+  - [ ] Non-developer
+  - [ ] Developer
+- [ ] Accessibility extensions options
+  - [ ] Semantic rich extension options
+  - [ ] Complexity extension options
+    - [ ] Non-developer
+    - [ ] Developer
+  - [ ] Explorer extension options
+  - [ ] Assistive-MML extension options
 
 #### Document Options
 
@@ -197,7 +223,7 @@ let outputOptions = SVGOutputProcessorOptions(displayIndent: 0.5)
 let svg = try! mathjax.tex2svg("\\text{Hello, }\\LaTeX\\text{!}", inputOptions: inputOptions, outputOptions: outputOptions)
 ```
 
-### Error Handling
+### 🚨 Error Handling
 
 Each of the conversion methods are throwing methods, but you can also catch errors from MathJax using options.
 
@@ -213,7 +239,7 @@ let inputOptions = TexInputProcessorOptions { jax, err in
 }
 ```
 
-### MathJax Version
+### ♾️ MathJax Version
 
 To check the version of MathJax that has been loaded, use the static `metadata() throws` method.
 
@@ -229,7 +255,7 @@ catch {
 
 You can also use the returned metadata to check the MathJax node module's URL and its SHA-512.
 
-## Notes
+## 📓 Notes
 
 To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create bundle files that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
 

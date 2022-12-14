@@ -13,4 +13,4 @@ import Foundation
 /// In particular, the options that correspond to the version-2 options
 /// `skipTags`, `includeTags`, and similar options for the various v2
 /// pre-processors are now document-level options.
-@objc public class InputProcessorOptions: NSObject, Options {}
+@objc public class InputProcessorOptions: NSObject, Codable {}

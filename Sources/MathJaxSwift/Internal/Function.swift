@@ -76,4 +76,16 @@ internal enum Function: String {
     }
   }
   
+  /// The output parser to use with this function.
+  var outputParser: Parser {
+    switch self {
+    case .tex2chtml, .mml2chtml, .am2chtml:
+      return HTMLParser.shared
+    case .tex2mml, .am2mml:
+      return MMLParser.shared
+    case .tex2svg, .mml2svg:
+      return SVGParser.shared
+    }
+  }
+  
 }

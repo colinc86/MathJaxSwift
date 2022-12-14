@@ -8,7 +8,7 @@
 import Foundation
 import JavaScriptCore
 
-@objc public protocol ConversionOptionsExports: JSExport {
+@objc internal protocol ConversionOptionsExports: JSExport {
   var display: Bool { get set }
   var em: Double { get set }
   var ex: Double { get set }
@@ -17,7 +17,7 @@ import JavaScriptCore
   var scale: Double { get set }
 }
 
-@objc public class ConversionOptions: NSObject, Options, ConversionOptionsExports {
+@objc public class ConversionOptions: NSObject, Codable, ConversionOptionsExports {
   
   // MARK: Default values
   

@@ -9,6 +9,8 @@ const {AssistiveMmlHandler} = require('mathjax-full/js/a11y/assistive-mml.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
+const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+
 const CSS = [
   'svg a{fill:blue;stroke:blue}',
   '[data-mml-node="merror"]>g{fill:red;stroke:red}',
@@ -39,6 +41,7 @@ export class SVGConverter {
    * @return {string} The SVG formatted string.
    */
   static tex2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, texOptions, svgOptions) {
+    texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) || (name === 'base')));
     const tex = new TeX(texOptions);
     return SVGConverter.createSVG(input, tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
   }

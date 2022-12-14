@@ -1,5 +1,5 @@
 //
-//  Tex2CHTML.swift
+//  TeX2CHTML.swift
 //  MathJaxSwift
 //
 //  Created by Colin Campbell on 11/29/22.
@@ -27,7 +27,7 @@ extension MathJax {
     assistiveMml: Bool = false,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
@@ -61,7 +61,7 @@ extension MathJax {
     assistiveMml: Bool = false,
     conversionOptions: ConversionOptions = ConversionOptions(),
     documentOptions: DocumentOptions = DocumentOptions(),
-    inputOptions: TexInputProcessorOptions = TexInputProcessorOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
     return try callFunction(.tex2chtml, with: [
@@ -73,6 +73,39 @@ extension MathJax {
       inputOptions,
       outputOptions
     ])
+  }
+  
+  /// Converts a TeX input string to CHTML.
+  ///
+  /// - Parameters:
+  ///   - input: The input string containing TeX.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - outputOptions: The CHTML output processor options.
+  ///   - error: The error produced by the conversion.
+  /// - Returns: CHTML formatted output.
+  public func tex2chtml(
+    _ input: String,
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
+    error: inout Error?
+  ) -> String {
+    return callFunction(.tex2chtml, with: [
+      input,
+      css,
+      assistiveMml,
+      conversionOptions,
+      documentOptions,
+      inputOptions,
+      outputOptions
+    ], error: &error)
   }
   
 }
