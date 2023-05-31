@@ -81,7 +81,7 @@ function identity(argument) {
     XCTAssertEqual(metadata.version, Constants.expectedMathJaxVersion)
     
     // Make sure the URL is correct
-    XCTAssertEqual(metadata.resolved.absoluteString, "https://registry.npmjs.org/mathjax-full/-/mathjax-full-\(metadata.version).tgz")
+    XCTAssertEqual(metadata.resolved?.absoluteString, "https://registry.npmjs.org/mathjax-full/-/mathjax-full-\(metadata.version).tgz")
   }
   
   func testInitTime() {

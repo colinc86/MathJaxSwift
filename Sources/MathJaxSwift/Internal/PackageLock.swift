@@ -12,6 +12,6 @@ import Foundation
 internal struct PackageLock: Codable {
   
   /// The package-lock file's dependencies.
-  let dependencies: [String: MathJax.Metadata]
+  let packages: [String: MathJax.Metadata]
   
 }
