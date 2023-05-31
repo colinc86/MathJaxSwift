@@ -20,10 +20,10 @@ public final class MathJax {
     let version: String
     
     /// The URL of the module.
-    let resolved: URL
+    let resolved: URL?
     
     /// The module's SHA-512.
-    let integrity: String
+    let integrity: String?
   }
   
   /// An output format.
@@ -117,7 +117,7 @@ extension MathJax {
     let package = try JSONDecoder().decode(PackageLock.self, from: try Data(contentsOf: packageLockURL))
     
     // Find the mathjax module and return its metadata.
-    guard let dependency = package.dependencies[Constants.Names.Modules.mathjax] else {
+    guard let dependency = package.packages[Constants.Names.Modules.mathjax] else {
       throw MathJaxError.missingDependencyInformation
     }
     return dependency

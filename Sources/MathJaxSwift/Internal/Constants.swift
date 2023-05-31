@@ -20,7 +20,7 @@ internal struct Constants {
     struct Modules {
       
       /// The name of the MathJax npm module.
-      static let mathjax = "mathjax-full"
+      static let mathjax = "node_modules/mathjax-full"
       
       /// The name of the mjn npm module.
       static let mjn = "mjn"
