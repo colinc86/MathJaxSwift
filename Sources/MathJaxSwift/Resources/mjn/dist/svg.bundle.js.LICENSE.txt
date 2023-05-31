@@ -2,7 +2,7 @@
  *************************************************************************
  *
  *  mhchemParser.ts
- *  4.1.1
+ *  4.2.1
  *
  *  Parser for the \ce command and \pu command for MathJax and Co.
  *
@@ -11,7 +11,7 @@
  *
  *  ----------------------------------------------------------------------
  *
- *  Copyright (c) 2015-2021 Martin Hensel
+ *  Copyright (c) 2015-2023 Martin Hensel
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
