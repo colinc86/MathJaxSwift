@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![Swift Version](https://img.shields.io/badge/Swift-5.5-orange?logo=swift) ![macOS Version](https://img.shields.io/badge/macOS-10.15-informational) ![iOS Version](https://img.shields.io/badge/iOS-13-informational) ![tvOS Version](https://img.shields.io/badge/tvOS-13-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/colinc86/MathJaxSwift) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/colinc86/MathJaxSwift) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
 
 <a href="https://www.mathjax.org">
     <img title="Powered by MathJax"
@@ -51,11 +51,7 @@ catch {
 
 > The example above converts the TeX input to SVG data that renders the following PNG.
 >
-> <picture>
->   <source media="(prefers-color-scheme: dark)" srcset="./assets/images/hello_tex_light.png">
->   <source media="(prefers-color-scheme: light)" srcset="./assets/images/hello_tex_dark.png">
->   <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png" width=200px, height=auto>
-> </picture>
+> <img alt="Hello, Tex!" src="./assets/images/hello_tex.png" width=200px, height=auto>
 
 ### 🧰 Available Methods
 
