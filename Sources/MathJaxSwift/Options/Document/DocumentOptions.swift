@@ -36,6 +36,8 @@ import JavaScriptCore
   var makeCollapsible: Bool { get set }
   var enableExplorer: Bool { get set }
   var enableAssistiveMml: Bool { get set }
+  var enableMenu: Bool { get set }
+  var annotationTypes: [String: [String]] { get set }
   var a11y: A11YOptions { get set }
   var sre: SREOptions { get set }
   var menuOptions: MenuOptions { get set }
@@ -65,6 +67,8 @@ import JavaScriptCore
     case makeCollapsible
     case enableExplorer
     case enableAssistiveMml
+    case enableMenu
+    case annotationTypes
     case a11y
     case sre
     case menuOptions
@@ -91,6 +95,14 @@ import JavaScriptCore
     "#comment": ""
   ]
   
+  public static let defaultAnnotationTypes: [String: [String]] = [
+    "TeX": ["TeX", "LaTeX", "application/x-tex"],
+    "StarMath": ["StarMath 5.0"],
+    "Maple": ["Maple"],
+    "ContentMathML": ["MathML-Content", "application/mathml-content+xml"],
+    "OpenMath": ["OpenMath"]
+  ]
+  
   public static let defaultIgnoreHtmlClass: String = "tex2jax_ignore"
   public static let defaultProcessHtmlClass: String = "tex2jax_process"
   public static let defaultEnableEnrichment: Bool = true
@@ -98,6 +110,7 @@ import JavaScriptCore
   public static let defaultMakeCollapsible: Bool = true
   public static let defaultEnableExplorer: Bool = true
   public static let defaultEnableAssistiveMml: Bool = false
+  public static let defaultEnableMenu: Bool = true
   public static let defaultA11Y: A11YOptions = A11YOptions()
   public static let defaultSREOptions: SREOptions = SREOptions()
   public static let defaultMenuOptions: MenuOptions = MenuOptions()
@@ -116,6 +129,8 @@ import JavaScriptCore
   dynamic public var makeCollapsible: Bool
   dynamic public var enableExplorer: Bool
   dynamic public var enableAssistiveMml: Bool
+  dynamic public var enableMenu: Bool
+  dynamic public var annotationTypes: [String : [String]]
   dynamic public var a11y: A11YOptions
   dynamic public var sre: SREOptions
   dynamic public var menuOptions: MenuOptions
@@ -135,6 +150,8 @@ import JavaScriptCore
     makeCollapsible: Bool = defaultMakeCollapsible,
     enableExplorer: Bool = defaultEnableExplorer,
     enableAssistiveMml: Bool = defaultEnableAssistiveMml,
+    enableMenu: Bool = defaultEnableMenu,
+    annotationTypes: [String: [String]] = defaultAnnotationTypes,
     a11y: A11YOptions = defaultA11Y,
     sre: SREOptions = defaultSREOptions,
     menuOptions: MenuOptions = defaultMenuOptions,
@@ -151,6 +168,8 @@ import JavaScriptCore
     self.makeCollapsible = makeCollapsible
     self.enableExplorer = enableExplorer
     self.enableAssistiveMml = enableAssistiveMml
+    self.enableMenu = enableMenu
+    self.annotationTypes = annotationTypes
     self.a11y = a11y
     self.sre = sre
     self.menuOptions = menuOptions
