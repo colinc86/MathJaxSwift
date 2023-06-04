@@ -78,8 +78,11 @@ public final class MathJax {
   
   /// Initializes a new `MathJax` instance.
   ///
-  /// - Parameter outputFormats: The preferred output formats.
-  public init(preferredOutputFormats: [OutputFormat] = OutputFormat.allCases) throws {
+  /// - Parameters:
+  ///   - outputFormats: The preferred output formats.
+  ///   - debugLogs: Whether or not the instance should produce log output from
+  ///     JavaScript calls to `console.log`.
+  public init(preferredOutputFormats: [OutputFormat] = OutputFormat.allCases, debugLogs: Bool = false) throws {
     // Make sure we're using the correct MathJax version
     let metadata = try MathJax.metadata()
     guard metadata.version == Constants.expectedMathJaxVersion else {
@@ -91,6 +94,15 @@ public final class MathJax {
       throw MathJaxError.unableToCreateContext
     }
     context = ctx
+    
+    // Set up logs from the context.
+    context.evaluateScript("var console = { log: function(message) { _consoleLog(message) } }")
+    let consoleLog: @convention(block) (String) -> Void = { message in
+      if debugLogs {
+        NSLog("JSContext: " + message)
+      }
+    }
+    context.setObject(unsafeBitCast(consoleLog, to: AnyObject.self), forKeyedSubscript: "_consoleLog" as NSString)
     
     // Register our options classes
     try registerClasses([

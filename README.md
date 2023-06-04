@@ -151,7 +151,7 @@ See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more
 Each of the methods have various options that can be passed. The following options have been implemented.
 
 - [ ] [Document options](#document-options)
-  - [x] Non-developer options
+  - [x] Accessibility extensions options
   - [ ] Developer options
 - [x] [Conversion options](#conversion-options)
 - [ ] [Input processor options](#processor-options)
@@ -178,13 +178,7 @@ Each of the methods have various options that can be passed. The following optio
 - [ ] Contextual menu options
   - [ ] Non-developer
   - [ ] Developer
-- [ ] Accessibility extensions options
-  - [ ] Semantic rich extension options
-  - [ ] Complexity extension options
-    - [ ] Non-developer
-    - [ ] Developer
-  - [ ] Explorer extension options
-  - [ ] Assistive-MML extension options
+
 
 #### Document Options
 
