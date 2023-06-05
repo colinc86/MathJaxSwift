@@ -41,6 +41,7 @@ import JavaScriptCore
   var a11y: A11YOptions { get set }
   var sre: SREOptions { get set }
   var menuOptions: MenuOptions { get set }
+  var safeOptions: SafeOptions { get set }
   var enrichError: DocumentOptions.ErrorFunction? { get set }
   var compileError: DocumentOptions.ErrorFunction? { get set }
   var typesetError: DocumentOptions.ErrorFunction? { get set }
@@ -72,6 +73,7 @@ import JavaScriptCore
     case a11y
     case sre
     case menuOptions
+    case safeOptions
   }
   
   public typealias ErrorFunction = @convention(block) (_ doc: JSValue?, _ math: JSValue?, _ err: JSValue?) -> Void
@@ -114,6 +116,7 @@ import JavaScriptCore
   public static let defaultA11Y: A11YOptions = A11YOptions()
   public static let defaultSREOptions: SREOptions = SREOptions()
   public static let defaultMenuOptions: MenuOptions = MenuOptions()
+  public static let defaultSafeOptions: SafeOptions = SafeOptions()
   public static let defaultEnrichError: ErrorFunction? = nil
   public static let defaultCompileError: ErrorFunction? = nil
   public static let defaultTypesetError: ErrorFunction? = nil
@@ -134,6 +137,7 @@ import JavaScriptCore
   dynamic public var a11y: A11YOptions
   dynamic public var sre: SREOptions
   dynamic public var menuOptions: MenuOptions
+  dynamic public var safeOptions: SafeOptions
   dynamic public var enrichError: ErrorFunction?
   dynamic public var compileError: ErrorFunction?
   dynamic public var typesetError: ErrorFunction?
@@ -155,6 +159,7 @@ import JavaScriptCore
     a11y: A11YOptions = defaultA11Y,
     sre: SREOptions = defaultSREOptions,
     menuOptions: MenuOptions = defaultMenuOptions,
+    safeOptions: SafeOptions = defaultSafeOptions,
     enrichError: ErrorFunction? = defaultEnrichError,
     compileError: ErrorFunction? = defaultCompileError,
     typesetError: ErrorFunction? = defaultTypesetError
@@ -173,6 +178,7 @@ import JavaScriptCore
     self.a11y = a11y
     self.sre = sre
     self.menuOptions = menuOptions
+    self.safeOptions = safeOptions
     self.enrichError = enrichError
     self.compileError = compileError
     self.typesetError = typesetError

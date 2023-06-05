@@ -1,5 +1,5 @@
 //
-//  DocumentOptions.swift
+//  SafeProtocols.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -26,33 +26,56 @@
 import Foundation
 import JavaScriptCore
 
-@objc internal protocol MenuOptionsExports: JSExport {
-  var settings: MenuOptionsSettings { get set }
+@objc internal protocol SafeProtocolsExports: JSExport {
+  var http: Bool { get set }
+  var https: Bool { get set }
+  var file: Bool { get set }
+  var javascript: Bool { get set }
+  var data: Bool { get set }
 }
 
-/// See [Accessibility Extension Options](https://docs.mathjax.org/en/latest/options/accessibility.html)
-@objc public class MenuOptions: NSObject, Codable, MenuOptionsExports {
+@objc public class SafeProtocols: NSObject, Codable, SafeProtocolsExports {
   
   // MARK: Types
   
   internal enum CodingKeys: CodingKey {
-    case settings
+    case http
+    case https
+    case file
+    case javascript
+    case data
   }
   
   // MARK: Default values
   
-  public static let defaultSettings: MenuOptionsSettings = MenuOptionsSettings()
+  public static let defaultHTTP: Bool = true
+  public static let defaultHTTPS: Bool = true
+  public static let defaultFile: Bool = true
+  public static let defaultJavascript: Bool = false
+  public static let defaultData: Bool = false
   
   // MARK: Properties
   
-  dynamic public var settings: MenuOptionsSettings
+  dynamic public var http: Bool
+  dynamic public var https: Bool
+  dynamic public var file: Bool
+  dynamic public var javascript: Bool
+  dynamic public var data: Bool
   
   // MARK: Initializers
   
   public init(
-    settings: MenuOptionsSettings = defaultSettings
+    http: Bool = defaultHTTP,
+    https: Bool = defaultHTTPS,
+    file: Bool = defaultFile,
+    javascript: Bool = defaultJavascript,
+    data: Bool = defaultData
   ) {
-    self.settings = settings
+    self.http = http
+    self.https = https
+    self.file = file
+    self.javascript = javascript
+    self.data = data
   }
   
 }
