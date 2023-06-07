@@ -44,6 +44,9 @@ import JavaScriptCore
   var formatError: TeXInputProcessorOptions.ErrorFunction? { get set }
   
   var ams: AMSOptions { get set }
+  var amscd: AMSCDOptions { get set }
+  var autoload: AutoloadOptions { get set }
+  var color: ColorOptions { get set }
 }
 
 /// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
@@ -72,6 +75,9 @@ import JavaScriptCore
     case maxBuffer
     case baseURL
     case ams
+    case amscd
+    case autoload
+    case color
   }
   
   public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
@@ -181,6 +187,9 @@ import JavaScriptCore
   public static let defaultBaseURL: String? = nil
   public static let defaultFormatError: ErrorFunction? = nil
   public static let defaultAMS: AMSOptions = AMSOptions()
+  public static let defaultAMSCD: AMSCDOptions = AMSCDOptions()
+  public static let defaultAutoload: AutoloadOptions = AutoloadOptions()
+  public static let defaultColor: ColorOptions = ColorOptions()
   
   // MARK: Properties
   
@@ -200,6 +209,9 @@ import JavaScriptCore
   dynamic public var baseURL: String?
   dynamic public var formatError: ErrorFunction?
   dynamic public var ams: AMSOptions
+  dynamic public var amscd: AMSCDOptions
+  dynamic public var autoload: AutoloadOptions
+  dynamic public var color: ColorOptions
   
   // MARK: Initializers
   
@@ -219,7 +231,10 @@ import JavaScriptCore
     maxBuffer: Int = defaultMaxBuffer,
     baseURL: String? = defaultBaseURL,
     formatError: ErrorFunction? = defaultFormatError,
-    ams: AMSOptions = defaultAMS
+    ams: AMSOptions = defaultAMS,
+    amscd: AMSCDOptions = defaultAMSCD,
+    autoload: AutoloadOptions = defaultAutoload,
+    color: ColorOptions = defaultColor
   ) {
     self.loadPackages = loadPackages
     self.inlineMath = inlineMath
@@ -237,6 +252,9 @@ import JavaScriptCore
     self.baseURL = baseURL
     self.formatError = formatError
     self.ams = ams
+    self.amscd = amscd
+    self.autoload = autoload
+    self.color = color
     super.init()
   }
   
@@ -257,6 +275,9 @@ import JavaScriptCore
     maxBuffer = try container.decode(Int.self, forKey: .maxBuffer)
     baseURL = try container.decode(String?.self, forKey: .baseURL)
     ams = try container.decode(AMSOptions.self, forKey: .ams)
+    amscd = try container.decode(AMSCDOptions.self, forKey: .amscd)
+    autoload = try container.decode(AutoloadOptions.self, forKey: .autoload)
+    color = try container.decode(ColorOptions.self, forKey: .color)
     try super.init(from: decoder)
   }
   
@@ -278,6 +299,9 @@ import JavaScriptCore
     try container.encode(maxBuffer, forKey: .maxBuffer)
     try container.encode(baseURL, forKey: .baseURL)
     try container.encode(ams, forKey: .ams)
+    try container.encode(amscd, forKey: .amscd)
+    try container.encode(autoload, forKey: .autoload)
+    try container.encode(color, forKey: .color)
   }
   
 }
