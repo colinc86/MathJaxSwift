@@ -47,6 +47,9 @@ import JavaScriptCore
   var amscd: AMSCDOptions { get set }
   var autoload: AutoloadOptions { get set }
   var color: ColorOptions { get set }
+  var mathtools: MathtoolsOptions { get set }
+  var noundefined: NoundefinedOptions { get set }
+  var physics: PhysicsOptions { get set }
 }
 
 /// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
@@ -78,6 +81,9 @@ import JavaScriptCore
     case amscd
     case autoload
     case color
+    case mathtools
+    case noundefined
+    case physics
   }
   
   public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
@@ -190,6 +196,9 @@ import JavaScriptCore
   public static let defaultAMSCD: AMSCDOptions = AMSCDOptions()
   public static let defaultAutoload: AutoloadOptions = AutoloadOptions()
   public static let defaultColor: ColorOptions = ColorOptions()
+  public static let defaultMathtools: MathtoolsOptions = MathtoolsOptions()
+  public static let defaultNoundefined: NoundefinedOptions = NoundefinedOptions()
+  public static let defaultPhysics: PhysicsOptions = PhysicsOptions()
   
   // MARK: Properties
   
@@ -212,6 +221,9 @@ import JavaScriptCore
   dynamic public var amscd: AMSCDOptions
   dynamic public var autoload: AutoloadOptions
   dynamic public var color: ColorOptions
+  dynamic public var mathtools: MathtoolsOptions
+  dynamic public var noundefined: NoundefinedOptions
+  dynamic public var physics: PhysicsOptions
   
   // MARK: Initializers
   
@@ -234,7 +246,10 @@ import JavaScriptCore
     ams: AMSOptions = defaultAMS,
     amscd: AMSCDOptions = defaultAMSCD,
     autoload: AutoloadOptions = defaultAutoload,
-    color: ColorOptions = defaultColor
+    color: ColorOptions = defaultColor,
+    mathtools: MathtoolsOptions = defaultMathtools,
+    noundefined: NoundefinedOptions = defaultNoundefined,
+    physics: PhysicsOptions = defaultPhysics
   ) {
     self.loadPackages = loadPackages
     self.inlineMath = inlineMath
@@ -255,6 +270,9 @@ import JavaScriptCore
     self.amscd = amscd
     self.autoload = autoload
     self.color = color
+    self.mathtools = mathtools
+    self.noundefined = noundefined
+    self.physics = physics
     super.init()
   }
   
@@ -278,6 +296,9 @@ import JavaScriptCore
     amscd = try container.decode(AMSCDOptions.self, forKey: .amscd)
     autoload = try container.decode(AutoloadOptions.self, forKey: .autoload)
     color = try container.decode(ColorOptions.self, forKey: .color)
+    mathtools = try container.decode(MathtoolsOptions.self, forKey: .mathtools)
+    noundefined = try container.decode(NoundefinedOptions.self, forKey: .noundefined)
+    physics = try container.decode(PhysicsOptions.self, forKey: .physics)
     try super.init(from: decoder)
   }
   
@@ -302,6 +323,8 @@ import JavaScriptCore
     try container.encode(amscd, forKey: .amscd)
     try container.encode(autoload, forKey: .autoload)
     try container.encode(color, forKey: .color)
+    try container.encode(noundefined, forKey: .noundefined)
+    try container.encode(physics, forKey: .physics)
   }
   
 }
