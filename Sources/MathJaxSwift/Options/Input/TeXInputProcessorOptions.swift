@@ -162,22 +162,14 @@ import JavaScriptCore
   
   public typealias Tag = String
   public struct Tags {
-    /// No tags.
     public static let none = Tag("none")
-    
-    /// AMS style tags.
     public static let ams = Tag("ams")
-    
-    /// All tags.
     public static let all = Tag("all")
   }
   
   public typealias TagSide = String
   public struct TagSides {
-    /// Tags should be displayed on the left.
     public static let left = TagSide("left")
-    
-    /// Tags should be displayed on the right.
     public static let right = TagSide("right")
   }
   

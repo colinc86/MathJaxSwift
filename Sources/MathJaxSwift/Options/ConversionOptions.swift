@@ -47,42 +47,11 @@ import JavaScriptCore
   
   // MARK: Properties
   
-  /// A boolean specifying whether the math is in display-mode or not (for TeX
-  /// input).
-  ///
-  /// - Note: The default value is `true`
-  /// - SeeAlso: [Conversion Options](https://docs.mathjax.org/en/latest/web/typeset.html)
   dynamic public var display: Bool
-  
-  /// A number giving the number of pixels in an `em` for the surrounding font.
-  ///
-  /// - Note: The default value is `16`
-  /// - SeeAlso: [Conversion Options](https://docs.mathjax.org/en/latest/web/typeset.html)
   dynamic public var em: Double
-  
-  /// A number giving the number of pixels in an `ex` for the surrounding font.
-  ///
-  /// - Note: The default value is `8`
-  /// - SeeAlso: [Conversion Options](https://docs.mathjax.org/en/latest/web/typeset.html)
   dynamic public var ex: Double
-  
-  /// A number giving the width of the container, in pixels.
-  ///
-  /// - Note: The default value is `80 * ex`
-  /// - SeeAlso: [Conversion Options](https://docs.mathjax.org/en/latest/web/typeset.html)
   dynamic public var containerWidth: Double
-  
-  /// A number giving the line-breaking width in em units. Default is a very
-  /// large number (100000), so effectively no line breaking.
-  ///
-  /// - Note: The default value is `100000`
-  /// - SeeAlso: [Conversion Options](https://docs.mathjax.org/en/latest/web/typeset.html)
   dynamic public var lineWidth: Double
-  
-  /// A number giving a scaling factor to apply to the resulting conversion.\
-  ///
-  /// - Note: The default value is `1`
-  /// - SeeAlso: [Conversion Options](https://docs.mathjax.org/en/latest/web/typeset.html)
   dynamic public var scale: Double
   
   // MARK: Initializers

@@ -64,13 +64,8 @@ import JavaScriptCore
   
   public typealias FontCache = String
   public struct FontCaches {
-    /// No font cache should be used.
     public static let none = FontCache("none")
-    
-    /// The local font cache should be used.
     public static let local = FontCache("local")
-    
-    /// The global font cache should be used.
     public static let global = FontCache("global")
   }
   
