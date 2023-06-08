@@ -48,13 +48,6 @@ import JavaScriptCore
   var typesetError: DocumentOptions.ErrorFunction? { get set }
 }
 
-/// The options below control the operation of the `MathDocument` object created
-/// by MathJax to process the mathematics in your web page. They are listed with
-/// their default values. To set any of these options, include an options
-/// section in your `MathJax` global object.
-///
-/// See [Document Options](https://docs.mathjax.org/en/latest/options/document.html)
-/// for documentation.
 @objc public class DocumentOptions: NSObject, Codable, DocumentOptionsExports {
   
   // MARK: Types

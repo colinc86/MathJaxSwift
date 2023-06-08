@@ -24,6 +24,7 @@
   - [Error Handling](#🚨-error-handling)
   - [MathJax Version](#♾️-mathjax-version)
 - [Example](#📗-example)
+- [Documentation](#📘-documentation)
 - [Notes](#📓-notes)
 
 ## 📦 Installation
@@ -261,6 +262,12 @@ To use the class you could do something like:
 let renderer = try EquationRenderer()
 let svg = try await renderer.render("$\\text{Hello, }\\TeX$!")
 ```
+
+## 📘 Documentation
+
+The classes unique to this package (namely `MathJax`) should be well documented. Documentation about the MathJax options and conversion processes is not included.
+
+Please refer to the official [MathJax Documentation](https://docs.mathjax.org/en/latest/) for more information.
 
 ## 📓 Notes
 

@@ -41,12 +41,6 @@ import JavaScriptCore
   var fixMtables: Bool { get set }
 }
 
-/// The options below control the operation of the [MathML input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#mathml-input)
-/// that is run when you include `input/mml` in the load array of the loader
-/// block of your MathJax configuration, or if you load a combined component
-/// that includes the MathML input jax. They are listed with their default
-/// values. To set any of these options, include an mml section in your
-/// `MathJax` global object.
 @objc public class MMLInputProcessorOptions: InputProcessorOptions, MMLInputProcessorOptionsJSExports {
   
   // MARK: Types

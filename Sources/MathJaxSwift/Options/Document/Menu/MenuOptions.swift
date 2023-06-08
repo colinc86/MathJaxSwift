@@ -30,7 +30,6 @@ import JavaScriptCore
   var settings: MenuOptionsSettings { get set }
 }
 
-/// See [Accessibility Extension Options](https://docs.mathjax.org/en/latest/options/accessibility.html)
 @objc public class MenuOptions: NSObject, Codable, MenuOptionsExports {
   
   // MARK: Types

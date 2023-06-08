@@ -32,13 +32,6 @@ import JavaScriptCore
   var decimalsign: String { get set }
 }
 
-/// The options below control the operation of the [AsciiMath input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#asciimath-input)
-/// that is run when you include `input/asciimath` in the in the load array of
-/// the loader block of your MathJax configuration, or if you load a combined
-/// component that includes the AsciiMath input jax (none currently do, since
-/// the AsciiMath input has not been fully ported to version 3). They are listed
-/// with their default values. To set any of these options, include an asciimath
-/// section in your `MathJax` global object.
 @objc public class AMInputProcessorOptions: InputProcessorOptions, AMInputProcessorOptionsJSExports {
   
   // MARK: Types

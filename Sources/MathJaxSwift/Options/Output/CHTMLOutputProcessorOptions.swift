@@ -44,12 +44,6 @@ import JavaScriptCore
   var displayIndent: Double { get set }
 }
 
-/// The options below control the operation of the [CommonHTML output processor](https://docs.mathjax.org/en/latest/output/html.html#html-output)
-/// that is run when you include `output/chtml` in the load array of the loader
-/// block of your MathJax configuration, or if you load a combined component
-/// that includes the CommonHTML output jax. They are listed with their default
-/// values. To set any of these options, include a chtml section in your
-/// `MathJax` global object.
 @objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions, CHTMLOutputProcessorOptionsJSExports {
   
   // MARK: Types
