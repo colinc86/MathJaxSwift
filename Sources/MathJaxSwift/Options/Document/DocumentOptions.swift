@@ -34,6 +34,7 @@ import JavaScriptCore
   var enableEnrichment: Bool { get set }
   var enableComplexity: Bool { get set }
   var makeCollapsible: Bool { get set }
+  var identifyCollapsible: Bool { get set }
   var enableExplorer: Bool { get set }
   var enableAssistiveMml: Bool { get set }
   var enableMenu: Bool { get set }
@@ -66,6 +67,7 @@ import JavaScriptCore
     case enableEnrichment
     case enableComplexity
     case makeCollapsible
+    case identifyCollapsible
     case enableExplorer
     case enableAssistiveMml
     case enableMenu
@@ -110,6 +112,7 @@ import JavaScriptCore
   public static let defaultEnableEnrichment: Bool = true
   public static let defaultEnableComplexity: Bool = true
   public static let defaultMakeCollapsible: Bool = true
+  public static let defaultIdentifyCollapsible: Bool = true
   public static let defaultEnableExplorer: Bool = true
   public static let defaultEnableAssistiveMml: Bool = false
   public static let defaultEnableMenu: Bool = true
@@ -130,6 +133,7 @@ import JavaScriptCore
   dynamic public var enableEnrichment: Bool
   dynamic public var enableComplexity: Bool
   dynamic public var makeCollapsible: Bool
+  dynamic public var identifyCollapsible: Bool
   dynamic public var enableExplorer: Bool
   dynamic public var enableAssistiveMml: Bool
   dynamic public var enableMenu: Bool
@@ -152,6 +156,7 @@ import JavaScriptCore
     enableEnrichment: Bool = defaultEnableEnrichment,
     enableComplexity: Bool = defaultEnableComplexity,
     makeCollapsible: Bool = defaultMakeCollapsible,
+    identifyCollapsible: Bool = defaultIdentifyCollapsible,
     enableExplorer: Bool = defaultEnableExplorer,
     enableAssistiveMml: Bool = defaultEnableAssistiveMml,
     enableMenu: Bool = defaultEnableMenu,
@@ -171,6 +176,7 @@ import JavaScriptCore
     self.enableEnrichment = enableEnrichment
     self.enableComplexity = enableComplexity
     self.makeCollapsible = makeCollapsible
+    self.identifyCollapsible = identifyCollapsible
     self.enableExplorer = enableExplorer
     self.enableAssistiveMml = enableAssistiveMml
     self.enableMenu = enableMenu
