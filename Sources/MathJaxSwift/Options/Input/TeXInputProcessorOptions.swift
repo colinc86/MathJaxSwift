@@ -50,6 +50,9 @@ import JavaScriptCore
   var mathtools: MathtoolsOptions { get set }
   var noundefined: NoundefinedOptions { get set }
   var physics: PhysicsOptions { get set }
+  var require: RequireOptions { get set }
+  var setoptions: SetOptions { get set }
+  var tagformat: TagFormatOptions { get set }
 }
 
 /// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
@@ -84,6 +87,9 @@ import JavaScriptCore
     case mathtools
     case noundefined
     case physics
+    case require
+    case setoptions
+    case tagformat
   }
   
   public typealias ErrorFunction = @convention(block) (_ jax: JSValue?, _ err: JSValue?) -> Void
@@ -199,6 +205,9 @@ import JavaScriptCore
   public static let defaultMathtools: MathtoolsOptions = MathtoolsOptions()
   public static let defaultNoundefined: NoundefinedOptions = NoundefinedOptions()
   public static let defaultPhysics: PhysicsOptions = PhysicsOptions()
+  public static let defaultRequire: RequireOptions = RequireOptions()
+  public static let defaultSetOptions: SetOptions = SetOptions()
+  public static let defaultTagFormatOptions: TagFormatOptions = TagFormatOptions()
   
   // MARK: Properties
   
@@ -224,6 +233,9 @@ import JavaScriptCore
   dynamic public var mathtools: MathtoolsOptions
   dynamic public var noundefined: NoundefinedOptions
   dynamic public var physics: PhysicsOptions
+  dynamic public var require: RequireOptions
+  dynamic public var setoptions: SetOptions
+  dynamic public var tagformat: TagFormatOptions
   
   // MARK: Initializers
   
@@ -249,7 +261,10 @@ import JavaScriptCore
     color: ColorOptions = defaultColor,
     mathtools: MathtoolsOptions = defaultMathtools,
     noundefined: NoundefinedOptions = defaultNoundefined,
-    physics: PhysicsOptions = defaultPhysics
+    physics: PhysicsOptions = defaultPhysics,
+    require: RequireOptions = defaultRequire,
+    setoptions: SetOptions = defaultSetOptions,
+    tagformat: TagFormatOptions = defaultTagFormatOptions
   ) {
     self.loadPackages = loadPackages
     self.inlineMath = inlineMath
@@ -273,6 +288,9 @@ import JavaScriptCore
     self.mathtools = mathtools
     self.noundefined = noundefined
     self.physics = physics
+    self.require = require
+    self.setoptions = setoptions
+    self.tagformat = tagformat
     super.init()
   }
   
@@ -299,6 +317,9 @@ import JavaScriptCore
     mathtools = try container.decode(MathtoolsOptions.self, forKey: .mathtools)
     noundefined = try container.decode(NoundefinedOptions.self, forKey: .noundefined)
     physics = try container.decode(PhysicsOptions.self, forKey: .physics)
+    require = try container.decode(RequireOptions.self, forKey: .require)
+    setoptions = try container.decode(SetOptions.self, forKey: .setoptions)
+    tagformat = try container.decode(TagFormatOptions.self, forKey: .tagformat)
     try super.init(from: decoder)
   }
   
@@ -323,8 +344,12 @@ import JavaScriptCore
     try container.encode(amscd, forKey: .amscd)
     try container.encode(autoload, forKey: .autoload)
     try container.encode(color, forKey: .color)
+    try container.encode(mathtools, forKey: .mathtools)
     try container.encode(noundefined, forKey: .noundefined)
     try container.encode(physics, forKey: .physics)
+    try container.encode(require, forKey: .require)
+    try container.encode(setoptions, forKey: .setoptions)
+    try container.encode(tagformat, forKey: .tagformat)
   }
   
 }
