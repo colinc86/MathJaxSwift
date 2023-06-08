@@ -148,38 +148,6 @@ See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more
 
 ### ⚙️ Options
 
-Each of the methods have various options that can be passed. The following options have been implemented.
-
-- [ ] [Document options](#document-options)
-  - [x] Accessibility extensions options
-  - [ ] Developer options
-- [x] [Conversion options](#conversion-options)
-- [ ] [Input processor options](#processor-options)
-  - [ ] TeX
-    - [x] Non-developer
-    - [ ] Developer
-    - [ ] Extensions
-      - [x] Configurable via dictionaries
-      - [ ] Configurable via objects
-  - [ ] AsciiMath
-    - [x] Non-developer
-    - [ ] Developer
-  - [ ] MathML
-    - [x] Non-developer
-    - [ ] Developer
-- [ ] [Output processor options](#processor-options)
-  - [ ] CHTML
-    - [x] Non-developer
-    - [ ] Developer
-  - [ ] SVG
-    - [x] Non-developer
-    - [ ] Developer
-- [ ] Safe extension options
-- [ ] Contextual menu options
-  - [ ] Non-developer
-  - [ ] Developer
-
-
 #### Document Options
 
 Document options let you control the document created by MathJax. They apply to every conversion method and let you specify MathJax document-specific options. 
