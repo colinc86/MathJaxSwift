@@ -1,5 +1,5 @@
 //
-//  PackageLock.swift
+//  RequireOptions.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -24,12 +24,44 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-/// NPM package-lock.json metadata for extracting the mathjax-full version
-/// string.
-internal struct PackageLock: Codable {
+@objc internal protocol RequireOptionsExports: JSExport {
+  var allow: [String: Bool] { get set }
+  var defaultAllow: Bool { get set }
+}
+
+@objc public class RequireOptions: NSObject, Codable, RequireOptionsExports {
   
-  /// The package-lock file's dependencies.
-  let packages: [String: MathJax.Metadata]
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case allow
+    case defaultAllow
+  }
+  
+  // MARK: Default values
+  
+  public static let defaultAllow: [String: Bool] = [
+    "base": false,
+    "all-packages": false
+  ]
+  
+  public static let defaultAllowValue: Bool = true
+  
+  // MARK: Properties
+  
+  dynamic public var allow: [String: Bool]
+  dynamic public var defaultAllow: Bool
+  
+  // MARK: Initializers
+  
+  public init(
+    allow: [String: Bool] = defaultAllow,
+    defaultAllow: Bool = defaultAllowValue
+  ) {
+    self.allow = allow
+    self.defaultAllow = defaultAllow
+  }
   
 }

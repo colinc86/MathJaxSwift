@@ -4,6 +4,7 @@ import XCTest
 final class Tex2SVGTests: XCTestCase {
   
   let svgData = MathJaxSwiftTests.loadString(fromFile: "No Error/testSVG", withExtension: "svg")
+  let svgTagData = MathJaxSwiftTests.loadString(fromFile: "No Error/testSVGTag", withExtension: "svg")
   let svgErrorData = MathJaxSwiftTests.loadString(fromFile: "Error/testSVG", withExtension: "svg")
   let svgErrorDataNoErrors = MathJaxSwiftTests.loadString(fromFile: "Error/testSVGnoerrors", withExtension: "svg")
   var mathjax: MathJax!
@@ -52,6 +53,18 @@ final class Tex2SVGTests: XCTestCase {
     else {
       XCTFail("Unknown error.")
     }
+  }
+  
+  func testTex2SVGTags() async throws {
+    let input = """
+\\begin{equation}
+  E = mc^2 \\tag{1}
+\\end{equation}
+"""
+
+    let options = TeXInputProcessorOptions(loadPackages: TeXInputProcessorOptions.Packages.all, tags: TeXInputProcessorOptions.Tags.ams)
+    let output = try await mathjax.tex2svg(input, inputOptions: options)
+    XCTAssertEqual(output, svgTagData)
   }
   
   func testTex2SVGAsync() async throws {

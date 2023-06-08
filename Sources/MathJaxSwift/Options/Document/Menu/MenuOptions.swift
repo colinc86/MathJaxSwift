@@ -1,5 +1,5 @@
 //
-//  PackageLock.swift
+//  MenuOptions.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -24,12 +24,34 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-/// NPM package-lock.json metadata for extracting the mathjax-full version
-/// string.
-internal struct PackageLock: Codable {
+@objc internal protocol MenuOptionsExports: JSExport {
+  var settings: MenuOptionsSettings { get set }
+}
+
+@objc public class MenuOptions: NSObject, Codable, MenuOptionsExports {
   
-  /// The package-lock file's dependencies.
-  let packages: [String: MathJax.Metadata]
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case settings
+  }
+  
+  // MARK: Default values
+  
+  public static let defaultSettings: MenuOptionsSettings = MenuOptionsSettings()
+  
+  // MARK: Properties
+  
+  dynamic public var settings: MenuOptionsSettings
+  
+  // MARK: Initializers
+  
+  public init(
+    settings: MenuOptionsSettings = defaultSettings
+  ) {
+    self.settings = settings
+  }
   
 }

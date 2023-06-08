@@ -1,5 +1,5 @@
 //
-//  PackageLock.swift
+//  ColorOptions.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -24,12 +24,40 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-/// NPM package-lock.json metadata for extracting the mathjax-full version
-/// string.
-internal struct PackageLock: Codable {
+@objc internal protocol ColorOptionsExports: JSExport {
+  var padding: String { get set }
+  var borderWidth: String { get set }
+}
+
+@objc public class ColorOptions: NSObject, Codable, ColorOptionsExports {
   
-  /// The package-lock file's dependencies.
-  let packages: [String: MathJax.Metadata]
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case padding
+    case borderWidth
+  }
+  
+  // MARK: Default values
+  
+  public static let defaultPadding: String = "5px"
+  public static let defaultBorderWidth: String = "2px"
+  
+  // MARK: Properties
+  
+  dynamic public var padding: String
+  dynamic public var borderWidth: String
+  
+  // MARK: Initializers
+  
+  public init(
+    padding: String = defaultPadding,
+    borderWidth: String = defaultBorderWidth
+  ) {
+    self.padding = padding
+    self.borderWidth = borderWidth
+  }
   
 }

@@ -1,5 +1,5 @@
 //
-//  PackageLock.swift
+//  PhysicsOptions.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -24,12 +24,40 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-/// NPM package-lock.json metadata for extracting the mathjax-full version
-/// string.
-internal struct PackageLock: Codable {
+@objc internal protocol PhysicsOptionsExports: JSExport {
+  var italicdiff: Bool { get set }
+  var arrowdel: Bool { get set }
+}
+
+@objc public class PhysicsOptions: NSObject, Codable, PhysicsOptionsExports {
   
-  /// The package-lock file's dependencies.
-  let packages: [String: MathJax.Metadata]
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case italicdiff
+    case arrowdel
+  }
+  
+  // MARK: Default values
+  
+  public static let defaultItalicdiff: Bool = false
+  public static let defaultArrowdel: Bool = false
+  
+  // MARK: Properties
+  
+  dynamic public var italicdiff: Bool
+  dynamic public var arrowdel: Bool
+  
+  // MARK: Initializers
+  
+  public init(
+    italicdiff: Bool = defaultItalicdiff,
+    arrowdel: Bool = defaultArrowdel
+  ) {
+    self.italicdiff = italicdiff
+    self.arrowdel = arrowdel
+  }
   
 }
