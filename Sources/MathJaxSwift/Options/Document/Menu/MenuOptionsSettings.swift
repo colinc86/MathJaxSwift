@@ -43,7 +43,6 @@ import JavaScriptCore
   var explorer: Bool { get set }
 }
 
-/// See [Accessibility Extension Options](https://docs.mathjax.org/en/latest/options/accessibility.html)
 @objc public class MenuOptionsSettings: NSObject, Codable, MenuOptionsSettingsExports {
   
   // MARK: Types

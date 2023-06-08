@@ -44,12 +44,6 @@ import JavaScriptCore
   var displayIndent: Double { get set }
 }
 
-/// The options below control the operation of the [CommonHTML output processor](https://docs.mathjax.org/en/latest/output/html.html#html-output)
-/// that is run when you include `output/chtml` in the load array of the loader
-/// block of your MathJax configuration, or if you load a combined component
-/// that includes the CommonHTML output jax. They are listed with their default
-/// values. To set any of these options, include a chtml section in your
-/// `MathJax` global object.
 @objc public class CHTMLOutputProcessorOptions: OutputProcessorOptions, CHTMLOutputProcessorOptionsJSExports {
   
   // MARK: Types
@@ -68,43 +62,8 @@ import JavaScriptCore
   
   // MARK: Properties
   
-  /// This setting controls whether MathJax will scale the mathematics so that
-  /// the ex-height of the math fonts matches the ex-height of the surrounding
-  /// fonts.
-  ///
-  /// This makes the math match the surroundings better, but if the surrounding
-  /// font does not have its ex-height set properly (and not all fonts do), it
-  /// can cause the math to _not_ match the surrounding text. While this will
-  /// make the lower-case letters match the surrounding fonts, the upper case
-  /// letters may not match (that would require the font height and ex-height to
-  /// have the same ratio in the surrounding text as in the math fonts, which is
-  /// unlikely).
-  ///
-  /// - Note: The default value is `true`.
-  /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-matchfontheight)
   dynamic public var matchFontHeight: Bool
-  
-  /// This is the URL to the location where the MathJax fonts are stored.
-  ///
-  /// You should include a complete URL to the location of the fonts you want to
-  /// use.
-  ///
-  /// - Note: The default value is `"https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2"`.
-  /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-fonturl)
   dynamic public var fontURL: URL
-  
-  /// This setting controls how the CommonHTML output jax handles the CSS styles
-  /// that it generates.
-  ///
-  /// When true, this means that only the CSS needed for the math that has been
-  /// processed on the page so far is generated. When false, the CSS needed for
-  /// all elements and all characters in the MathJax font are generated. This is
-  /// an extremely large amount of CSS, and that can have an effect on the
-  /// performance of your page, so it is best to leave this as `true`. You can
-  /// reset the information about what CSS is needed by using the command
-  ///
-  /// - Note: The default value is `true`.
-  /// - SeeAlso: [CommonHTML Output Processor Options](https://docs.mathjax.org/en/latest/options/output/chtml.html#output-adaptivecss)
   dynamic public var adaptiveCSS: Bool
   
   // MARK: Initializers

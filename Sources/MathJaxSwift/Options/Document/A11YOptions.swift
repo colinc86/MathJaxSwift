@@ -49,8 +49,6 @@ import JavaScriptCore
   var infoPrefix: Bool { get set }
 }
 
-/// See [Explorer Extension Options](https://docs.mathjax.org/en/latest/options/accessibility.html#explorer-extension-options)
-/// for documentation.
 @objc public class A11YOptions: NSObject, Codable, A11YOptionsExports {
   
   // MARK: Types

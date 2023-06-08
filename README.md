@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/colinc86/MathJaxSwift) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/colinc86/MathJaxSwift) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/colinc86/MathJaxSwift) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/colinc86/MathJaxSwift) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green) [![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
 
 <a href="https://www.mathjax.org">
     <img title="Powered by MathJax"
@@ -23,6 +23,8 @@
     - [Processor Options](#processor-options)
   - [Error Handling](#🚨-error-handling)
   - [MathJax Version](#♾️-mathjax-version)
+- [Example](#📗-example)
+- [Documentation](#📘-documentation)
 - [Notes](#📓-notes)
 
 ## 📦 Installation
@@ -30,7 +32,7 @@
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.2.2")
+.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.3.0")
 ```
 
 ## 🎛️ Usage
@@ -49,7 +51,7 @@ catch {
 }
 ```
 
-> The example above converts the TeX input to SVG data that renders the following PNG.
+> The example above converts the TeX input to SVG data that renders the following PNG. See the [example](#📗-example) section for more details.
 >
 > <img alt="Hello, Tex!" src="./assets/images/hello_tex.png" width=200px, height=auto>
 
@@ -81,8 +83,8 @@ class MyModel {
     mathjax = try MathJax()
   }
   
-  func convertTex(_ input: String) async throws -> String {
-    return try await mathjax.tex2chtml(input)
+  func convertTex(_ input: String) throws -> String {
+    return try mathjax.tex2chtml(input)
   }
 }
 ```
@@ -148,38 +150,6 @@ See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more
 
 ### ⚙️ Options
 
-Each of the methods have various options that can be passed. The following options have been implemented.
-
-- [ ] [Document options](#document-options)
-  - [x] Accessibility extensions options
-  - [ ] Developer options
-- [x] [Conversion options](#conversion-options)
-- [ ] [Input processor options](#processor-options)
-  - [ ] TeX
-    - [x] Non-developer
-    - [ ] Developer
-    - [ ] Extensions
-      - [x] Configurable via dictionaries
-      - [ ] Configurable via objects
-  - [ ] AsciiMath
-    - [x] Non-developer
-    - [ ] Developer
-  - [ ] MathML
-    - [x] Non-developer
-    - [ ] Developer
-- [ ] [Output processor options](#processor-options)
-  - [ ] CHTML
-    - [x] Non-developer
-    - [ ] Developer
-  - [ ] SVG
-    - [x] Non-developer
-    - [ ] Developer
-- [ ] Safe extension options
-- [ ] Contextual menu options
-  - [ ] Non-developer
-  - [ ] Developer
-
-
 #### Document Options
 
 Document options let you control the document created by MathJax. They apply to every conversion method and let you specify MathJax document-specific options. 
@@ -244,6 +214,60 @@ catch {
 ```
 
 You can also use the returned metadata to check the MathJax node module's URL and its SHA-512.
+
+## 📗 Example
+
+The following example class shows how to
+1. create a `MathJax` instance,
+2. set the preferred output to `SVG`,
+3. create input, output and conversion options,
+4. and render the SVG output string from TeX input.
+
+```swift
+class EquationRenderer {
+  // A reference to our MathJax instance
+  private var mathjax: MathJax
+  
+  // The TeX input processor options - load all packages.
+  private let inputOptions = TeXInputProcessorOptions(loadPackages: TeXInputProcessorOptions.Packages.all)
+  
+  // The SVG output processor options - align our display left.
+  private let outputOptions = SVGOutputProcessorOptions(displayAlign: SVGOutputProcessorOptions.DisplayAlignments.left)
+  
+  // The conversion options - use block rendering.
+  private let convOptions = ConversionOptions(display: true)
+  
+  init() throws {
+    // We only want to convert to SVG
+    mathjax = try MathJax(preferredOutputFormat: .svg)
+  }
+  
+  /// Converts the TeX input to SVG.
+  ///
+  /// - Parameter texInput: The input string.
+  /// - Returns: SVG file data.
+  func convert(_ texInput: String) async throws -> String {
+    return try await mathjax.tex2svg(
+      texInput,
+      conversionOptions: convOptions,
+      inputOptions: inputOptions,
+      outputOptions: outputOptions)
+  }
+}
+```
+
+To use the class you could do something like:
+
+```swift
+let renderer = try EquationRenderer()
+let svg = try await renderer.render("$\\text{Hello, }\\TeX$!")
+```
+
+## 📘 Documentation
+
+The classes unique to this package (namely `MathJax`) should be well documented. Documentation about the MathJax options and conversion processes is not included.
+
+Please refer to the official [MathJax Documentation](https://docs.mathjax.org/en/latest/) for more information.
 
 ## 📓 Notes
 

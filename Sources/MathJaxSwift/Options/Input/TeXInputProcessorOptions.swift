@@ -55,12 +55,6 @@ import JavaScriptCore
   var tagformat: TagFormatOptions { get set }
 }
 
-/// The options below control the operation of the [TeX input processor](https://docs.mathjax.org/en/latest/basic/mathematics.html#tex-input)
-/// that is run when you include `input/tex`, `input/tex-full`, or
-/// `input/tex-base` in the load array of the loader block of your MathJax
-/// configuration, or if you load a combined component that includes the TeX
-/// input jax. They are listed with their default values. To set any of these
-/// options, include a tex section in your `MathJax` global object.
 @objc public class TeXInputProcessorOptions: InputProcessorOptions, TeXInputProcessorOptionsJSExports {
   
   // MARK: Types
@@ -162,22 +156,14 @@ import JavaScriptCore
   
   public typealias Tag = String
   public struct Tags {
-    /// No tags.
     public static let none = Tag("none")
-    
-    /// AMS style tags.
     public static let ams = Tag("ams")
-    
-    /// All tags.
     public static let all = Tag("all")
   }
   
   public typealias TagSide = String
   public struct TagSides {
-    /// Tags should be displayed on the left.
     public static let left = TagSide("left")
-    
-    /// Tags should be displayed on the right.
     public static let right = TagSide("right")
   }
   

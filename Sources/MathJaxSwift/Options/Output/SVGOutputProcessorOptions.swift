@@ -45,12 +45,6 @@ import JavaScriptCore
   var titleID: Int { get set }
 }
 
-/// The options below control the operation of the [SVG output processor](https://docs.mathjax.org/en/latest/output/svg.html#svg-output)
-/// that is run when you include `output/svg` in the load array of the loader
-/// block of your MathJax configuration, or if you load a combined component
-/// that includes the CommonHTML output jax. They are listed with their default
-/// values. To set any of these options, include an svg section in your
-/// `MathJax` global object.
 @objc public class SVGOutputProcessorOptions: OutputProcessorOptions, SVGOutputProcessorOptionsJSExports {
   
   // MARK: Types
@@ -64,13 +58,8 @@ import JavaScriptCore
   
   public typealias FontCache = String
   public struct FontCaches {
-    /// No font cache should be used.
     public static let none = FontCache("none")
-    
-    /// The local font cache should be used.
     public static let local = FontCache("local")
-    
-    /// The global font cache should be used.
     public static let global = FontCache("global")
   }
   

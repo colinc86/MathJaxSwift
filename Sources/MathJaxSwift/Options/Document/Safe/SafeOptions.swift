@@ -38,7 +38,6 @@ import JavaScriptCore
   var safeStyles: SafeStyles { get set }
 }
 
-/// See [Safe Extension Options](https://docs.mathjax.org/en/latest/options/safe.html)
 @objc public class SafeOptions: NSObject, Codable, SafeOptionsExports {
   
   // MARK: Types
