@@ -2,7 +2,25 @@
 //  MathJax.swift
 //  MathJaxSwift
 //
-//  Created by Colin Campbell on 11/26/22.
+//  Copyright (c) 2023 Colin Campbell
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
 //
 
 import Foundation
@@ -20,10 +38,10 @@ public final class MathJax {
     let version: String
     
     /// The URL of the module.
-    let resolved: URL
+    let resolved: URL?
     
     /// The module's SHA-512.
-    let integrity: String
+    let integrity: String?
   }
   
   /// An output format.
@@ -74,13 +92,21 @@ public final class MathJax {
     }
     context = ctx
     
+    // Uncomment the following to enable logging from the JS context
+//    context.evaluateScript("var console = { log: function(message) { _consoleLog(message) } }")
+//    let consoleLog: @convention(block) (String) -> Void = { message in
+//      if debugLogs {
+//        NSLog("JSContext: " + message)
+//      }
+//    }
+//    context.setObject(unsafeBitCast(consoleLog, to: AnyObject.self), forKeyedSubscript: "_consoleLog" as NSString)
+    
     // Register our options classes
     try registerClasses([
       CHTMLOutputProcessorOptions.self,
       SVGOutputProcessorOptions.self,
       TeXInputProcessorOptions.self,
       MMLInputProcessorOptions.self,
-      MMLInputProcessorOptions.Verify.self,
       AMInputProcessorOptions.self,
       DocumentOptions.self,
       ConversionOptions.self
@@ -117,7 +143,7 @@ extension MathJax {
     let package = try JSONDecoder().decode(PackageLock.self, from: try Data(contentsOf: packageLockURL))
     
     // Find the mathjax module and return its metadata.
-    guard let dependency = package.dependencies[Constants.Names.Modules.mathjax] else {
+    guard let dependency = package.packages[Constants.Names.Modules.mathjax] else {
       throw MathJaxError.missingDependencyInformation
     }
     return dependency

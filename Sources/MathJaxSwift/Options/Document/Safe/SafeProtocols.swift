@@ -1,5 +1,5 @@
 //
-//  ConversionOptions.swift
+//  SafeProtocols.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -26,50 +26,56 @@
 import Foundation
 import JavaScriptCore
 
-@objc internal protocol ConversionOptionsExports: JSExport {
-  var display: Bool { get set }
-  var em: Double { get set }
-  var ex: Double { get set }
-  var containerWidth: Double { get set }
-  var lineWidth: Double { get set }
-  var scale: Double { get set }
+@objc internal protocol SafeProtocolsExports: JSExport {
+  var http: Bool { get set }
+  var https: Bool { get set }
+  var file: Bool { get set }
+  var javascript: Bool { get set }
+  var data: Bool { get set }
 }
 
-@objc public class ConversionOptions: NSObject, Codable, ConversionOptionsExports {
+@objc public class SafeProtocols: NSObject, Codable, SafeProtocolsExports {
+  
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case http
+    case https
+    case file
+    case javascript
+    case data
+  }
   
   // MARK: Default values
   
-  public static let defaultDisplay: Bool = true
-  public static let defaultEm: Double = 16
-  public static let defaultEx: Double = 8
-  public static let defaultLineWidth: Double = 100000
-  public static let defaultScale: Double = 1
+  public static let defaultHTTP: Bool = true
+  public static let defaultHTTPS: Bool = true
+  public static let defaultFile: Bool = true
+  public static let defaultJavascript: Bool = false
+  public static let defaultData: Bool = false
   
   // MARK: Properties
   
-  dynamic public var display: Bool
-  dynamic public var em: Double
-  dynamic public var ex: Double
-  dynamic public var containerWidth: Double
-  dynamic public var lineWidth: Double
-  dynamic public var scale: Double
+  dynamic public var http: Bool
+  dynamic public var https: Bool
+  dynamic public var file: Bool
+  dynamic public var javascript: Bool
+  dynamic public var data: Bool
   
   // MARK: Initializers
   
   public init(
-    display: Bool = defaultDisplay,
-    em: Double = defaultEm,
-    ex: Double = defaultEx,
-    containerWidth: Double? = nil,
-    lineWidth: Double = defaultLineWidth,
-    scale: Double = defaultScale
+    http: Bool = defaultHTTP,
+    https: Bool = defaultHTTPS,
+    file: Bool = defaultFile,
+    javascript: Bool = defaultJavascript,
+    data: Bool = defaultData
   ) {
-    self.display = display
-    self.em = em
-    self.ex = ex
-    self.containerWidth = containerWidth ?? (80 * ex)
-    self.lineWidth = lineWidth
-    self.scale = scale
+    self.http = http
+    self.https = https
+    self.file = file
+    self.javascript = javascript
+    self.data = data
   }
   
 }

@@ -1,5 +1,5 @@
 //
-//  PackageLock.swift
+//  NoundefinedOptions.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -24,12 +24,46 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-/// NPM package-lock.json metadata for extracting the mathjax-full version
-/// string.
-internal struct PackageLock: Codable {
+@objc internal protocol NoundefinedOptionsExports: JSExport {
+  var color: String { get set }
+  var background: String { get set }
+  var size: String { get set }
+}
+
+@objc public class NoundefinedOptions: NSObject, Codable, NoundefinedOptionsExports {
   
-  /// The package-lock file's dependencies.
-  let packages: [String: MathJax.Metadata]
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case color
+    case background
+    case size
+  }
+  
+  // MARK: Default values
+  
+  public static let defaultColor: String = "red"
+  public static let defaultBackground: String = ""
+  public static let defaultSize: String = ""
+  
+  // MARK: Properties
+  
+  dynamic public var color: String
+  dynamic public var background: String
+  dynamic public var size: String
+  
+  // MARK: Initializers
+  
+  public init(
+    color: String = defaultColor,
+    background: String = defaultBackground,
+    size: String = defaultSize
+  ) {
+    self.color = color
+    self.background = background
+    self.size = size
+  }
   
 }

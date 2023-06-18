@@ -1,5 +1,5 @@
 //
-//  PackageLock.swift
+//  AMSOptions.swift
 //  MathJaxSwift
 //
 //  Copyright (c) 2023 Colin Campbell
@@ -24,12 +24,40 @@
 //
 
 import Foundation
+import JavaScriptCore
 
-/// NPM package-lock.json metadata for extracting the mathjax-full version
-/// string.
-internal struct PackageLock: Codable {
+@objc internal protocol AMSOptionsExports: JSExport {
+  var multilineWidth: String { get set }
+  var multilineIndent: String { get set }
+}
+
+@objc public class AMSOptions: NSObject, Codable, AMSOptionsExports {
   
-  /// The package-lock file's dependencies.
-  let packages: [String: MathJax.Metadata]
+  // MARK: Types
+  
+  internal enum CodingKeys: CodingKey {
+    case multilineWidth
+    case multilineIndent
+  }
+  
+  // MARK: Default values
+  
+  public static let defaultMultilineWidth: String = "100%"
+  public static let defaultMultilineIndent: String = "1em"
+  
+  // MARK: Properties
+  
+  dynamic public var multilineWidth: String
+  dynamic public var multilineIndent: String
+  
+  // MARK: Initializers
+  
+  public init(
+    multilineWidth: String = defaultMultilineWidth,
+    multilineIndent: String = defaultMultilineIndent
+  ) {
+    self.multilineWidth = multilineWidth
+    self.multilineIndent = multilineIndent
+  }
   
 }
