@@ -41,6 +41,7 @@ import JavaScriptCore
   var maxMacros: Int { get set }
   var maxBuffer: Int { get set }
   var baseURL: String? { get set }
+  var allowTexHTML: Bool { get set }
   var formatError: TeXInputProcessorOptions.ErrorFunction? { get set }
   
   var ams: AMSOptions { get set }
@@ -74,6 +75,7 @@ import JavaScriptCore
     case maxMacros
     case maxBuffer
     case baseURL
+    case allowTexHTML
     case ams
     case amscd
     case autoload
@@ -183,6 +185,7 @@ import JavaScriptCore
   public static let defaultMaxMacros: Int = 10000
   public static let defaultMaxBuffer: Int = 5 * 1024
   public static let defaultBaseURL: String? = nil
+  public static let defaultAllowTexHTML: Bool = true
   public static let defaultFormatError: ErrorFunction? = nil
   public static let defaultAMS: AMSOptions = AMSOptions()
   public static let defaultAMSCD: AMSCDOptions = AMSCDOptions()
@@ -211,6 +214,7 @@ import JavaScriptCore
   dynamic public var maxMacros: Int
   dynamic public var maxBuffer: Int
   dynamic public var baseURL: String?
+  dynamic public var allowTexHTML: Bool
   dynamic public var formatError: ErrorFunction?
   dynamic public var ams: AMSOptions
   dynamic public var amscd: AMSCDOptions
@@ -240,6 +244,7 @@ import JavaScriptCore
     maxMacros: Int = defaultMaxMacros,
     maxBuffer: Int = defaultMaxBuffer,
     baseURL: String? = defaultBaseURL,
+    allowTexHTML: Bool = defaultAllowTexHTML,
     formatError: ErrorFunction? = defaultFormatError,
     ams: AMSOptions = defaultAMS,
     amscd: AMSCDOptions = defaultAMSCD,
@@ -266,6 +271,7 @@ import JavaScriptCore
     self.maxMacros = maxMacros
     self.maxBuffer = maxBuffer
     self.baseURL = baseURL
+    self.allowTexHTML = allowTexHTML
     self.formatError = formatError
     self.ams = ams
     self.amscd = amscd
@@ -296,6 +302,7 @@ import JavaScriptCore
     maxMacros = try container.decode(Int.self, forKey: .maxMacros)
     maxBuffer = try container.decode(Int.self, forKey: .maxBuffer)
     baseURL = try container.decode(String?.self, forKey: .baseURL)
+    allowTexHTML = try container.decode(Bool.self, forKey: .allowTexHTML)
     ams = try container.decode(AMSOptions.self, forKey: .ams)
     amscd = try container.decode(AMSCDOptions.self, forKey: .amscd)
     autoload = try container.decode(AutoloadOptions.self, forKey: .autoload)
@@ -326,6 +333,7 @@ import JavaScriptCore
     try container.encode(maxMacros, forKey: .maxMacros)
     try container.encode(maxBuffer, forKey: .maxBuffer)
     try container.encode(baseURL, forKey: .baseURL)
+    try container.encode(allowTexHTML, forKey: .allowTexHTML)
     try container.encode(ams, forKey: .ams)
     try container.encode(amscd, forKey: .amscd)
     try container.encode(autoload, forKey: .autoload)

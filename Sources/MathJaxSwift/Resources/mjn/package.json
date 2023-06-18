@@ -19,7 +19,16 @@
   "author": "Colin Campbell",
   "license": "MIT",
   "dependencies": {
-    "mathjax-full": "^4.0.0-alpha.1"
+    "mathjax-asana-font": "^1.0.0-alpha.1",
+    "mathjax-bonum-font": "^1.0.0-alpha.1",
+    "mathjax-dejavu-font": "^1.0.0-alpha.1",
+    "mathjax-fira-font": "^1.0.0-alpha.1",
+    "mathjax-full": "^4.0.0-alpha.1",
+    "mathjax-pagella-font": "^1.0.0-alpha.1",
+    "mathjax-schola-font": "^1.0.0-alpha.1",
+    "mathjax-stix2-font": "^1.0.0-alpha.1",
+    "mathjax-termes-font": "^1.0.0-alpha.1",
+    "mathjax-tex-font": "^1.0.0-alpha.1"
   },
   "devDependencies": {
     "webpack": "^5.76.0",

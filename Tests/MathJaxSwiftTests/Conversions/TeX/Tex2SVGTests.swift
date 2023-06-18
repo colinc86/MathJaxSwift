@@ -14,7 +14,10 @@ final class Tex2SVGTests: XCTestCase {
   }
   
   func testTex2SVGSync() throws {
-    let output = try mathjax.tex2svg(MathJaxSwiftTests.texInput)
+    let documentOptions = DocumentOptions(font: DocumentOptions.Fonts.tex)
+    let output = try mathjax.tex2svg(MathJaxSwiftTests.texInput, documentOptions: documentOptions)
+    print(output)
+    print("asdfasdfasdf\n\n\n\n")
     XCTAssertEqual(output, svgData)
   }
   
