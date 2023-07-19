@@ -358,7 +358,7 @@ extension MathJax {
   /// - Parameters:
   ///   - queue: The queue to perform the block on.
   ///   - block: The block to execute.
-  /// - Returns: A string.
+  /// - Returns: A value.
   internal func perform<T>(on queue: DispatchQueue, _ block: @escaping (MathJax) throws -> T) async throws -> T {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {

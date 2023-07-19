@@ -21,8 +21,6 @@ const CSS = [
   'use[data-c]{stroke-width:3px}'
 ].join('');
 
-const responseDelimiter = "<<R>>"
-
 /**
  * Converts TeX and MathML input to SVG.
  */
