@@ -27,6 +27,74 @@ import Foundation
 
 extension MathJax {
   
+  /// Converts TeX input strings to CHTML.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing TeX.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - outputOptions: The CHTML output processor options.
+  ///   - queue: The queue to execute the conversion on.
+  /// - Returns: CHTML formatted output.
+  public func tex2chtml(
+    _ input: [String],
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
+    queue: DispatchQueue = .global()
+  ) async throws -> [Response] {
+    return try await perform(on: queue) { mathjax in
+      try mathjax.tex2chtml(
+        input,
+        css: css,
+        assistiveMml: assistiveMml,
+        conversionOptions: conversionOptions,
+        documentOptions: documentOptions,
+        inputOptions: inputOptions,
+        outputOptions: outputOptions
+      )
+    }
+  }
+  
+  /// Converts TeX input stringß to CHTML.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing TeX.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - outputOptions: The CHTML output processor options.
+  /// - Returns: CHTML formatted output.
+  public func tex2chtml(
+    _ input: [String],
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
+  ) throws -> [Response] {
+    return try callFunctionAndValidate(
+      .tex2chtml,
+      input: input,
+      arguments: [
+        css,
+        assistiveMml,
+        conversionOptions,
+        documentOptions,
+        inputOptions,
+        outputOptions
+      ])
+  }
+  
   /// Converts a TeX input string to CHTML.
   ///
   /// - Parameters:
@@ -82,15 +150,17 @@ extension MathJax {
     inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
-    return try callFunction(.tex2chtml, with: [
-      input,
-      css,
-      assistiveMml,
-      conversionOptions,
-      documentOptions,
-      inputOptions,
-      outputOptions
-    ])
+    return try callFunctionAndValidate(
+      .tex2chtml,
+      input: input,
+      arguments: [
+        css,
+        assistiveMml,
+        conversionOptions,
+        documentOptions,
+        inputOptions,
+        outputOptions
+      ])
   }
   
   /// Converts a TeX input string to CHTML.
@@ -115,15 +185,17 @@ extension MathJax {
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunction(.tex2chtml, with: [
-      input,
-      css,
-      assistiveMml,
-      conversionOptions,
-      documentOptions,
-      inputOptions,
-      outputOptions
-    ], error: &error)
+    return callFunctionAndValidate(
+      .tex2chtml,
+      input: input,
+      arguments: [
+        css,
+        assistiveMml,
+        conversionOptions,
+        documentOptions,
+        inputOptions,
+        outputOptions
+      ], error: &error)
   }
   
 }

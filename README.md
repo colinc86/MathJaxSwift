@@ -15,7 +15,9 @@
 - [Installation](#📦-installation)
 - [Usage](#🎛️-usage)
   - [Available Methods](#🧰-available-methods)
-  - [Threading and Memory](#🧵-threading-and-memory)
+    - [Initializing and Converting](#initializing-and-converting)
+    - [Batch Converting](#batch-converting)
+    - [Threading](#threading)
     - [Preferred Output Formats](#preferred-output-formats)
   - [Options](#⚙️-options)
     - [Document Options](#document-options)
@@ -32,7 +34,7 @@
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.3.0")
+.package(url: "https://github.com/colinc86/MathJaxSwift", from: "3.4.0")
 ```
 
 ## 🎛️ Usage
@@ -69,7 +71,7 @@ MathJaxSwift implements the following methods to convert [TeX](https://tug.org),
 | `am2chtml`  | AsciiMath                               | cHTML         |
 | `am2mml`    | AsciiMath                               | MathML        |
 
-### 🧵 Threading and Memory
+#### Initializing and Converting
 
 Initializing an instance of `MathJax` should not be performed on the main queue to prevent blocking of the UI. You should also attempt to keep a single reference to an instance and submit your function calls to it instead of creating a new `MathJax` instance each time you need to convert.
 
@@ -88,6 +90,36 @@ class MyModel {
   }
 }
 ```
+
+#### Batch Converting
+
+You can submit more than a single input string for conversion.
+
+```swift
+do {
+  // Some input array of TeX strings
+  let input: [String] = [ ... ]
+
+  // Convert each string in the input array
+  let responses = try mathjax.tex2svg(input)
+
+  for response in responses {
+    if let error = response.error {
+      print("Error converting input value: \(error)")
+    }
+    else {
+      print("Got response value: \(response.value)")
+    }
+  }
+}
+catch {
+  print("MathJax error: \(error)")
+}
+```
+
+The `MathJax` instance will return an array of `Response` types with errors parsed from the response's `value` and set on the `error` property. 
+
+#### Threading
 
 Each of the methods are also available with an `async` implementation.
 
@@ -260,7 +292,7 @@ To use the class you could do something like:
 
 ```swift
 let renderer = try EquationRenderer()
-let svg = try await renderer.render("$\\text{Hello, }\\TeX$!")
+let svg = try await renderer.convert("$\\text{Hello, }\\TeX$!")
 ```
 
 ## 📘 Documentation

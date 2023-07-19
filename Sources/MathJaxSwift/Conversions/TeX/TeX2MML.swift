@@ -27,6 +27,56 @@ import Foundation
 
 extension MathJax {
   
+  /// Converts TeX input strings to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing TeX.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - queue: The queue to execute the conversion on.
+  /// - Returns: MathML formatted output.
+  public func tex2mml(
+    _ input: [String],
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    queue: DispatchQueue = .global()
+  ) async throws -> [Response] {
+    return try await perform(on: queue) { mathjax in
+      try mathjax.tex2mml(
+        input,
+        conversionOptions: conversionOptions,
+        documentOptions: documentOptions,
+        inputOptions: inputOptions
+      )
+    }
+  }
+  
+  /// Converts TeX input strings to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing TeX.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  /// - Returns: MathML formatted output.
+  public func tex2mml(
+    _ input: [String],
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions()
+  ) throws -> [Response] {
+    return try callFunctionAndValidate(
+      .tex2mml,
+      input: input,
+      arguments: [
+        conversionOptions,
+        documentOptions,
+        inputOptions
+      ])
+  }
+  
   /// Converts a TeX input string to MathML.
   ///
   /// - Parameters:
@@ -67,12 +117,14 @@ extension MathJax {
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions()
   ) throws -> String {
-    return try callFunction(.tex2mml, with: [
-      input,
-      conversionOptions,
-      documentOptions,
-      inputOptions
-    ])
+    return try callFunctionAndValidate(
+      .tex2mml,
+      input: input,
+      arguments: [
+        conversionOptions,
+        documentOptions,
+        inputOptions
+      ])
   }
   
   /// Converts a TeX input string to MathML.
@@ -91,12 +143,14 @@ extension MathJax {
     inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunction(.tex2mml, with: [
-      input,
-      conversionOptions,
-      documentOptions,
-      inputOptions
-    ], error: &error)
+    return callFunctionAndValidate(
+      .tex2mml,
+      input: input,
+      arguments: [
+        conversionOptions,
+        documentOptions,
+        inputOptions
+      ], error: &error)
   }
   
 }

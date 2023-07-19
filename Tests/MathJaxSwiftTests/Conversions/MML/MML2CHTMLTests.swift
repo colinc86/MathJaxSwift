@@ -17,6 +17,14 @@ final class MML2CHTMLTests: XCTestCase {
     XCTAssertEqual(output, chtmlData)
   }
   
+  func testMML2CHTMLSyncBulk() throws {
+    let output = try mathjax.mml2chtml([mmlData, mmlData])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, chtmlData)
+    XCTAssertEqual(output[1].value, chtmlData)
+  }
+  
   func testMML2CHTMLSyncError() throws {
     var error: Error?
     let output = mathjax.mml2chtml(mmlData, error: &error)

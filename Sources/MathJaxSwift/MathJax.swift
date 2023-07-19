@@ -66,6 +66,16 @@ public final class MathJax {
     }
   }
   
+  /// A conversion response.
+  public struct Response {
+    
+    /// The response's value.
+    let value: String
+    
+    /// The response's error, if any.
+    let error: Error?
+  }
+  
   // MARK: Private/internal properties
   
   /// The JS context.
@@ -95,9 +105,7 @@ public final class MathJax {
     // Uncomment the following to enable logging from the JS context
 //    context.evaluateScript("var console = { log: function(message) { _consoleLog(message) } }")
 //    let consoleLog: @convention(block) (String) -> Void = { message in
-//      if debugLogs {
-//        NSLog("JSContext: " + message)
-//      }
+//      NSLog("JSContext: " + message)
 //    }
 //    context.setObject(unsafeBitCast(consoleLog, to: AnyObject.self), forKeyedSubscript: "_consoleLog" as NSString)
     
@@ -199,6 +207,9 @@ extension MathJax {
     supportedOutputFormats.append(outputFormat)
   }
   
+  /// Registers the class types with the context and checks for an exception.
+  ///
+  /// - Parameter classes: The array of classes.
   private func registerClasses(_ classes: [JSExport.Type]) throws {
     for aClass in classes {
       context.setObject(aClass.self, forKeyedSubscript: String(describing: aClass.self) as NSString)
@@ -218,80 +229,128 @@ extension MathJax {
     throw MathJaxError.javascriptException(value: exception.toString())
   }
   
-  /// Calls the function with the given arguments.
+  /// Calls the function with the given input and arguments and then validates
+  /// the response.
+  ///
+  /// - Note: all errors are thrown from the method.
   ///
   /// - Parameters:
   ///   - function: The function to call.
+  ///   - input: The function's input value.
   ///   - arguments: The arguments to pass to the function.
-  /// - Returns: The function's return value.
-  internal func callFunction(_ function: Function, with arguments: [Any]) throws -> String {
+  /// - Returns: The function's string response.
+  internal func callFunctionAndValidate(_ function: Function, input: String, arguments: [Any]) throws -> String {
     var error: Error?
-    let output = callFunction(function, with: arguments, error: &error)
-    if let error = error {
+    let response = callFunctionAndValidate(function, input: input, arguments: arguments, error: &error)
+    if let error {
       throw error
     }
-    return output
+    return response
   }
   
-  /// Calls the function with the given arguments and stores any errors produced
-  /// to an inout parameter.
+  /// Calls the function with the given input and arguments and then validates
+  /// the response.
+  ///
+  /// - Note: all errors are thrown from the method.
   ///
   /// - Parameters:
   ///   - function: The function to call.
+  ///   - input: The function's input value.
   ///   - arguments: The arguments to pass to the function.
-  ///   - error: The error that was produced by the function call.
-  /// - Returns: The function's return value.
-  internal func callFunction(_ function: Function, with arguments: [Any], error: inout Error?) -> String {
+  ///   - error: Any errors produced as a result of the function call or
+  ///     validation.
+  /// - Returns: The function's string response.
+  internal func callFunctionAndValidate(_ function: Function, input: String, arguments: [Any], error: inout Error?) -> String {
     var output = ""
     do {
-      // Lazily load the bundle that owns the function if it hasn't been loaded
-      if !supportedOutputFormats.contains(function.outputFormat) {
-        try loadBundle(with: function.outputFormat)
+      guard let response = try callFunctionAndValidate(function, input: [input], arguments: arguments).first else {
+        throw MathJaxError.conversionMissingResponse
+      }
+      output = response.value
+      
+      if let error = response.error {
+        throw error
       }
       
-      // Get the module's JS value
-      guard let module = context.objectForKeyedSubscript(function.jsModuleName) else {
-        throw MathJaxError.missingModule
-      }
-      
-      // Get the class's JS value
-      guard let converter = module.objectForKeyedSubscript(function.className) else {
-        throw MathJaxError.missingClass
-      }
-      
-      // Get the function's JS value
-      guard let jsFunction = converter.objectForKeyedSubscript(function.name) else {
-        throw MathJaxError.missingFunction(name: function.name)
-      }
-      
-      // Call the function and get its return value
-      guard let value = jsFunction.call(withArguments: arguments) else {
-        throw MathJaxError.conversionFailed
-      }
-      
-      // Make sure no exceptions were thrown.
-      try checkForJSException()
-      
-      // Make sure the value isn't undefined.
-      guard !value.isUndefined else {
-        throw MathJaxError.conversionUnknownError
-      }
-      
-      // Get the string value and return it
-      guard let stringValue = value.toString() else {
-        throw MathJaxError.conversionInvalidFormat
-      }
-      
-      // Capture the output
-      output = stringValue
-      
-      // Validate and return the string
-      return try function.outputParser.validate(stringValue)
+      return output
     }
     catch let callError {
       error = callError
       return output
     }
+  }
+  
+  /// Calls the function with the given input and arguments and then validates
+  /// the responses.
+  ///
+  /// - Parameters:
+  ///   - function: The function to call.
+  ///   - input: The function's input values.
+  ///   - arguments: The arguments to pass to the function.
+  /// - Returns: The function's responses.
+  internal func callFunctionAndValidate(_ function: Function, input: [String], arguments: [Any]) throws -> [Response] {
+    let responses = try callFunction(function, input: input, arguments: arguments)
+    var output = [Response]()
+    for response in responses {
+      do {
+        output.append(Response(value: try function.outputParser.validate(response), error: nil))
+      }
+      catch {
+        output.append(Response(value: response, error: error))
+      }
+    }
+    return output
+  }
+  
+  /// Calls the function with the given input and arguments.
+  ///
+  /// - Parameters:
+  ///   - function: The function to call.
+  ///   - input: The function's input values.
+  ///   - arguments: The arguments to pass to the function.
+  /// - Returns: The function's responses.
+  internal func callFunction(_ function: Function, input: [String], arguments: [Any]) throws -> [String] {
+    // Lazily load the bundle that owns the function if it hasn't been loaded
+    if !supportedOutputFormats.contains(function.outputFormat) {
+      try loadBundle(with: function.outputFormat)
+    }
+    
+    // Get the module's JS value
+    guard let module = context.objectForKeyedSubscript(function.jsModuleName) else {
+      throw MathJaxError.missingModule
+    }
+    
+    // Get the class's JS value
+    guard let converter = module.objectForKeyedSubscript(function.className) else {
+      throw MathJaxError.missingClass
+    }
+    
+    // Get the function's JS value
+    guard let jsFunction = converter.objectForKeyedSubscript(function.name) else {
+      throw MathJaxError.missingFunction(name: function.name)
+    }
+    
+    // Call the function and get its return value
+    let inputArguments: [Any] = [input]
+    guard let value = jsFunction.call(withArguments: inputArguments + arguments) else {
+      throw MathJaxError.conversionFailed
+    }
+    
+    // Make sure no exceptions were thrown.
+    try checkForJSException()
+    
+    // Make sure the value isn't undefined.
+    guard !value.isUndefined else {
+      throw MathJaxError.conversionUnknownError
+    }
+    
+    // Get the string value and return it
+    guard let arrayValue = value.toArray() as? [String] else {
+      throw MathJaxError.conversionInvalidFormat
+    }
+    
+    // Capture the output
+    return arrayValue
   }
   
   /// Performs the throwing closure asynchronously.
@@ -300,7 +359,7 @@ extension MathJax {
   ///   - queue: The queue to perform the block on.
   ///   - block: The block to execute.
   /// - Returns: A string.
-  internal func perform(on queue: DispatchQueue, _ block: @escaping (MathJax) throws -> String) async throws -> String {
+  internal func perform<T>(on queue: DispatchQueue, _ block: @escaping (MathJax) throws -> T) async throws -> T {
     return try await withCheckedThrowingContinuation { [weak self] continuation in
       guard let self = self else {
         continuation.resume(throwing: MathJaxError.deallocatedSelf)

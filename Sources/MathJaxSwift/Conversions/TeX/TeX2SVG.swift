@@ -27,6 +27,88 @@ import Foundation
 
 extension MathJax {
   
+  /// Converts TeX input strings to SVG.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing TeX.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included. (Default is `true`.)
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - outputOptions: The SVG output processor options.
+  ///   - queue: The queue to execute the conversion on.
+  /// - Returns: SVG formatted output.
+  public func tex2svg(
+    _ input: [String],
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
+    queue: DispatchQueue = .global()
+  ) async throws -> [Response] {
+    return try await perform(on: queue) { mathjax in
+      try mathjax.callFunctionAndValidate(
+        .tex2svg,
+        input: input,
+        arguments: [
+          css,
+          assistiveMml,
+          container,
+          styles,
+          conversionOptions,
+          documentOptions,
+          inputOptions,
+          outputOptions
+        ])
+    }
+  }
+  
+  /// Converts TeX input strings to SVG.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing TeX.
+  ///   - css: Whether the document's CSS should be output.
+  ///   - assistiveMml: Whether the include assistive MathML output.
+  ///   - container: Whether the document's outer HTML should be returned.
+  ///   - styles: Whether CSS styles should be included. (Default is `true`.)
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The TeX input processor options.
+  ///   - outputOptions: The SVG output processor options.
+  /// - Returns: SVG formatted output.
+  public func tex2svg(
+    _ input: [String],
+    css: Bool = false,
+    assistiveMml: Bool = false,
+    container: Bool = false,
+    styles: Bool = true,
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
+    outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
+  ) throws -> [Response] {
+    return try callFunctionAndValidate(
+      .tex2svg,
+      input: input,
+      arguments: [
+        css,
+        assistiveMml,
+        container,
+        styles,
+        conversionOptions,
+        documentOptions,
+        inputOptions,
+        outputOptions
+      ])
+  }
+  
   /// Converts a TeX input string to SVG.
   ///
   /// - Parameters:
@@ -92,17 +174,19 @@ extension MathJax {
     inputOptions: TeXInputProcessorOptions = TeXInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
-    return try callFunction(.tex2svg, with: [
-      input,
-      css,
-      assistiveMml,
-      container,
-      styles,
-      conversionOptions,
-      documentOptions,
-      inputOptions,
-      outputOptions
-    ])
+    return try callFunctionAndValidate(
+      .tex2svg,
+      input: input,
+      arguments: [
+        css,
+        assistiveMml,
+        container,
+        styles,
+        conversionOptions,
+        documentOptions,
+        inputOptions,
+        outputOptions
+      ])
   }
   
   /// Converts a TeX input string to SVG.
@@ -131,17 +215,19 @@ extension MathJax {
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunction(.tex2svg, with: [
-      input,
-      css,
-      assistiveMml,
-      container,
-      styles,
-      conversionOptions,
-      documentOptions,
-      inputOptions,
-      outputOptions
-    ], error: &error)
+    return callFunctionAndValidate(
+      .tex2svg,
+      input: input,
+      arguments: [
+        css,
+        assistiveMml,
+        container,
+        styles,
+        conversionOptions,
+        documentOptions,
+        inputOptions,
+        outputOptions
+      ], error: &error)
   }
   
 }
