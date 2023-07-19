@@ -18,6 +18,14 @@ final class Tex2SVGTests: XCTestCase {
     XCTAssertEqual(output, svgData)
   }
   
+  func testTex2SVGSyncBulk() throws {
+    let output = try mathjax.tex2svg([MathJaxSwiftTests.texInput, MathJaxSwiftTests.texInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, svgData)
+    XCTAssertEqual(output[1].value, svgData)
+  }
+  
   func testTex2SVGSyncNoError() throws {
     var error: Error?
     let output = mathjax.tex2svg(MathJaxSwiftTests.texInput, error: &error)
@@ -35,6 +43,20 @@ final class Tex2SVGTests: XCTestCase {
     else {
       XCTFail("Unknown error.")
     }
+  }
+  
+  func testTex2SVGSyncErrorBulk() throws {
+    let output = try mathjax.tex2svg([MathJaxSwiftTests.texErrorInput, MathJaxSwiftTests.texInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, svgErrorData)
+    if let error = output[0].error as? MathJaxError {
+      XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
+    else {
+      XCTFail("Unknown error.")
+    }
+    XCTAssertEqual(output[1].value, svgData)
   }
   
   func testTex2SVGSyncErrorNoErrors() throws {

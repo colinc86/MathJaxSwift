@@ -29,7 +29,7 @@ export class SVGConverter {
   /**
    * Converts a TeX input string to SVG.
    *
-   * @param {string} input The TeX input string.
+   * @param {string} input The TeX input strings.
    * @param {boolean} css Whether the documents CSS should be output.
    * @param {boolean} assistiveMml Whether to include assistive MathML output.
    * @param {boolean} container Whether the document's outer HTML should be returned.
@@ -38,12 +38,16 @@ export class SVGConverter {
    * @param {object} documentOptions The math document options.
    * @param {object} texOptions The TeX input options.
    * @param {object} svgOptions The SVG output configuration.
-   * @return {string} The SVG formatted string.
+   * @return {string} The SVG formatted strings.
    */
   static tex2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, texOptions, svgOptions) {
     texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) || (name === 'base')));
     const tex = new TeX(texOptions);
-    return SVGConverter.createSVG(input, tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(SVGConverter.createSVG(input[i], tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions));
+    }
+    return output;
   }
   
   /**
@@ -62,7 +66,11 @@ export class SVGConverter {
    */
   static mml2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, mathmlOptions, svgOptions) {
     const mml = new MathML(mathmlOptions);
-    return SVGConverter.createSVG(input, mml, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(SVGConverter.createSVG(input[i], mml, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions));
+    }
+    return output;
   }
   
   /**

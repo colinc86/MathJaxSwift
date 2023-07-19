@@ -44,6 +44,7 @@ public enum MathJaxError: Error, CustomStringConvertible, Equatable {
   case conversionFailed
   case conversionUnknownError
   case conversionInvalidFormat
+  case conversionMissingResponse
   case conversionError(error: String)
   
   public var description: String {
@@ -65,6 +66,7 @@ public enum MathJaxError: Error, CustomStringConvertible, Equatable {
     case .conversionFailed:               return "The function failed to convert the input string."
     case .conversionUnknownError:         return "The conversion failed for an unknown reason."
     case .conversionInvalidFormat:        return "The output format was invalid."
+    case .conversionMissingResponse:      return "The output response is missing."
     case .conversionError(let error):     return error
     }
   }

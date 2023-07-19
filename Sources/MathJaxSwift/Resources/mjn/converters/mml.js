@@ -27,7 +27,11 @@ export class MathMLConverter {
   static tex2mml(input, conversionOptions, documentOptions, texOptions) {
     texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) && ((name !== 'bussproofs') || (name === 'base'))));
     const tex = new TeX(texOptions);
-    return MathMLConverter.createMML(input, tex, conversionOptions, documentOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(MathMLConverter.createMML(input[i], tex, conversionOptions, documentOptions));
+    }
+    return output;
   }
   
   /**
@@ -41,7 +45,11 @@ export class MathMLConverter {
    */
   static am2mml(input, conversionOptions, documentOptions, asciimathOptions) {
     const asciimath = new AsciiMath(asciimathOptions);
-    return MathMLConverter.createMML(input, asciimath, conversionOptions, documentOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(MathMLConverter.createMML(input[i], asciimath, conversionOptions, documentOptions));
+    }
+    return output;
   }
   
   /**

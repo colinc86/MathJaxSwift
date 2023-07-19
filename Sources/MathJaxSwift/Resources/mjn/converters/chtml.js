@@ -32,7 +32,11 @@ export class CommonHTMLConverter {
   static tex2chtml(input, css, assistiveMml, conversionOptions, documentOptions, texOptions, chtmlOptions) {
     texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) || (name === 'base')));
     const tex = new TeX(texOptions);
-    return CommonHTMLConverter.createCHTML(input, tex, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(CommonHTMLConverter.createCHTML(input[i], tex, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions));
+    }
+    return output;
   }
   
   /**
@@ -49,7 +53,11 @@ export class CommonHTMLConverter {
    */
   static mml2chtml(input, css, assistiveMml, conversionOptions, documentOptions, mathmlOptions, chtmlOptions) {
     const mml = new MathML(mathmlOptions);
-    return CommonHTMLConverter.createCHTML(input, mml, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(CommonHTMLConverter.createCHTML(input[i], mml, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions));
+    }
+    return output;
   }
   
   /**
@@ -66,7 +74,11 @@ export class CommonHTMLConverter {
    */
   static am2chtml(input, css, assistiveMml, conversionOptions, documentOptions, asciimathOptions, chtmlOptions) {
     const asciimath = new AsciiMath(asciimathOptions);
-    return CommonHTMLConverter.createCHTML(input, asciimath, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions);
+    var output = [];
+    for (let i = 0; i < input.length; i++) {
+      output.push(CommonHTMLConverter.createCHTML(input[i], asciimath, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions));
+    }
+    return output;
   }
   
   /**

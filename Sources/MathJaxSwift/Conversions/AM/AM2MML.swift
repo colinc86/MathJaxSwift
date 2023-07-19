@@ -27,6 +27,56 @@ import Foundation
 
 extension MathJax {
   
+  /// Converts ASCIIMath input strings to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing ASCIIMath.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  ///   - queue: The queue to execute the conversion on.
+  /// - Returns: MathML formatted output.
+  public func am2mml(
+    _ input: [String],
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
+    queue: DispatchQueue = .global()
+  ) async throws -> [Response] {
+    return try await perform(on: queue) { mathjax in
+      try mathjax.am2mml(
+        input,
+        conversionOptions: conversionOptions,
+        documentOptions: documentOptions,
+        inputOptions: inputOptions
+      )
+    }
+  }
+  
+  /// Converts ASCIIMath input strings to MathML.
+  ///
+  /// - Parameters:
+  ///   - input: The input strings containing ASCIIMath.
+  ///   - conversionOptions: The MathJax conversion options.
+  ///   - documentOptions: The math document options.
+  ///   - inputOptions: The ASCIIMath input processor options.
+  /// - Returns: MathML formatted output.
+  public func am2mml(
+    _ input: [String],
+    conversionOptions: ConversionOptions = ConversionOptions(),
+    documentOptions: DocumentOptions = DocumentOptions(),
+    inputOptions: AMInputProcessorOptions = AMInputProcessorOptions()
+  ) throws -> [Response] {
+    return try callFunctionAndValidate(
+      .am2mml,
+      input: input,
+      arguments: [
+        conversionOptions,
+        documentOptions,
+        inputOptions
+      ])
+  }
+  
   /// Converts an ASCIIMath input string to MathML.
   ///
   /// - Parameters:
@@ -67,12 +117,14 @@ extension MathJax {
     documentOptions: DocumentOptions = DocumentOptions(),
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions()
   ) throws -> String {
-    return try callFunction(.am2mml, with: [
-      input,
-      conversionOptions,
-      documentOptions,
-      inputOptions
-    ])
+    return try callFunctionAndValidate(
+      .am2mml,
+      input: input,
+      arguments: [
+        conversionOptions,
+        documentOptions,
+        inputOptions
+      ])
   }
   
   /// Converts an ASCIIMath input string to MathML.
@@ -91,12 +143,14 @@ extension MathJax {
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
     error: inout Error?
   ) -> String {
-    return callFunction(.am2mml, with: [
-      input,
-      conversionOptions,
-      documentOptions,
-      inputOptions
-    ], error: &error)
+    return callFunctionAndValidate(
+      .am2mml,
+      input: input,
+      arguments: [
+        conversionOptions,
+        documentOptions,
+        inputOptions
+      ], error: &error)
   }
   
 }
