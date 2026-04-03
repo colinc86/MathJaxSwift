@@ -128,15 +128,24 @@ final class InputProcessorOptionsTests: XCTestCase {
   }
   
   func testASCIIMathInputProcessorOptionsAreCodable() throws {
-    let options = AMInputProcessorOptions(fixphi: true, displaystyle: true, decimalsign: "test")
+    let options = AMInputProcessorOptions(fixphi: true, displaystyle: true, decimalsign: "test", delimiters: [["$", "$"]])
     let optionsData = try JSONEncoder().encode(options)
     XCTAssertNoThrow(optionsData)
-    
+
     let decodedOptions = try JSONDecoder().decode(AMInputProcessorOptions.self, from: optionsData)
     XCTAssertNoThrow(decodedOptions)
     XCTAssertEqual(options.fixphi, decodedOptions.fixphi)
     XCTAssertEqual(options.displaystyle, decodedOptions.displaystyle)
     XCTAssertEqual(options.decimalsign, decodedOptions.decimalsign)
+    XCTAssertEqual(options.delimiters, decodedOptions.delimiters)
   }
-  
+
+  func testTeXPackagesAllContainsNewEntries() {
+    let all = TeXInputProcessorOptions.Packages.all
+    XCTAssertTrue(all.contains(TeXInputProcessorOptions.Packages.colorv2))
+    XCTAssertTrue(all.contains(TeXInputProcessorOptions.Packages.physics))
+    XCTAssertTrue(all.contains(TeXInputProcessorOptions.Packages.require))
+    XCTAssertTrue(all.contains(TeXInputProcessorOptions.Packages.setoptions))
+  }
+
 }

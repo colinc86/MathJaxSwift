@@ -18,6 +18,14 @@ final class Tex2MMLTests: XCTestCase {
     XCTAssertEqual(output, mmlData)
   }
   
+  func testTex2MMLSyncBulk() throws {
+    let output = try mathjax.tex2mml([MathJaxSwiftTests.texInput, MathJaxSwiftTests.texInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, mmlData)
+    XCTAssertEqual(output[1].value, mmlData)
+  }
+  
   func testTex2MMLSyncNoError() throws {
     var error: Error?
     let output = mathjax.tex2mml(MathJaxSwiftTests.texInput, error: &error)
@@ -35,6 +43,20 @@ final class Tex2MMLTests: XCTestCase {
     else {
       XCTFail("Unknown error.")
     }
+  }
+  
+  func testTex2MMLSyncErrorBulk() throws {
+    let output = try mathjax.tex2mml([MathJaxSwiftTests.texErrorInput, MathJaxSwiftTests.texInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, mmlErrorData)
+    if let error = output[0].error as? MathJaxError {
+      XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
+    else {
+      XCTFail("Unknown error.")
+    }
+    XCTAssertEqual(output[1].value, mmlData)
   }
   
   func testTex2MMLSyncErrorNoErrors() throws {

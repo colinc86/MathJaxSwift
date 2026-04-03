@@ -16,6 +16,14 @@ final class AM2CHTMLTests: XCTestCase {
     XCTAssertEqual(output, chtmlData)
   }
   
+  func testAM2CHTMLSyncBulk() throws {
+    let output = try mathjax.am2chtml([MathJaxSwiftTests.amInput, MathJaxSwiftTests.amInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, chtmlData)
+    XCTAssertEqual(output[1].value, chtmlData)
+  }
+  
   func testAM2CHTMLSyncError() throws {
     var error: Error?
     let output = mathjax.am2chtml(MathJaxSwiftTests.amInput, error: &error)

@@ -18,6 +18,14 @@ final class Tex2CHTMLTests: XCTestCase {
     XCTAssertEqual(output, chtmlData)
   }
   
+  func testTex2CHTMLSyncBulk() throws {
+    let output = try mathjax.tex2chtml([MathJaxSwiftTests.texInput, MathJaxSwiftTests.texInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, chtmlData)
+    XCTAssertEqual(output[1].value, chtmlData)
+  }
+  
   func testTex2CHTMLSyncNoError() throws {
     var error: Error?
     let output = mathjax.tex2chtml(MathJaxSwiftTests.texInput, error: &error)
@@ -35,6 +43,20 @@ final class Tex2CHTMLTests: XCTestCase {
     else {
       XCTFail("Unknown error.")
     }
+  }
+  
+  func testTex2CHTMLSyncErrorBulk() throws {
+    let output = try mathjax.tex2chtml([MathJaxSwiftTests.texErrorInput, MathJaxSwiftTests.texInput])
+    XCTAssertNoThrow(output)
+    XCTAssertEqual(output.count, 2)
+    XCTAssertEqual(output[0].value, chtmlErrorData)
+    if let error = output[0].error as? MathJaxError {
+      XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
+    }
+    else {
+      XCTFail("Unknown error.")
+    }
+    XCTAssertEqual(output[1].value, chtmlData)
   }
   
   func testTex2CHTMLSyncErrorNoErrors() throws {

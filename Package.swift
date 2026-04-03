@@ -20,7 +20,8 @@ let package = Package(
       name: "MathJaxSwift",
       dependencies: [],
       resources: [
-        .copy("Resources/mjn")
+        .copy("Resources/mjn"),
+        .process("Resources/PrivacyInfo.xcprivacy")
       ]),
     .testTarget(
       name: "MathJaxSwiftTests",

@@ -37,7 +37,7 @@ final class DocumentOptionsTests: XCTestCase {
       typesetError: nil)
     let optionsData = try JSONEncoder().encode(options)
     XCTAssertNoThrow(optionsData)
-    
+
     let decodedOptions = try JSONDecoder().decode(DocumentOptions.self, from: optionsData)
     XCTAssertNoThrow(decodedOptions)
     XCTAssertEqual(options.skipHtmlTags, decodedOptions.skipHtmlTags)
@@ -45,5 +45,20 @@ final class DocumentOptionsTests: XCTestCase {
     XCTAssertEqual(options.ignoreHtmlClass, decodedOptions.ignoreHtmlClass)
     XCTAssertEqual(options.processHtmlClass, decodedOptions.processHtmlClass)
   }
-  
+
+  func testDocumentOptionsNestedSubObjectsCodable() throws {
+    let safeOptions = SafeOptions(
+      lengthMax: 5,
+      allowOptions: AllowOptions(URLs: AllowOptions.Allows.none)
+    )
+    let options = DocumentOptions(safeOptions: safeOptions)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+
+    let decoded = try JSONDecoder().decode(DocumentOptions.self, from: optionsData)
+    XCTAssertNoThrow(decoded)
+    XCTAssertEqual(decoded.safeOptions.lengthMax, 5)
+    XCTAssertEqual(decoded.safeOptions.allowOptions.URLs, AllowOptions.Allows.none)
+  }
+
 }

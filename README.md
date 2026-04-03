@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-[![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml) ![Swift Version](https://img.shields.io/badge/Swift-5.5-orange?logo=swift) ![macOS Version](https://img.shields.io/badge/macOS-10.15-informational) ![iOS Version](https://img.shields.io/badge/iOS-13-informational) ![tvOS Version](https://img.shields.io/badge/tvOS-13-informational) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/colinc86/MathJaxSwift) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/colinc86/MathJaxSwift) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green) [![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
 
 <a href="https://www.mathjax.org">
     <img title="Powered by MathJax"
@@ -15,14 +15,19 @@
 - [Installation](#📦-installation)
 - [Usage](#🎛️-usage)
   - [Available Methods](#🧰-available-methods)
-  - [Threading and Memory](#🧵-threading-and-memory)
+    - [Initializing and Converting](#initializing-and-converting)
+    - [Batch Converting](#batch-converting)
+    - [Threading](#threading)
     - [Preferred Output Formats](#preferred-output-formats)
+  - [Speech Conversion](#🗣️-speech-conversion)
   - [Options](#⚙️-options)
     - [Document Options](#document-options)
     - [Conversion Options](#conversion-options)
     - [Processor Options](#processor-options)
   - [Error Handling](#🚨-error-handling)
   - [MathJax Version](#♾️-mathjax-version)
+- [Example](#📗-example)
+- [Documentation](#📘-documentation)
 - [Notes](#📓-notes)
 
 ## 📦 Installation
@@ -30,7 +35,7 @@
 Add the dependency to your package manifest file.
 
 ```swift
-.package(url: "https://github.com/colinc86/MathJaxSwift", branch: "v4.0")
+.package(url: "https://github.com/colinc86/MathJaxSwift", from: "4.0.0")
 ```
 
 ## 🎛️ Usage
@@ -49,29 +54,29 @@ catch {
 }
 ```
 
-> The example above converts the TeX input to SVG data that renders the following PNG.
+> The example above converts the TeX input to SVG data that renders the following PNG. See the [example](#📗-example) section for more details.
 >
-> <picture>
->   <source media="(prefers-color-scheme: dark)" srcset="./assets/images/hello_tex_light.png">
->   <source media="(prefers-color-scheme: light)" srcset="./assets/images/hello_tex_dark.png">
->   <img alt="Hello, Tex!" src="./assets/images/hello_tex_dark.png" width=200px, height=auto>
-> </picture>
+> <img alt="Hello, Tex!" src="./assets/images/hello_tex.png" width=200px, height=auto>
 
 ### 🧰 Available Methods
 
-MathJaxSwift implements the following methods to convert [TeX](https://tug.org), [MathML](https://www.w3.org/TR/MathML/), and [AsciiMath](http://asciimath.org) to CommonHTML, MathML and SVG data.
+MathJaxSwift implements the following methods to convert [TeX](https://tug.org), [MathML](https://www.w3.org/TR/MathML/), and [AsciiMath](http://asciimath.org) to CommonHTML, MathML, SVG, and speech text.
 
-| Method      | Input Format                            | Output Format |
-| :---------- | :-------------------------------------- | :------------ |
-| `tex2chtml` | TeX                                     | cHTML         |
-| `tex2mml`   | TeX                                     | MathML        |
-| `tex2svg`   | TeX                                     | SVG           |
-| `mml2chtml` | MathML                                  | cHTML         |
-| `mml2svg`   | MathML                                  | SVG           |
-| `am2chtml`  | AsciiMath                               | cHTML         |
-| `am2mml`    | AsciiMath                               | MathML        |
+| Method        | Input Format                            | Output Format |
+| :------------ | :-------------------------------------- | :------------ |
+| `tex2chtml`   | TeX                                     | cHTML         |
+| `tex2mml`     | TeX                                     | MathML        |
+| `tex2svg`     | TeX                                     | SVG           |
+| `tex2speech`  | TeX                                     | Speech text   |
+| `mml2chtml`   | MathML                                  | cHTML         |
+| `mml2svg`     | MathML                                  | SVG           |
+| `mml2speech`  | MathML                                  | Speech text   |
+| `am2chtml`    | AsciiMath                               | cHTML         |
+| `am2mml`      | AsciiMath                               | MathML        |
+| `am2svg`      | AsciiMath                               | SVG           |
+| `am2speech`   | AsciiMath                               | Speech text   |
 
-### 🧵 Threading and Memory
+#### Initializing and Converting
 
 Initializing an instance of `MathJax` should not be performed on the main queue to prevent blocking of the UI. You should also attempt to keep a single reference to an instance and submit your function calls to it instead of creating a new `MathJax` instance each time you need to convert.
 
@@ -85,11 +90,41 @@ class MyModel {
     mathjax = try MathJax()
   }
   
-  func convertTex(_ input: String) async throws -> String {
-    return try await mathjax.tex2chtml(input)
+  func convertTex(_ input: String) throws -> String {
+    return try mathjax.tex2chtml(input)
   }
 }
 ```
+
+#### Batch Converting
+
+You can submit more than a single input string for conversion.
+
+```swift
+do {
+  // Some input array of TeX strings
+  let input: [String] = [ ... ]
+
+  // Convert each string in the input array
+  let responses = try mathjax.tex2svg(input)
+
+  for response in responses {
+    if let error = response.error {
+      print("Error converting input value: \(error)")
+    }
+    else {
+      print("Got response value: \(response.value)")
+    }
+  }
+}
+catch {
+  print("MathJax error: \(error)")
+}
+```
+
+The `MathJax` instance will return an array of `Response` types with errors parsed from the response's `value` and set on the `error` property. 
+
+#### Threading
 
 Each of the methods are also available with an `async` implementation.
 
@@ -125,6 +160,9 @@ MathJaxSwift loads all of the necessary JavaScript in to its context to run all 
 do {
   // Save some time and don't load the SVG output format.
   let mathjax = try MathJax(preferredOutputFormats: [.chtml, .mml])
+  
+  // Or load speech support along with MML (needed for tex2speech/am2speech).
+  let speechJax = try MathJax(preferredOutputFormats: [.mml, .speech])
 }
 catch {
   print("Error initializing MathJax: \(error)")
@@ -150,45 +188,35 @@ catch {
 
 See the [Notes](https://github.com/colinc86/MathJaxSwift#notes) section for more details.
 
+### 🗣️ Speech Conversion
+
+MathJaxSwift can convert math expressions to spoken text using the [Speech Rule Engine](https://speechruleengine.org) (SRE). This is useful for accessibility and text-to-speech applications.
+
+```swift
+do {
+  let mathjax = try MathJax(preferredOutputFormats: [.mml, .speech])
+  
+  let speech = try mathjax.tex2speech("\\frac{2}{3}")
+  print(speech) // "two thirds"
+  
+  let speech2 = try mathjax.tex2speech("x^2 + y^2 = z^2")
+  print(speech2) // "x squared plus y squared equals z squared"
+}
+catch {
+  print("Error: \(error)")
+}
+```
+
+Speech conversion works by first converting the input to MathML, then passing it through SRE. You can also convert MathML directly:
+
+```swift
+let mml = try mathjax.tex2mml("\\sqrt{2}")
+let speech = try mathjax.mml2speech(mml) // "StartRoot 2 EndRoot"
+```
+
+> **Note:** The speech output format must be included in `preferredOutputFormats` (or it will be loaded lazily on first use). The `.mml` format is also required since speech conversion uses MathML as an intermediate step for TeX and AsciiMath input.
+
 ### ⚙️ Options
-
-Each of the methods have various options that can be passed. The following options have been implemented.
-
-- [ ] [Document options](#document-options)
-  - [x] Non-developer options
-  - [ ] Developer options
-- [x] [Conversion options](#conversion-options)
-- [ ] [Input processor options](#processor-options)
-  - [ ] TeX
-    - [x] Non-developer
-    - [ ] Developer
-    - [ ] Extensions
-      - [x] Configurable via dictionaries
-      - [ ] Configurable via objects
-  - [ ] AsciiMath
-    - [x] Non-developer
-    - [ ] Developer
-  - [ ] MathML
-    - [x] Non-developer
-    - [ ] Developer
-- [ ] [Output processor options](#processor-options)
-  - [ ] CHTML
-    - [x] Non-developer
-    - [ ] Developer
-  - [ ] SVG
-    - [x] Non-developer
-    - [ ] Developer
-- [ ] Safe extension options
-- [ ] Contextual menu options
-  - [ ] Non-developer
-  - [ ] Developer
-- [ ] Accessibility extensions options
-  - [ ] Semantic rich extension options
-  - [ ] Complexity extension options
-    - [ ] Non-developer
-    - [ ] Developer
-  - [ ] Explorer extension options
-  - [ ] Assistive-MML extension options
 
 #### Document Options
 
@@ -255,10 +283,64 @@ catch {
 
 You can also use the returned metadata to check the MathJax node module's URL and its SHA-512.
 
+## 📗 Example
+
+The following example class shows how to
+1. create a `MathJax` instance,
+2. set the preferred output to `SVG`,
+3. create input, output and conversion options,
+4. and render the SVG output string from TeX input.
+
+```swift
+class EquationRenderer {
+  // A reference to our MathJax instance
+  private var mathjax: MathJax
+  
+  // The TeX input processor options - load all packages.
+  private let inputOptions = TeXInputProcessorOptions(loadPackages: TeXInputProcessorOptions.Packages.all)
+  
+  // The SVG output processor options - align our display left.
+  private let outputOptions = SVGOutputProcessorOptions(displayAlign: SVGOutputProcessorOptions.DisplayAlignments.left)
+  
+  // The conversion options - use block rendering.
+  private let convOptions = ConversionOptions(display: true)
+  
+  init() throws {
+    // We only want to convert to SVG
+    mathjax = try MathJax(preferredOutputFormat: .svg)
+  }
+  
+  /// Converts the TeX input to SVG.
+  ///
+  /// - Parameter texInput: The input string.
+  /// - Returns: SVG file data.
+  func convert(_ texInput: String) async throws -> String {
+    return try await mathjax.tex2svg(
+      texInput,
+      conversionOptions: convOptions,
+      inputOptions: inputOptions,
+      outputOptions: outputOptions)
+  }
+}
+```
+
+To use the class you could do something like:
+
+```swift
+let renderer = try EquationRenderer()
+let svg = try await renderer.convert("$\\text{Hello, }\\TeX$!")
+```
+
+## 📘 Documentation
+
+The classes unique to this package (namely `MathJax`) should be well documented. Documentation about the MathJax options and conversion processes is not included.
+
+Please refer to the official [MathJax Documentation](https://docs.mathjax.org/en/latest/) for more information.
+
 ## 📓 Notes
 
 To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create bundle files that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
 
-`mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions.
+`mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions. The `speech.bundle.js` file is built separately via `node build-speech.js` and bundles the [Speech Rule Engine](https://speechruleengine.org) with xmldom polyfills for headless JSContext operation.
 
-After making modifications to `index.js`, it should be rebuilt with `npm run build` executed in the `mjn` directory which will recreate the bundle files.
+After making modifications to the converters, rebuild with `npm run build` executed in the `mjn` directory for the main bundles, and `node build-speech.js` for the speech bundle.

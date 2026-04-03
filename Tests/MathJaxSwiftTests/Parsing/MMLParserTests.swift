@@ -2,9 +2,15 @@ import XCTest
 @testable import MathJaxSwift
 
 final class MMLParserTests: XCTestCase {
-  
+
+  let validData = MathJaxSwiftTests.loadString(fromFile: "No Error/testMML", withExtension: "xml")
   let errorData = MathJaxSwiftTests.loadString(fromFile: "Error/testMML", withExtension: "xml")
-  
+
+  func testValidateSuccess() throws {
+    let result = try MMLParser.shared.validate(validData)
+    XCTAssertEqual(result, validData)
+  }
+
   func testValidate() throws {
     XCTAssertThrowsError(try MMLParser.shared.validate(errorData)) { error in
       guard let error = error as? MathJaxError else {

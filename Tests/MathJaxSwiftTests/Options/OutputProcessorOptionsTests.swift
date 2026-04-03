@@ -62,10 +62,35 @@ final class OutputProcessorOptionsTests: XCTestCase {
     let options = SVGOutputProcessorOptions(fontCache: SVGOutputProcessorOptions.FontCaches.local)
     let optionsData = try JSONEncoder().encode(options)
     XCTAssertNoThrow(optionsData)
-    
+
     let decodedOptions = try JSONDecoder().decode(SVGOutputProcessorOptions.self, from: optionsData)
     XCTAssertNoThrow(decodedOptions)
     XCTAssertEqual(options.fontCache, decodedOptions.fontCache)
   }
-  
+
+  func testSVGOutputProcessorCodableWithLinebreaks() throws {
+    let linebreaks = LinebreakOptions(inline: true, width: "50em", lineleading: ".5em")
+    let options = SVGOutputProcessorOptions(linebreaks: linebreaks)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+
+    let decoded = try JSONDecoder().decode(SVGOutputProcessorOptions.self, from: optionsData)
+    XCTAssertNoThrow(decoded)
+    XCTAssertEqual(decoded.linebreaks.inline, true)
+    XCTAssertEqual(decoded.linebreaks.width, "50em")
+    XCTAssertEqual(decoded.linebreaks.lineleading, ".5em")
+  }
+
+  func testCHTMLOutputProcessorCodableWithLinebreaks() throws {
+    let linebreaks = LinebreakOptions(inline: true, width: "80em")
+    let options = CHTMLOutputProcessorOptions(linebreaks: linebreaks)
+    let optionsData = try JSONEncoder().encode(options)
+    XCTAssertNoThrow(optionsData)
+
+    let decoded = try JSONDecoder().decode(CHTMLOutputProcessorOptions.self, from: optionsData)
+    XCTAssertNoThrow(decoded)
+    XCTAssertEqual(decoded.linebreaks.inline, true)
+    XCTAssertEqual(decoded.linebreaks.width, "80em")
+  }
+
 }
