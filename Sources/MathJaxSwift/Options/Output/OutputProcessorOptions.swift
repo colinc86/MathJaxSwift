@@ -50,6 +50,7 @@ import Foundation
   public static let defaultExFactor: Double = 0.5
   public static let defaultDisplayAlign: DisplayAlignment = DisplayAlignments.center
   public static let defaultDisplayIndent: Double = 0
+  public static let defaultDisplayOverflow: String = "overflow"
   public static let defaultLinebreaks: LinebreakOptions = LinebreakOptions()
 
   // MARK: Properties
@@ -66,6 +67,7 @@ import Foundation
   @objc dynamic public var exFactor: Double
   @objc dynamic public var displayAlign: DisplayAlignment
   @objc dynamic public var displayIndent: Double
+  @objc dynamic public var displayOverflow: String
   @objc dynamic public var linebreaks: LinebreakOptions
 
   // MARK: Initializers
@@ -83,6 +85,7 @@ import Foundation
     exFactor: Double = defaultExFactor,
     displayAlign: DisplayAlignment = defaultDisplayAlign,
     displayIndent: Double = defaultDisplayIndent,
+    displayOverflow: String = defaultDisplayOverflow,
     linebreaks: LinebreakOptions = defaultLinebreaks
   ) {
     self.scale = scale
@@ -97,6 +100,7 @@ import Foundation
     self.exFactor = exFactor
     self.displayAlign = displayAlign
     self.displayIndent = displayIndent
+    self.displayOverflow = displayOverflow
     self.linebreaks = linebreaks
   }
 

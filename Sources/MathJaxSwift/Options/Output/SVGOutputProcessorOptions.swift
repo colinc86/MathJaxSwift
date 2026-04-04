@@ -41,6 +41,7 @@ import JavaScriptCore
   var exFactor: Double { get set }
   var displayAlign: String { get set }
   var displayIndent: Double { get set }
+  var displayOverflow: String { get set }
   var linebreaks: LinebreakOptions { get set }
   var localID: String? { get set }
   var titleID: Int { get set }

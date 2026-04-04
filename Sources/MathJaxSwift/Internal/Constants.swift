@@ -28,7 +28,7 @@ import Foundation
 internal struct Constants {
   
   /// The version of MathJax that the package expects.
-  static let expectedMathJaxVersion = "4.0.0-alpha.1"
+  static let expectedMathJaxVersion = "4.1.1"
   
   struct Names {
     
@@ -38,7 +38,7 @@ internal struct Constants {
     struct Modules {
       
       /// The name of the MathJax npm module.
-      static let mathjax = "node_modules/mathjax-full"
+      static let mathjax = "node_modules/@mathjax/src"
       
       /// The name of the mjn npm module.
       static let mjn = "mjn"

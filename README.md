@@ -1,6 +1,6 @@
 # MathJaxSwift
 
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/colinc86/MathJaxSwift) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/colinc86/MathJaxSwift) ![MathJax Version](https://img.shields.io/badge/MathJax-3.2.2-green) [![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/colinc86/MathJaxSwift) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fcolinc86%2FMathJaxSwift%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/colinc86/MathJaxSwift) ![MathJax Version](https://img.shields.io/badge/MathJax-4.1.1-green) [![Unit Tests](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml/badge.svg)](https://github.com/colinc86/MathJaxSwift/actions/workflows/swift.yml)
 
 <a href="https://www.mathjax.org">
     <img title="Powered by MathJax"
@@ -136,10 +136,10 @@ func myAsyncMethod() async throws {
 ```
 
 ```xml
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-  <mfrac>
-    <mn>2</mn>
-    <mn>3</mn>
+<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\frac{2}{3}" display="block">
+  <mfrac data-latex="\frac{2}{3}">
+    <mn data-latex="2">2</mn>
+    <mn data-latex="3">3</mn>
   </mfrac>
 </math>
 ```
@@ -246,7 +246,7 @@ let output = try! tex2chtml("\\text{Hello, }$\\LaTeX$\\text{!}", conversionOptio
 The input and output of each of the conversion methods is configurable through various processor options. For example, if you are calling the `tex2svg` conversion method, then you can configure the input and output with `TexInputProcessorOptions` and `SVGOutputProcessorOptions`, respectively.
 
 ```swift
-let inputOptions = TexInputProcessorOptions(processEscapes: true)
+let inputOptions = TeXInputProcessorOptions(processEscapes: true)
 let outputOptions = SVGOutputProcessorOptions(displayIndent: 0.5)
 let svg = try! mathjax.tex2svg("\\text{Hello, }\\LaTeX\\text{!}", inputOptions: inputOptions, outputOptions: outputOptions)
 ```
@@ -262,7 +262,7 @@ let documentOptions = DocumentOptions { doc, math, err in
   // Do something with the typeset error...
 }
 
-let inputOptions = TexInputProcessorOptions { jax, err in
+let inputOptions = TeXInputProcessorOptions { jax, err in
   // Do something with the TeX format error...
 }
 ```
@@ -339,8 +339,33 @@ Please refer to the official [MathJax Documentation](https://docs.mathjax.org/en
 
 ## 📓 Notes
 
-To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create bundle files that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`. 
+To get around the limitations of the `JSContext` class, the package uses [Webpack](https://webpack.js.org) to create bundle files that can be evaluated by the context. The wrapper methods, MathJax, and Webpack dependencies are bundled together in an npm module called `mjn`.
 
-`mjn`'s main entry point is `index.js` which exposes the converter classes and functions that utilize MathJax. The files are packed with Webpack and placed in to the `mjn/dist/` directory. `chtml.bundle.js`, `mml.bundle.js`, and `svg.bundle.js` files are loaded by the Swift package's module and evaluated by a JavaScript context to expose the functions. The `speech.bundle.js` file is built separately via `node build-speech.js` and bundles the [Speech Rule Engine](https://speechruleengine.org) with xmldom polyfills for headless JSContext operation.
+### JavaScript Bundles
 
-After making modifications to the converters, rebuild with `npm run build` executed in the `mjn` directory for the main bundles, and `node build-speech.js` for the speech bundle.
+`mjn` exposes converter classes via Webpack bundles in the `mjn/dist/` directory:
+
+- `chtml.bundle.js`, `mml.bundle.js`, `svg.bundle.js` — main conversion bundles built by Webpack
+- `speech.bundle.js` — built separately via `node build-speech.js`, bundles the [Speech Rule Engine](https://speechruleengine.org) with xmldom polyfills for headless JSContext operation
+
+### MathJax 4
+
+This version of MathJaxSwift wraps [MathJax 4](https://docs.mathjax.org/en/latest/) (`@mathjax/src` v4.1.1) with the [New Computer Modern](https://ctan.org/pkg/newcomputermodern) font (`@mathjax/mathjax-newcm-font`). Key changes from the v3 wrapper:
+
+- **Font system**: MathJax 4 decoupled fonts into separate packages. The New Computer Modern font provides expanded character coverage including Cyrillic, Greek, Arabic, Cherokee, Devanagari, and more.
+- **TeX extensions**: All extensions are explicitly registered at bundle time (MathJax 4 removed the `AllPackages` convenience module). New extensions include `bbm`, `bboldx`, `begingroup`, `dsfont`, `texhtml`, and `units`.
+- **AsciiMath**: Due to a MathJax 4/Webpack compatibility issue with the legacy AsciiMath code, all AsciiMath conversions use a two-step process (AM to MathML, then MathML to output format) internally.
+
+### Rebuilding Bundles
+
+After making modifications to the converters:
+
+```bash
+cd Sources/MathJaxSwift/Resources/mjn
+
+# Rebuild main bundles (includes post-build AsciiMath fix)
+npm run build
+
+# Rebuild speech bundle
+node build-speech.js
+```

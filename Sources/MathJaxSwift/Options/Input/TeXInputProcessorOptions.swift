@@ -40,6 +40,7 @@ import JavaScriptCore
   var useLabelIds: Bool { get set }
   var maxMacros: Int { get set }
   var maxBuffer: Int { get set }
+  var maxTemplateSubstitutions: Int { get set }
   var baseURL: String? { get set }
   var formatError: TeXInputProcessorOptions.ErrorFunction? { get set }
   
@@ -73,6 +74,7 @@ import JavaScriptCore
     case useLabelIds
     case maxMacros
     case maxBuffer
+    case maxTemplateSubstitutions
     case baseURL
     case ams
     case amscd
@@ -95,7 +97,10 @@ import JavaScriptCore
     public static let autoload = "autoload"
     public static let amscd = "amscd"
     public static let base = "base"
+    public static let bbm = "bbm"
+    public static let bboldx = "bboldx"
     public static let bbox = "bbox"
+    public static let begingroup = "begingroup"
     public static let boldsymbol = "boldsymbol"
     public static let braket = "braket"
     public static let bussproofs = "bussproofs"
@@ -105,6 +110,7 @@ import JavaScriptCore
     public static let color = "color"
     public static let colortbl = "colortbl"
     public static let configmacros = "configmacros"
+    public static let dsfont = "dsfont"
     public static let empheq = "empheq"
     public static let enclose = "enclose"
     public static let extpfeil = "extpfeil"
@@ -119,9 +125,11 @@ import JavaScriptCore
     public static let require = "require"
     public static let setoptions = "setoptions"
     public static let tagformat = "tagformat"
+    public static let texhtml = "texhtml"
     public static let textcomp = "textcomp"
     public static let textmacros = "textmacros"
     public static let unicode = "unicode"
+    public static let units = "units"
     public static let upgreek = "upgreek"
     public static let verb = "verb"
     public static let colorv2 = "colorv2"
@@ -131,7 +139,10 @@ import JavaScriptCore
       amscd,
       autoload,
       base,
+      bbm,
+      bboldx,
       bbox,
+      begingroup,
       boldsymbol,
       braket,
       bussproofs,
@@ -142,6 +153,7 @@ import JavaScriptCore
       colortbl,
       colorv2,
       configmacros,
+      dsfont,
       empheq,
       enclose,
       extpfeil,
@@ -156,9 +168,11 @@ import JavaScriptCore
       require,
       setoptions,
       tagformat,
+      texhtml,
       textcomp,
       textmacros,
       unicode,
+      units,
       upgreek,
       verb
     ]
@@ -192,6 +206,7 @@ import JavaScriptCore
   public static let defaultUseLabelIds: Bool = true
   public static let defaultMaxMacros: Int = 10000
   public static let defaultMaxBuffer: Int = 5 * 1024
+  public static let defaultMaxTemplateSubstitutions: Int = 10000
   public static let defaultBaseURL: String? = nil
   public static let defaultFormatError: ErrorFunction? = nil
   public static let defaultAMS: AMSOptions = AMSOptions()
@@ -220,6 +235,7 @@ import JavaScriptCore
   dynamic public var useLabelIds: Bool
   dynamic public var maxMacros: Int
   dynamic public var maxBuffer: Int
+  dynamic public var maxTemplateSubstitutions: Int
   dynamic public var baseURL: String?
   dynamic public var formatError: ErrorFunction?
   dynamic public var ams: AMSOptions
@@ -249,6 +265,7 @@ import JavaScriptCore
     useLabelIds: Bool = defaultUseLabelIds,
     maxMacros: Int = defaultMaxMacros,
     maxBuffer: Int = defaultMaxBuffer,
+    maxTemplateSubstitutions: Int = defaultMaxTemplateSubstitutions,
     baseURL: String? = defaultBaseURL,
     formatError: ErrorFunction? = defaultFormatError,
     ams: AMSOptions = defaultAMS,
@@ -275,6 +292,7 @@ import JavaScriptCore
     self.useLabelIds = useLabelIds
     self.maxMacros = maxMacros
     self.maxBuffer = maxBuffer
+    self.maxTemplateSubstitutions = maxTemplateSubstitutions
     self.baseURL = baseURL
     self.formatError = formatError
     self.ams = ams
@@ -305,6 +323,7 @@ import JavaScriptCore
     useLabelIds = try container.decode(Bool.self, forKey: .useLabelIds)
     maxMacros = try container.decode(Int.self, forKey: .maxMacros)
     maxBuffer = try container.decode(Int.self, forKey: .maxBuffer)
+    maxTemplateSubstitutions = try container.decode(Int.self, forKey: .maxTemplateSubstitutions)
     baseURL = try container.decode(String?.self, forKey: .baseURL)
     ams = try container.decode(AMSOptions.self, forKey: .ams)
     amscd = try container.decode(AMSCDOptions.self, forKey: .amscd)
@@ -335,6 +354,7 @@ import JavaScriptCore
     try container.encode(useLabelIds, forKey: .useLabelIds)
     try container.encode(maxMacros, forKey: .maxMacros)
     try container.encode(maxBuffer, forKey: .maxBuffer)
+    try container.encode(maxTemplateSubstitutions, forKey: .maxTemplateSubstitutions)
     try container.encode(baseURL, forKey: .baseURL)
     try container.encode(ams, forKey: .ams)
     try container.encode(amscd, forKey: .amscd)

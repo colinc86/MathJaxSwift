@@ -82,17 +82,9 @@ extension MathJax {
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> [Response] {
-    return try callFunctionAndValidate(
-      .am2chtml,
-      input: input,
-      arguments: [
-        css,
-        assistiveMml,
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary(),
-        try outputOptions.toDictionary()
-      ])
+    let mmlResponses = try am2mml(input, conversionOptions: conversionOptions, documentOptions: documentOptions, inputOptions: inputOptions)
+    let mmlStrings = mmlResponses.map { $0.value }
+    return try mml2chtml(mmlStrings, css: css, assistiveMml: assistiveMml, conversionOptions: conversionOptions, documentOptions: documentOptions, outputOptions: outputOptions)
   }
   
   /// Converts an ASCIIMath input string to CHTML.
@@ -150,17 +142,8 @@ extension MathJax {
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
     outputOptions: CHTMLOutputProcessorOptions = CHTMLOutputProcessorOptions()
   ) throws -> String {
-    return try callFunctionAndValidate(
-      .am2chtml,
-      input: input,
-      arguments: [
-        css,
-        assistiveMml,
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary(),
-        try outputOptions.toDictionary()
-      ])
+    let mml = try am2mml(input, conversionOptions: conversionOptions, documentOptions: documentOptions, inputOptions: inputOptions)
+    return try mml2chtml(mml, css: css, assistiveMml: assistiveMml, conversionOptions: conversionOptions, documentOptions: documentOptions, outputOptions: outputOptions)
   }
   
   /// Converts an ASCIIMath input string to CHTML.
@@ -186,19 +169,7 @@ extension MathJax {
     error: inout Error?
   ) -> String {
     do {
-      let arguments: [Any] = [
-        css,
-        assistiveMml,
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary(),
-        try outputOptions.toDictionary()
-      ]
-      return callFunctionAndValidate(
-        .am2chtml,
-        input: input,
-        arguments: arguments,
-        error: &error)
+      return try am2chtml(input, css: css, assistiveMml: assistiveMml, conversionOptions: conversionOptions, documentOptions: documentOptions, inputOptions: inputOptions, outputOptions: outputOptions)
     } catch let e {
       error = e
       return ""

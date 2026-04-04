@@ -92,19 +92,9 @@ extension MathJax {
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> [Response] {
-    return try callFunctionAndValidate(
-      .am2svg,
-      input: input,
-      arguments: [
-        css,
-        assistiveMml,
-        container,
-        styles,
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary(),
-        try outputOptions.toDictionary()
-      ])
+    let mmlResponses = try am2mml(input, conversionOptions: conversionOptions, documentOptions: documentOptions, inputOptions: inputOptions)
+    let mmlStrings = mmlResponses.map { $0.value }
+    return try mml2svg(mmlStrings, css: css, assistiveMml: assistiveMml, container: container, styles: styles, conversionOptions: conversionOptions, documentOptions: documentOptions, outputOptions: outputOptions)
   }
 
   /// Converts an ASCIIMath input string to SVG.
@@ -172,19 +162,8 @@ extension MathJax {
     inputOptions: AMInputProcessorOptions = AMInputProcessorOptions(),
     outputOptions: SVGOutputProcessorOptions = SVGOutputProcessorOptions()
   ) throws -> String {
-    return try callFunctionAndValidate(
-      .am2svg,
-      input: input,
-      arguments: [
-        css,
-        assistiveMml,
-        container,
-        styles,
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary(),
-        try outputOptions.toDictionary()
-      ])
+    let mml = try am2mml(input, conversionOptions: conversionOptions, documentOptions: documentOptions, inputOptions: inputOptions)
+    return try mml2svg(mml, css: css, assistiveMml: assistiveMml, container: container, styles: styles, conversionOptions: conversionOptions, documentOptions: documentOptions, outputOptions: outputOptions)
   }
 
   /// Converts an ASCIIMath input string to SVG.
@@ -214,21 +193,7 @@ extension MathJax {
     error: inout Error?
   ) -> String {
     do {
-      let arguments: [Any] = [
-        css,
-        assistiveMml,
-        container,
-        styles,
-        try conversionOptions.toDictionary(),
-        try documentOptions.toDictionary(),
-        try inputOptions.toDictionary(),
-        try outputOptions.toDictionary()
-      ]
-      return callFunctionAndValidate(
-        .am2svg,
-        input: input,
-        arguments: arguments,
-        error: &error)
+      return try am2svg(input, css: css, assistiveMml: assistiveMml, container: container, styles: styles, conversionOptions: conversionOptions, documentOptions: documentOptions, inputOptions: inputOptions, outputOptions: outputOptions)
     } catch let e {
       error = e
       return ""
