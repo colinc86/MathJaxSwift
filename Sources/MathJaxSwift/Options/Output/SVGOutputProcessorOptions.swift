@@ -28,6 +28,7 @@ import JavaScriptCore
 
 @objc internal protocol SVGOutputProcessorOptionsJSExports: JSExport {
   var fontCache: SVGOutputProcessorOptions.FontCache { get set }
+  var blacker: Int { get set }
   var internalSpeechTitles: Bool { get set }
   var scale: Double { get set }
   var minScale: Double { get set }
@@ -40,7 +41,7 @@ import JavaScriptCore
   var skipAttributes: [String: Bool] { get set }
   var exFactor: Double { get set }
   var displayAlign: String { get set }
-  var displayIndent: Double { get set }
+  var displayIndent: String { get set }
   var displayOverflow: String { get set }
   var linebreaks: LinebreakOptions { get set }
   var localID: String? { get set }
@@ -53,6 +54,7 @@ import JavaScriptCore
   
   internal enum CodingKeys: CodingKey {
     case fontCache
+    case blacker
     case internalSpeechTitles
     case localID
     case titleID
@@ -68,6 +70,7 @@ import JavaScriptCore
   // MARK: Default values
   
   public static let defaultFontCache: FontCache = FontCaches.local
+  public static let defaultBlacker: Int = 3
   public static let defaultInternalSpeechTitles: Bool = true
   public static let defaultLocalID: String? = nil
   public static let defaultTitleID: Int = 0
@@ -75,6 +78,7 @@ import JavaScriptCore
   // MARK: Properties
   
   dynamic public var fontCache: FontCache
+  dynamic public var blacker: Int
   dynamic public var internalSpeechTitles: Bool
   dynamic public var localID: String?
   dynamic public var titleID: Int
@@ -83,6 +87,7 @@ import JavaScriptCore
   
   public init(
     fontCache: FontCache = defaultFontCache,
+    blacker: Int = defaultBlacker,
     internalSpeechTitles: Bool = defaultInternalSpeechTitles,
     scale: Double = defaultScale,
     minScale: Double = defaultMinScale,
@@ -95,12 +100,13 @@ import JavaScriptCore
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
     displayAlign: String = defaultDisplayAlign,
-    displayIndent: Double = defaultDisplayIndent,
+    displayIndent: String = defaultDisplayIndent,
     linebreaks: LinebreakOptions = defaultLinebreaks,
     localID: String? = defaultLocalID,
     titleID: Int = defaultTitleID
   ) {
     self.fontCache = fontCache
+    self.blacker = blacker
     self.internalSpeechTitles = internalSpeechTitles
     self.localID = localID
     self.titleID = titleID
@@ -124,16 +130,18 @@ import JavaScriptCore
   public required init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     fontCache = try container.decode(FontCache.self, forKey: .fontCache)
+    blacker = try container.decode(Int.self, forKey: .blacker)
     internalSpeechTitles = try container.decode(Bool.self, forKey: .internalSpeechTitles)
     localID = try container.decodeIfPresent(String.self, forKey: .localID)
     titleID = try container.decode(Int.self, forKey: .titleID)
     try super.init(from: decoder)
   }
-  
+
   public override func encode(to encoder: Encoder) throws {
     try super.encode(to: encoder)
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(fontCache, forKey: .fontCache)
+    try container.encode(blacker, forKey: .blacker)
     try container.encode(internalSpeechTitles, forKey: .internalSpeechTitles)
     try container.encodeIfPresent(localID, forKey: .localID)
     try container.encode(titleID, forKey: .titleID)

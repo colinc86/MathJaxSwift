@@ -102,10 +102,33 @@ mathjax.asyncIsSynchronous = true;
 /**
  * Installs all pre-loaded dynamic font data into an output jax's font instance.
  *
+ * MathJax's loadDynamicFileSync guards each file with `if (!dynamic.promise)`,
+ * meaning the setup function only runs for the FIRST font instance. Since our
+ * converters create a fresh output jax (and thus a fresh font instance) per
+ * conversion, subsequent instances would be missing all dynamic font data.
+ *
+ * We work around this by calling `dynamic.setup(font)` directly on every
+ * dynamic file, regardless of whether it has already been "loaded".
+ *
  * @param {object} outputJax The MathJax output jax (SVG or CHTML).
  */
 module.exports.loadDynamicFonts = function loadDynamicFonts(outputJax) {
-  if (Object.keys(outputJax.font.constructor.dynamicFiles || {}).length > 0) {
-    outputJax.font.loadDynamicFilesSync();
+  var font = outputJax.font;
+  var dynamicFiles = font.constructor.dynamicFiles || {};
+  var names = Object.keys(dynamicFiles);
+  if (names.length === 0) return;
+  // Run setup for every dynamic file on this font instance.
+  names.forEach(function(name) {
+    var dynamic = dynamicFiles[name];
+    dynamic.setup(font);
+  });
+  // Also handle dynamic extensions (font extension packs).
+  var extensions = font.constructor.dynamicExtensions;
+  if (extensions) {
+    extensions.forEach(function(data) {
+      Object.keys(data.files).forEach(function(name) {
+        data.files[name].setup(font);
+      });
+    });
   }
 };

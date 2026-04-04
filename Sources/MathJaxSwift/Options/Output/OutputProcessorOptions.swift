@@ -49,7 +49,7 @@ import Foundation
   public static let defaultSkipAttributes: [String: Bool] = [:]
   public static let defaultExFactor: Double = 0.5
   public static let defaultDisplayAlign: DisplayAlignment = DisplayAlignments.center
-  public static let defaultDisplayIndent: Double = 0
+  public static let defaultDisplayIndent: String = "0"
   public static let defaultDisplayOverflow: String = "overflow"
   public static let defaultLinebreaks: LinebreakOptions = LinebreakOptions()
 
@@ -59,14 +59,19 @@ import Foundation
   @objc dynamic public var minScale: Double
   @objc dynamic public var mtextInheritFont: Bool
   @objc dynamic public var merrorInheritFont: Bool
+  /// The font to use for `<mtext>` elements. Setting this to a non-empty value
+  /// (e.g. `"serif"`) requires CSS font metrics that are unavailable in headless
+  /// SVG mode, causing glyphs to disappear. Leave empty (the default) for
+  /// headless rendering.
   @objc dynamic public var mtextFont: String
+  /// The font to use for `<merror>` elements. Same headless caveat as `mtextFont`.
   @objc dynamic public var merrorFont: String
   @objc dynamic public var unknownFamily: String
   @objc dynamic public var mathmlSpacing: Bool
   @objc dynamic public var skipAttributes: [String: Bool]
   @objc dynamic public var exFactor: Double
   @objc dynamic public var displayAlign: DisplayAlignment
-  @objc dynamic public var displayIndent: Double
+  @objc dynamic public var displayIndent: String
   @objc dynamic public var displayOverflow: String
   @objc dynamic public var linebreaks: LinebreakOptions
 
@@ -84,7 +89,7 @@ import Foundation
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
     displayAlign: DisplayAlignment = defaultDisplayAlign,
-    displayIndent: Double = defaultDisplayIndent,
+    displayIndent: String = defaultDisplayIndent,
     displayOverflow: String = defaultDisplayOverflow,
     linebreaks: LinebreakOptions = defaultLinebreaks
   ) {

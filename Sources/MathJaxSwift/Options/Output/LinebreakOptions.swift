@@ -32,6 +32,12 @@ import JavaScriptCore
   var lineleading: String { get set }
 }
 
+/// Line breaking options for the output processor.
+///
+/// - Note: Line breaking requires DOM width measurements that the headless
+///   `liteAdaptor` cannot provide. These options have no effect when rendering
+///   via JavaScriptCore (the default MathJaxSwift environment). They are
+///   included for API completeness with MathJax.
 @objc public class LinebreakOptions: NSObject, Codable, LinebreakOptionsExports {
 
   // MARK: Types

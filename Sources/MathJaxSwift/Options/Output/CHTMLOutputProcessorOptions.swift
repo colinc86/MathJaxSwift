@@ -41,7 +41,7 @@ import JavaScriptCore
   var skipAttributes: [String: Bool] { get set }
   var exFactor: Double { get set }
   var displayAlign: String { get set }
-  var displayIndent: Double { get set }
+  var displayIndent: String { get set }
   var displayOverflow: String { get set }
   var linebreaks: LinebreakOptions { get set }
 }
@@ -85,7 +85,7 @@ import JavaScriptCore
     skipAttributes: [String: Bool] = defaultSkipAttributes,
     exFactor: Double = defaultExFactor,
     displayAlign: String = defaultDisplayAlign,
-    displayIndent: Double = defaultDisplayIndent,
+    displayIndent: String = defaultDisplayIndent,
     linebreaks: LinebreakOptions = defaultLinebreaks
   ) {
     self.matchFontHeight = matchFontHeight
