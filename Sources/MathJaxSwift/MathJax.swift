@@ -214,6 +214,26 @@ extension MathJax {
     throw MathJaxError.javascriptException(value: "SRE initialization did not complete")
   }
 
+  /// Configures the Speech Rule Engine with the given options.
+  ///
+  /// This must be a separate `evaluateScript` call (not inlined in the
+  /// `toSpeech` JS function) because SRE's locale loading uses native
+  /// Promises whose microtasks only drain between JSContext evaluations.
+  internal func configureSRE(_ options: SREOptions) throws {
+    if !supportedOutputFormats.contains(.speech) {
+      try loadBundle(with: .speech)
+    }
+    let locale = options.locale.replacingOccurrences(of: "'", with: "\\'")
+    let domain = options.domain.replacingOccurrences(of: "'", with: "\\'")
+    let style = options.style.replacingOccurrences(of: "'", with: "\\'")
+    let modality = options.modality.replacingOccurrences(of: "'", with: "\\'")
+    let markup = options.markup.replacingOccurrences(of: "'", with: "\\'")
+    context.evaluateScript(
+      "\(Constants.Names.JSModules.speech).\(Constants.Names.Classes.speechConverter).configure('\(locale)','\(domain)','\(style)','\(modality)','\(markup)')"
+    )
+    try checkForJSException()
+  }
+
   /// Checks for an exception in the JS context.
   private func checkForJSException() throws {
     guard let exception = context.exception else {

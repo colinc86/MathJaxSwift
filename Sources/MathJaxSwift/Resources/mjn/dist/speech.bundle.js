@@ -78,7 +78,7 @@ var speech = (function() {
 
   if (sre) {
     try {
-      sre.setupEngine({locale: 'en', domain: 'mathspeak', modality: 'speech'});
+      sre.setupEngine({locale: 'en', domain: 'mathspeak', modality: 'speech', mode: 'sync'});
       sre.engineReady().then(function() { _ready = true; }).catch(function(e) { _error = e ? (e.message || String(e)) : 'unknown'; });
     } catch(e) {
       _error = 'Init error: ' + (e.message || e);
@@ -87,15 +87,40 @@ var speech = (function() {
     _error = 'SRE not loaded';
   }
 
+  function _configure(locale, domain, style, modality, markup) {
+    var loc = locale || 'en';
+    var dom = domain || 'mathspeak';
+    var sty = style || 'default';
+    var mod = modality || 'speech';
+    var mrk = markup || 'none';
+    var setup = sre.engineSetup();
+    if (setup.locale === loc && setup.domain === dom && setup.style === sty && setup.modality === mod && setup.markup === mrk) return;
+    _ready = false; _error = null;
+    sre.setupEngine({ locale: loc, domain: dom, style: sty, modality: mod, markup: mrk, mode: 'sync' });
+    // SRE's engineReady() returns a native Promise in JavaScriptCore.
+    // We must resolve it synchronously. The data is already loaded via
+    // readFileSync, so we just need to drain the microtask/timer queue.
+    _flushTimers();
+    var resolved = false;
+    sre.engineReady().then(function() { resolved = true; _ready = true; }).catch(function(e) { resolved = true; _error = e ? (e.message || String(e)) : 'unknown'; });
+    // Drain any timers the Promise resolution might have queued.
+    _flushTimers();
+    if (!resolved) {
+      // If still not resolved, the locale data may need additional processing.
+      // Force a synchronous wait by re-checking after each timer flush.
+      for (var i = 0; i < 50 && !resolved; i++) {
+        _flushTimers();
+      }
+    }
+  }
+
   return {
     SpeechConverter: {
       isReady: function() { return _ready; },
       getError: function() { return _error; },
       getDebug: function() { try { return JSON.stringify(sre.engineSetup()); } catch(e) { return 'error: ' + e.message; } },
-      configure: function(locale, domain, style) {
-        _ready = false; _error = null;
-        sre.setupEngine({ locale: locale || 'en', domain: domain || 'mathspeak', style: style || 'default', modality: 'speech' });
-        sre.engineReady().then(function() { _ready = true; }).catch(function(e) { _error = e ? (e.message || String(e)) : 'unknown'; });
+      configure: function(locale, domain, style, modality, markup) {
+        _configure(locale, domain, style, modality, markup);
       },
       toSpeech: function(input) {
         var output = [];

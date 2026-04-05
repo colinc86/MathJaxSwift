@@ -77,7 +77,7 @@ extension MathJax {
       inputOptions: inputOptions
     )
     let mmlStrings = mmlResponses.map { $0.value }
-    return try mml2speech(mmlStrings)
+    return try mml2speech(mmlStrings, sreOptions: documentOptions.sre)
   }
 
   /// Converts an AsciiMath input string to speech text.
@@ -126,7 +126,7 @@ extension MathJax {
       documentOptions: documentOptions,
       inputOptions: inputOptions
     )
-    return try mml2speech(mml)
+    return try mml2speech(mml, sreOptions: documentOptions.sre)
   }
 
 }

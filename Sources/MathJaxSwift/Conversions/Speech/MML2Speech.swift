@@ -31,14 +31,16 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input strings containing MathML.
+  ///   - sreOptions: The Speech Rule Engine options (locale, domain, style, etc.).
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: Speech text output.
   public func mml2speech(
     _ input: [String],
+    sreOptions: SREOptions = SREOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> [Response] {
     return try await perform(on: queue) { mathjax in
-      try mathjax.mml2speech(input)
+      try mathjax.mml2speech(input, sreOptions: sreOptions)
     }
   }
 
@@ -46,10 +48,13 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input strings containing MathML.
+  ///   - sreOptions: The Speech Rule Engine options (locale, domain, style, etc.).
   /// - Returns: Speech text output.
   public func mml2speech(
-    _ input: [String]
+    _ input: [String],
+    sreOptions: SREOptions = SREOptions()
   ) throws -> [Response] {
+    try configureSRE(sreOptions)
     return try callFunctionAndValidate(
       .toSpeech,
       input: input,
@@ -60,14 +65,16 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
+  ///   - sreOptions: The Speech Rule Engine options (locale, domain, style, etc.).
   ///   - queue: The queue to execute the conversion on.
   /// - Returns: Speech text output.
   public func mml2speech(
     _ input: String,
+    sreOptions: SREOptions = SREOptions(),
     queue: DispatchQueue = .global()
   ) async throws -> String {
     return try await perform(on: queue) { mathjax in
-      try mathjax.mml2speech(input)
+      try mathjax.mml2speech(input, sreOptions: sreOptions)
     }
   }
 
@@ -75,10 +82,13 @@ extension MathJax {
   ///
   /// - Parameters:
   ///   - input: The input string containing MathML.
+  ///   - sreOptions: The Speech Rule Engine options (locale, domain, style, etc.).
   /// - Returns: Speech text output.
   public func mml2speech(
-    _ input: String
+    _ input: String,
+    sreOptions: SREOptions = SREOptions()
   ) throws -> String {
+    try configureSRE(sreOptions)
     return try callFunctionAndValidate(
       .toSpeech,
       input: input,
