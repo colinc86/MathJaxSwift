@@ -17,6 +17,16 @@ final class BugReproTests: XCTestCase {
     XCTAssertEqual(dict["blacker"] as? Int, 5)
   }
 
+  func testBlacker_perRender() throws {
+    let mj = try MathJax(preferredOutputFormat: .svg)
+    let svg3 = try mj.tex2svg("x^2", outputOptions: SVGOutputProcessorOptions())
+    let svg5 = try mj.tex2svg("x^2", outputOptions: SVGOutputProcessorOptions(blacker: 5))
+    let svg1 = try mj.tex2svg("x^2", outputOptions: SVGOutputProcessorOptions(blacker: 1))
+    XCTAssertTrue(svg3.contains("stroke-width:3px"))
+    XCTAssertTrue(svg5.contains("stroke-width:5px"))
+    XCTAssertTrue(svg1.contains("stroke-width:1px"))
+  }
+
   // MARK: - displayIndent type (String)
 
   func testDisplayIndent_isString() throws {

@@ -59,12 +59,14 @@ import Foundation
   @objc dynamic public var minScale: Double
   @objc dynamic public var mtextInheritFont: Bool
   @objc dynamic public var merrorInheritFont: Bool
-  /// The font to use for `<mtext>` elements. Setting this to a non-empty value
-  /// (e.g. `"serif"`) requires CSS font metrics that are unavailable in headless
-  /// SVG mode, causing glyphs to disappear. Leave empty (the default) for
-  /// headless rendering.
+  /// The font to use for `<mtext>` elements. When set to a non-empty value
+  /// (e.g. `"serif"`), MathJax renders text as SVG `<text>` elements referencing
+  /// that CSS font family instead of self-contained `<path>` glyphs. The SVG is
+  /// valid but requires a font-capable renderer (browser, WKWebView) to display
+  /// the text. Leave empty (the default) for fully self-contained SVG output.
   @objc dynamic public var mtextFont: String
-  /// The font to use for `<merror>` elements. Same headless caveat as `mtextFont`.
+  /// The font to use for `<merror>` elements. Same rendering caveat as
+  /// `mtextFont` — produces CSS-font-dependent `<text>` elements when non-empty.
   @objc dynamic public var merrorFont: String
   @objc dynamic public var unknownFamily: String
   @objc dynamic public var mathmlSpacing: Bool
