@@ -44,6 +44,9 @@ import JavaScriptCore
   var displayIndent: String { get set }
   var displayOverflow: String { get set }
   var linebreaks: LinebreakOptions { get set }
+  var unknownCharWidth: Double { get set }
+  var unknownCharHeight: Double { get set }
+  var cjkCharWidth: Double { get set }
   var localID: String? { get set }
   var titleID: Int { get set }
 }
@@ -56,6 +59,9 @@ import JavaScriptCore
     case fontCache
     case blacker
     case internalSpeechTitles
+    case unknownCharWidth
+    case unknownCharHeight
+    case cjkCharWidth
     case localID
     case titleID
   }
@@ -72,6 +78,9 @@ import JavaScriptCore
   public static let defaultFontCache: FontCache = FontCaches.local
   public static let defaultBlacker: Int = 3
   public static let defaultInternalSpeechTitles: Bool = true
+  public static let defaultUnknownCharWidth: Double = 0.6
+  public static let defaultUnknownCharHeight: Double = 0.8
+  public static let defaultCjkCharWidth: Double = 1.0
   public static let defaultLocalID: String? = nil
   public static let defaultTitleID: Int = 0
   
@@ -80,6 +89,13 @@ import JavaScriptCore
   dynamic public var fontCache: FontCache
   dynamic public var blacker: Int
   dynamic public var internalSpeechTitles: Bool
+  /// Width (in em units) used to estimate unknown (non-CJK) characters when
+  /// MathJax cannot measure them (headless mode). Relevant when `mtextFont` is set.
+  dynamic public var unknownCharWidth: Double
+  /// Height (in em units) used to estimate unknown characters in headless mode.
+  dynamic public var unknownCharHeight: Double
+  /// Width (in em units) used to estimate CJK (full-width) characters in headless mode.
+  dynamic public var cjkCharWidth: Double
   dynamic public var localID: String?
   dynamic public var titleID: Int
   
@@ -89,6 +105,9 @@ import JavaScriptCore
     fontCache: FontCache = defaultFontCache,
     blacker: Int = defaultBlacker,
     internalSpeechTitles: Bool = defaultInternalSpeechTitles,
+    unknownCharWidth: Double = defaultUnknownCharWidth,
+    unknownCharHeight: Double = defaultUnknownCharHeight,
+    cjkCharWidth: Double = defaultCjkCharWidth,
     scale: Double = defaultScale,
     minScale: Double = defaultMinScale,
     mtextInheritFont: Bool = defaultMtextInheritFont,
@@ -108,6 +127,9 @@ import JavaScriptCore
     self.fontCache = fontCache
     self.blacker = blacker
     self.internalSpeechTitles = internalSpeechTitles
+    self.unknownCharWidth = unknownCharWidth
+    self.unknownCharHeight = unknownCharHeight
+    self.cjkCharWidth = cjkCharWidth
     self.localID = localID
     self.titleID = titleID
     super.init(
@@ -132,6 +154,9 @@ import JavaScriptCore
     fontCache = try container.decode(FontCache.self, forKey: .fontCache)
     blacker = try container.decode(Int.self, forKey: .blacker)
     internalSpeechTitles = try container.decode(Bool.self, forKey: .internalSpeechTitles)
+    unknownCharWidth = try container.decode(Double.self, forKey: .unknownCharWidth)
+    unknownCharHeight = try container.decode(Double.self, forKey: .unknownCharHeight)
+    cjkCharWidth = try container.decode(Double.self, forKey: .cjkCharWidth)
     localID = try container.decodeIfPresent(String.self, forKey: .localID)
     titleID = try container.decode(Int.self, forKey: .titleID)
     try super.init(from: decoder)
@@ -143,6 +168,9 @@ import JavaScriptCore
     try container.encode(fontCache, forKey: .fontCache)
     try container.encode(blacker, forKey: .blacker)
     try container.encode(internalSpeechTitles, forKey: .internalSpeechTitles)
+    try container.encode(unknownCharWidth, forKey: .unknownCharWidth)
+    try container.encode(unknownCharHeight, forKey: .unknownCharHeight)
+    try container.encode(cjkCharWidth, forKey: .cjkCharWidth)
     try container.encodeIfPresent(localID, forKey: .localID)
     try container.encode(titleID, forKey: .titleID)
   }

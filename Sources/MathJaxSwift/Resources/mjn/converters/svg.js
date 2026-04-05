@@ -132,6 +132,17 @@ module.exports = { SVGConverter: class SVGConverter {
     documentOptions.InputJax = inputJax;
     const outputJax = new SVG({...svgOptions, fontData: MathJaxNewcmFont});
     loadDynamicFonts(outputJax);
+
+    // Override measureTextNode to use custom font metric estimations.
+    // In headless mode, MathJax can't measure CSS fonts. This controls
+    // the estimated width of text rendered via mtextFont/merrorFont.
+    if (svgOptions.unknownCharWidth !== undefined) {
+      var _charW = svgOptions.unknownCharWidth;
+      outputJax.measureTextNode = function(text) {
+        var str = adaptor.textContent(text);
+        return { w: str.length * _charW, h: 0.75, d: 0.2 };
+      };
+    }
     documentOptions.OutputJax = outputJax;
 
     const html = mathjax.document('', documentOptions);
