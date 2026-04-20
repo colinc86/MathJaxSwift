@@ -8,7 +8,7 @@ const {STATE} = require('mathjax-full/js/core/MathItem.js');
 const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
-const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
+const {normalizeTeXOptions} = require('./texOptions.js');
 
 /**
  * Converts Tex and AsciiMath to MathML.
@@ -25,8 +25,7 @@ export class MathMLConverter {
    * @return {string} The MathML formatted string.
    */
   static tex2mml(input, conversionOptions, documentOptions, texOptions) {
-    texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) && ((name !== 'bussproofs') || (name === 'base'))));
-    const tex = new TeX(texOptions);
+    const tex = new TeX(normalizeTeXOptions(texOptions));
     var output = [];
     for (let i = 0; i < input.length; i++) {
       output.push(MathMLConverter.createMML(input[i], tex, conversionOptions, documentOptions));
