@@ -185,7 +185,7 @@ import JavaScriptCore
   public static let defaultProcessEscapes: Bool = false
   public static let defaultProcessRefs: Bool = true
   public static let defaultProcessEnvironments: Bool = true
-  public static let defaultDigits: String = "^(?:[0-9]+(?:{,}[0-9]{3})*(?:.[0-9]*)?|.[0-9]+)"
+  public static let defaultDigits: String = #"^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)"#
   public static let defaultTags: Tag = Tags.none
   public static let defaultTagSide: TagSide = TagSides.right
   public static let defaultTagIndent: String = "0.8em"

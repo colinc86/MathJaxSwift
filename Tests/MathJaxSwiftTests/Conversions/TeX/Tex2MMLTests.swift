@@ -92,6 +92,20 @@ final class Tex2MMLTests: XCTestCase {
       XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
     }
   }
+
+  func testTex2MMLDoesNotEmitMErrorForValidGroupedExpressions() throws {
+    let inputs = [
+      "a^{10}",
+      "\\sum_{i=1}^n x_i",
+      "\\lim_{x \\to 0} \\frac{\\sin x}{x}",
+      "\\left( \\sum_{i=1}^n a_i \\right)^2"
+    ]
+
+    for input in inputs {
+      let output = try mathjax.tex2mml(input)
+      XCTAssertFalse(output.contains("<merror"), "Expected valid TeX to render without merror for input: \(input)")
+    }
+  }
   
   func testTex2MMLTime() {
     measure {

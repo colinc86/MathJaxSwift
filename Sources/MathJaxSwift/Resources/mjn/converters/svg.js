@@ -10,9 +10,8 @@ const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
-const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
-
 const {loadDynamicFonts} = require('./dynamicFonts.js');
+const {normalizeTeXOptions} = require('./texOptions.js');
 
 const CSS = [
   'svg a{fill:blue;stroke:blue}',
@@ -44,8 +43,7 @@ export class SVGConverter {
    * @return {string} The SVG formatted strings.
    */
   static tex2svg(input, css, assistiveMml, container, styles, conversionOptions, documentOptions, texOptions, svgOptions) {
-    texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) || (name === 'base')));
-    const tex = new TeX(texOptions);
+    const tex = new TeX(normalizeTeXOptions(texOptions));
     var output = [];
     for (let i = 0; i < input.length; i++) {
       output.push(SVGConverter.createSVG(input[i], tex, css, assistiveMml, container, styles, conversionOptions, documentOptions, svgOptions));

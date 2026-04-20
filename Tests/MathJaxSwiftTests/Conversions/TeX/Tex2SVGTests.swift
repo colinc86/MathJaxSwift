@@ -104,6 +104,20 @@ final class Tex2SVGTests: XCTestCase {
       XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
     }
   }
+
+  func testTex2SVGDoesNotEmitMErrorForValidGroupedExpressions() throws {
+    let inputs = [
+      "a^{10}",
+      "\\sum_{i=1}^n x_i",
+      "\\lim_{x \\to 0} \\frac{\\sin x}{x}",
+      "\\left( \\sum_{i=1}^n a_i \\right)^2"
+    ]
+
+    for input in inputs {
+      let output = try mathjax.tex2svg(input)
+      XCTAssertFalse(output.contains("data-mml-node=\"merror\""), "Expected valid TeX to render without merror for input: \(input)")
+    }
+  }
   
   func testTex2SVGTime() {
     measure {
