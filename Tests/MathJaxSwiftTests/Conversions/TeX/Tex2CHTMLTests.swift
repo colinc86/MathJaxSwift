@@ -92,6 +92,20 @@ final class Tex2CHTMLTests: XCTestCase {
       XCTAssertEqual(error, MathJaxError.conversionError(error: MathJaxSwiftTests.texErrorOutput))
     }
   }
+
+  func testTex2CHTMLDoesNotEmitMErrorForValidGroupedExpressions() throws {
+    let inputs = [
+      "a^{10}",
+      "\\sum_{i=1}^n x_i",
+      "\\lim_{x \\to 0} \\frac{\\sin x}{x}",
+      "\\left( \\sum_{i=1}^n a_i \\right)^2"
+    ]
+
+    for input in inputs {
+      let output = try mathjax.tex2chtml(input)
+      XCTAssertFalse(output.contains("data-mjx-error="), "Expected valid TeX to render without merror for input: \(input)")
+    }
+  }
   
   func testTex2CHTMLTime() {
     measure {

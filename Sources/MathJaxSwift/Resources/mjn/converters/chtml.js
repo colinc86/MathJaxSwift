@@ -10,9 +10,8 @@ const {AsciiMath} = require('mathjax-full/js/input/asciimath.js');
 const {MathML} = require('mathjax-full/js/input/mathml.js');
 const {TeX} = require('mathjax-full/js/input/tex.js');
 
-const {AllPackages} = require('mathjax-full/js/input/tex/AllPackages.js');
-
 const {loadDynamicFonts} = require('./dynamicFonts.js');
+const {normalizeTeXOptions} = require('./texOptions.js');
 
 /**
  * Converts TeX, MathML, and AsciiMath input to CommonHTML.
@@ -32,8 +31,7 @@ export class CommonHTMLConverter {
    * @return {string} The CommonHTML formatted string.
    */
   static tex2chtml(input, css, assistiveMml, conversionOptions, documentOptions, texOptions, chtmlOptions) {
-    texOptions.packages = AllPackages.filter((name) => (texOptions.loadPackages.includes(name) || (name === 'base')));
-    const tex = new TeX(texOptions);
+    const tex = new TeX(normalizeTeXOptions(texOptions));
     var output = [];
     for (let i = 0; i < input.length; i++) {
       output.push(CommonHTMLConverter.createCHTML(input[i], tex, css, assistiveMml, conversionOptions, documentOptions, chtmlOptions));
