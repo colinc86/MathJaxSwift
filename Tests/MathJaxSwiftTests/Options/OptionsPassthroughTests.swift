@@ -74,6 +74,22 @@ final class OptionsPassthroughTests: XCTestCase {
     XCTAssertFalse(inlineOutput.contains("display=\"block\""), "Inline output should not contain display=\"block\"")
   }
 
+  func testDefaultDigitsDoNotConsumeFollowingCharacter() throws {
+    // The default `digits` pattern reaches MathJax, so an unescaped `.` in it
+    // would swallow the character after a number (e.g. the `}` in `x^{2}`).
+    let mathjax = try MathJax(preferredOutputFormat: .svg)
+    for input in ["x^{2}", "a^{10}", "a_{n-1}", "\\sum_{i=1}^n x_i", "\\left( \\sum_{i=1}^n a_i \\right)^2", "3.14", "1{,}000"] {
+      XCTAssertNoThrow(try mathjax.tex2svg(input), "Failed to convert \(input)")
+    }
+  }
+
+  func testDefaultDigitsMatchesMathJaxDefault() {
+    XCTAssertEqual(
+      TeXInputProcessorOptions.defaultDigits,
+      #"^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)"#
+    )
+  }
+
   func testSVGFontCacheNoneChangesOutput() throws {
     let mathjax = try MathJax(preferredOutputFormat: .svg)
 
